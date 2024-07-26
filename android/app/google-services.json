@@ -1,0 +1,186 @@
+{
+  "project_info": {
+    "project_number": "490606516846",
+    "project_id": "planremind",
+    "storage_bucket": "planremind.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:490606516846:android:9d2cb38ef053226eb1a47f",
+        "android_client_info": {
+          "package_name": "com.mycompany.planremindproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "490606516846-di4dt0ijdmt3prbnjg1pio4a440ic66p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mycompany.planremindproject",
+            "certificate_hash": "112550eb947fc9805596071ffc84f983d6f44f24"
+          }
+        },
+        {
+          "client_id": "490606516846-gj5domrcjhsvb57qt4grrasqjnrt858h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mycompany.planremindproject",
+            "certificate_hash": "7460dac9515faa7d6f4696a809743b959149449f"
+          }
+        },
+        {
+          "client_id": "490606516846-p12hp2u3qkddua4johtekt8s947u6409.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mycompany.planremindproject",
+            "certificate_hash": "f270e54553cfa86d5c1dbbc95dc825de8cfdb8cb"
+          }
+        },
+        {
+          "client_id": "490606516846-s79fmaj3v9cd8c68v87gcdi2deofgg7i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mycompany.planremindproject",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "490606516846-ttod695ug2qi0h5k33d6516jhtlo7hma.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mycompany.planremindproject",
+            "certificate_hash": "b79877eebd1b62f36a6757c20dc36ef63f510c2d"
+          }
+        },
+        {
+          "client_id": "490606516846-7ndd32c32t308m47vbhdq06rpsp93srk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5XZ2CyWSikoZJV4b0J3QQn3eDwarXZcM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "490606516846-7ndd32c32t308m47vbhdq06rpsp93srk.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "490606516846-babr96tv9bp469cngelmdc6qsplquiso.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mycompany.planremindproject"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:490606516846:android:0a912df2296a9fdeb1a47f",
+        "android_client_info": {
+          "package_name": "com.planremindcompany.planremindproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "490606516846-3iv4t7le2h4dqg223k2ttru1me6nbnni.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.planremindcompany.planremindproject",
+            "certificate_hash": "4e1571356fb2b1a5cafa17d94c68df4769bdb7a7"
+          }
+        },
+        {
+          "client_id": "490606516846-7mgk1arhdv8j61c6j40vjkub3sg98ri3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.planremindcompany.planremindproject",
+            "certificate_hash": "2e3f7e5af696ee6f740c2133e2c3b47d10220976"
+          }
+        },
+        {
+          "client_id": "490606516846-808fah83sre3oi5vn7lm6t27fs1lmg8f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.planremindcompany.planremindproject",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "490606516846-br13ofql8c5kq45ttn628qa0pv6o9ba5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.planremindcompany.planremindproject",
+            "certificate_hash": "ea7081e290569aab5880891c935cf10917dc0d97"
+          }
+        },
+        {
+          "client_id": "490606516846-g3g4vfhf6pls9l3lq4u5qhgdmchmmoha.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.planremindcompany.planremindproject",
+            "certificate_hash": "112550eb947fc9805596071ffc84f983d6f44f24"
+          }
+        },
+        {
+          "client_id": "490606516846-iupbvvunmiecg2mr5iv896ippithmpf6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.planremindcompany.planremindproject",
+            "certificate_hash": "5cc8f07754f9815fc35eeec6cfaa08f2adf516d9"
+          }
+        },
+        {
+          "client_id": "490606516846-lv1umaujrtqiofcnlvvh51pt5n698746.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.planremindcompany.planremindproject",
+            "certificate_hash": "50fb38cafd3f137ebfd1df04b9d0238c77faa663"
+          }
+        },
+        {
+          "client_id": "490606516846-pn499ki8moeenkedhj7huivtcd0k58np.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.planremindcompany.planremindproject",
+            "certificate_hash": "a05ea3a80e7bb738c1484cb6e7e4c2103e4f0d2c"
+          }
+        },
+        {
+          "client_id": "490606516846-7ndd32c32t308m47vbhdq06rpsp93srk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5XZ2CyWSikoZJV4b0J3QQn3eDwarXZcM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "490606516846-7ndd32c32t308m47vbhdq06rpsp93srk.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "490606516846-babr96tv9bp469cngelmdc6qsplquiso.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mycompany.planremindproject"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
