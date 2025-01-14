@@ -1,5 +1,6 @@
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import 'dart:ui';
 import '/flutter_flow/custom_functions.dart' as functions;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -40,23 +41,6 @@ class _CarSparePartMileageWidgetState extends State<CarSparePartMileageWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => CarSparePartMileageModel());
-
-    _model.textController1 ??= TextEditingController(
-        text:
-            functions.sum(widget!.parameter1!, widget!.parameter2!).toString());
-    _model.textFieldFocusNode1 ??= FocusNode();
-
-    _model.textController2 ??= TextEditingController(
-        text: functions.minus(
-                    functions.sum(widget!.parameter1!, widget!.parameter2!),
-                    widget!.mileage!) <
-                0
-            ? '0'
-            : functions
-                .minus(functions.sum(widget!.parameter1!, widget!.parameter2!),
-                    widget!.mileage!)
-                .toString());
-    _model.textFieldFocusNode2 ??= FocusNode();
   }
 
   @override
@@ -68,127 +52,116 @@ class _CarSparePartMileageWidgetState extends State<CarSparePartMileageWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        Expanded(
-          child: Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(8.0, 0.0, 8.0, 0.0),
-            child: TextFormField(
-              controller: _model.textController1,
-              focusNode: _model.textFieldFocusNode1,
-              autofocus: false,
-              readOnly: true,
-              obscureText: false,
-              decoration: InputDecoration(
-                labelText: FFLocalizations.of(context).getText(
-                  'nqnby8he' /* Заміна */,
-                ),
-                labelStyle: FlutterFlowTheme.of(context).labelMedium.override(
-                      fontFamily: 'Inter',
-                      letterSpacing: 0.0,
+    return Padding(
+      padding: EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 10.0, 0.0),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Expanded(
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 0.0, 0.0),
+                  child: Text(
+                    FFLocalizations.of(context).getText(
+                      'h7mufkty' /* Заміна */,
                     ),
-                alignLabelWithHint: false,
-                hintStyle: FlutterFlowTheme.of(context).labelMedium.override(
-                      fontFamily: 'Inter',
-                      letterSpacing: 0.0,
+                    style: FlutterFlowTheme.of(context).bodyMedium.override(
+                          fontFamily: 'Inter',
+                          color: FlutterFlowTheme.of(context).secondaryText,
+                          fontSize: 11.0,
+                          letterSpacing: 0.0,
+                        ),
+                  ),
+                ),
+                Container(
+                  height: 50.0,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16.0),
+                    border: Border.all(
+                      color: FlutterFlowTheme.of(context).alternate,
+                      width: 2.0,
                     ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: FlutterFlowTheme.of(context).alternate,
-                    width: 1.0,
                   ),
-                  borderRadius: BorderRadius.circular(16.0),
+                  alignment: AlignmentDirectional(-1.0, 0.0),
+                  child: Padding(
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 10.0, 0.0),
+                    child: Text(
+                      functions
+                          .sum(widget!.parameter1!, widget!.parameter2!)
+                          .toString(),
+                      style: FlutterFlowTheme.of(context).bodyMedium.override(
+                            fontFamily: 'Inter',
+                            letterSpacing: 0.0,
+                          ),
+                    ),
+                  ),
                 ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: FlutterFlowTheme.of(context).alternate,
-                    width: 1.0,
-                  ),
-                  borderRadius: BorderRadius.circular(16.0),
-                ),
-                errorBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: FlutterFlowTheme.of(context).error,
-                    width: 1.0,
-                  ),
-                  borderRadius: BorderRadius.circular(16.0),
-                ),
-                focusedErrorBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: FlutterFlowTheme.of(context).error,
-                    width: 1.0,
-                  ),
-                  borderRadius: BorderRadius.circular(16.0),
-                ),
-              ),
-              style: FlutterFlowTheme.of(context).bodyMedium.override(
-                    fontFamily: 'Inter',
-                    letterSpacing: 0.0,
-                  ),
-              validator: _model.textController1Validator.asValidator(context),
+              ],
             ),
           ),
-        ),
-        Expanded(
-          child: Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(8.0, 0.0, 8.0, 0.0),
-            child: TextFormField(
-              controller: _model.textController2,
-              focusNode: _model.textFieldFocusNode2,
-              autofocus: false,
-              readOnly: true,
-              obscureText: false,
-              decoration: InputDecoration(
-                labelText: FFLocalizations.of(context).getText(
-                  '55qf5czo' /* Заміна через */,
-                ),
-                labelStyle: FlutterFlowTheme.of(context).labelMedium.override(
-                      fontFamily: 'Inter',
-                      letterSpacing: 0.0,
+          Expanded(
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 0.0, 0.0),
+                  child: Text(
+                    FFLocalizations.of(context).getText(
+                      'o0sfjjk0' /* Заміна через */,
                     ),
-                hintStyle: FlutterFlowTheme.of(context).labelMedium.override(
-                      fontFamily: 'Inter',
-                      letterSpacing: 0.0,
+                    style: FlutterFlowTheme.of(context).bodyMedium.override(
+                          fontFamily: 'Inter',
+                          color: FlutterFlowTheme.of(context).secondaryText,
+                          fontSize: 11.0,
+                          letterSpacing: 0.0,
+                        ),
+                  ),
+                ),
+                Container(
+                  height: 50.0,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16.0),
+                    border: Border.all(
+                      color: FlutterFlowTheme.of(context).alternate,
+                      width: 2.0,
                     ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: FlutterFlowTheme.of(context).alternate,
-                    width: 1.0,
                   ),
-                  borderRadius: BorderRadius.circular(16.0),
+                  alignment: AlignmentDirectional(-1.0, 0.0),
+                  child: Padding(
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 10.0, 0.0),
+                    child: Text(
+                      functions.minus(
+                                  functions.sum(
+                                      widget!.parameter1!, widget!.parameter2!),
+                                  widget!.mileage!) <
+                              0
+                          ? '0'
+                          : functions
+                              .minus(
+                                  functions.sum(
+                                      widget!.parameter1!, widget!.parameter2!),
+                                  widget!.mileage!)
+                              .toString(),
+                      style: FlutterFlowTheme.of(context).bodyMedium.override(
+                            fontFamily: 'Inter',
+                            color: FlutterFlowTheme.of(context).primaryText,
+                            letterSpacing: 0.0,
+                          ),
+                    ),
+                  ),
                 ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: FlutterFlowTheme.of(context).alternate,
-                    width: 1.0,
-                  ),
-                  borderRadius: BorderRadius.circular(16.0),
-                ),
-                errorBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: FlutterFlowTheme.of(context).error,
-                    width: 1.0,
-                  ),
-                  borderRadius: BorderRadius.circular(16.0),
-                ),
-                focusedErrorBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: FlutterFlowTheme.of(context).error,
-                    width: 1.0,
-                  ),
-                  borderRadius: BorderRadius.circular(16.0),
-                ),
-              ),
-              style: FlutterFlowTheme.of(context).bodyMedium.override(
-                    fontFamily: 'Inter',
-                    letterSpacing: 0.0,
-                  ),
-              validator: _model.textController2Validator.asValidator(context),
+              ],
             ),
           ),
-        ),
-      ],
+        ].divide(SizedBox(width: 10.0)),
+      ),
     );
   }
 }

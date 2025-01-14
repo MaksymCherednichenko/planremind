@@ -1,11 +1,13 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
+import '/backend/schema/enums/enums.dart';
 import '/custom_components/app_bar/app_bar_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
-import '/home_modul/kitchen/storage_page/add_item_storage_food/add_item_storage_food_widget.dart';
-import '/home_modul/kitchen/storage_page/edit_item_storage_food/edit_item_storage_food_widget.dart';
+import '/home_modul/kitchen/storage_page/add_storage_stuff/add_storage_stuff_widget.dart';
+import 'dart:ui';
+import '/flutter_flow/custom_functions.dart' as functions;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -36,19 +38,19 @@ class _StorageFoodWidgetState extends State<StorageFoodWidget> {
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       _model.itemNum = FFAppState().category.length;
       _model.index = 0;
-      setState(() {});
+      safeSetState(() {});
       while (_model.index! < _model.itemNum!) {
         _model.insertAtIndexInCategoriesIsOpened(_model.index!, true);
         _model.index = _model.index! + 1;
-        setState(() {});
+        safeSetState(() {});
       }
-      _model.settings = await querySettingsCategoryAndShopRecordOnce(
+      _model.categoryOutput = await querySettingsCategoryAndShopRecordOnce(
         parent: FFAppState().currentUserRef,
         singleRecord: true,
       ).then((s) => s.firstOrNull);
       FFAppState().category =
-          _model.settings!.categoryFood.toList().cast<String>();
-      setState(() {});
+          _model.categoryOutput!.categoryFood.toList().cast<String>();
+      safeSetState(() {});
     });
   }
 
@@ -64,9 +66,10 @@ class _StorageFoodWidgetState extends State<StorageFoodWidget> {
     context.watch<FFAppState>();
 
     return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
-          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-          : FocusScope.of(context).unfocus(),
+      onTap: () {
+        FocusScope.of(context).unfocus();
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
@@ -77,7 +80,7 @@ class _StorageFoodWidgetState extends State<StorageFoodWidget> {
             children: [
               wrapWithModel(
                 model: _model.appBarModel,
-                updateCallback: () => setState(() {}),
+                updateCallback: () => safeSetState(() {}),
                 child: AppBarWidget(
                   title: 'Home',
                   colorButton: FlutterFlowTheme.of(context).home,
@@ -91,24 +94,24 @@ class _StorageFoodWidgetState extends State<StorageFoodWidget> {
                   padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
                   child: Container(
                     width: MediaQuery.sizeOf(context).width * 1.0,
-                    height: 59.0,
+                    height: 60.0,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(12.0),
                     ),
                     child: Align(
-                      alignment: AlignmentDirectional(0.0, -1.0),
+                      alignment: AlignmentDirectional(0.0, 0.0),
                       child: Padding(
                         padding: EdgeInsets.all(8.0),
                         child: Row(
                           mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Expanded(
                               child: FFButtonWidget(
                                 onPressed: () async {
-                                  context.pushNamed('HomeShoppingActual');
+                                  context.goNamed('HomeShoppingActual');
                                 },
                                 text: FFLocalizations.of(context).getText(
                                   'ecnzn07y' /* Shopping */,
@@ -129,16 +132,16 @@ class _StorageFoodWidgetState extends State<StorageFoodWidget> {
                                   elevation: 0.0,
                                   borderSide: BorderSide(
                                     color: Colors.transparent,
-                                    width: 1.0,
+                                    width: 0.0,
                                   ),
-                                  borderRadius: BorderRadius.circular(13.0),
+                                  borderRadius: BorderRadius.circular(12.0),
                                 ),
                               ),
                             ),
                             Expanded(
                               child: FFButtonWidget(
                                 onPressed: () async {
-                                  context.pushNamed('HomePlannerPage');
+                                  context.goNamed('HomePlannerPage');
                                 },
                                 text: FFLocalizations.of(context).getText(
                                   'ojbxx00i' /* Planner */,
@@ -159,9 +162,9 @@ class _StorageFoodWidgetState extends State<StorageFoodWidget> {
                                   elevation: 0.0,
                                   borderSide: BorderSide(
                                     color: Colors.transparent,
-                                    width: 1.0,
+                                    width: 0.0,
                                   ),
-                                  borderRadius: BorderRadius.circular(13.0),
+                                  borderRadius: BorderRadius.circular(12.0),
                                 ),
                               ),
                             ),
@@ -188,7 +191,7 @@ class _StorageFoodWidgetState extends State<StorageFoodWidget> {
                                   elevation: 0.0,
                                   borderSide: BorderSide(
                                     color: Colors.transparent,
-                                    width: 1.0,
+                                    width: 0.0,
                                   ),
                                   borderRadius: BorderRadius.circular(12.0),
                                 ),
@@ -256,10 +259,10 @@ class _StorageFoodWidgetState extends State<StorageFoodWidget> {
                               0.0, 8.0, 8.0, 8.0),
                           child: FFButtonWidget(
                             onPressed: () async {
-                              context.pushNamed('Household');
+                              context.goNamed('Household');
                             },
                             text: FFLocalizations.of(context).getText(
-                              'eu821lyn' /* Household */,
+                              'eu821lyn' /* Побутові */,
                             ),
                             options: FFButtonOptions(
                               width: 155.5,
@@ -300,169 +303,175 @@ class _StorageFoodWidgetState extends State<StorageFoodWidget> {
                       children: [
                         Align(
                           alignment: AlignmentDirectional(0.0, -1.0),
-                          child: SingleChildScrollView(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Align(
-                                  alignment: AlignmentDirectional(0.0, 0.0),
-                                  child: Builder(
-                                    builder: (context) {
-                                      final categories =
-                                          FFAppState().category.toList();
-
-                                      return Column(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children:
-                                            List.generate(categories.length,
-                                                (categoriesIndex) {
-                                          final categoriesItem =
-                                              categories[categoriesIndex];
-                                          return Container(
-                                            decoration: BoxDecoration(
-                                              color: Color(0x00FFFFFF),
+                          child: Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                0.0, 0.0, 0.0, 100.0),
+                            child: SingleChildScrollView(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  StreamBuilder<List<StaffStorageRecord>>(
+                                    stream: queryStaffStorageRecord(
+                                      parent: FFAppState().currentUserRef,
+                                      queryBuilder: (staffStorageRecord) =>
+                                          staffStorageRecord
+                                              .where(
+                                                'staffCategoryType',
+                                                isEqualTo: HomeStuffEnum.food
+                                                    .serialize(),
+                                              )
+                                              .where(
+                                                'endOfDate',
+                                                isLessThan:
+                                                    functions.getDateOnly(
+                                                        getCurrentTimestamp),
+                                              ),
+                                    ),
+                                    builder: (context, snapshot) {
+                                      // Customize what your widget looks like when it's loading.
+                                      if (!snapshot.hasData) {
+                                        return Center(
+                                          child: SizedBox(
+                                            width: 50.0,
+                                            height: 50.0,
+                                            child: CircularProgressIndicator(
+                                              valueColor:
+                                                  AlwaysStoppedAnimation<Color>(
+                                                Color(0xFFF57F44),
+                                              ),
                                             ),
+                                          ),
+                                        );
+                                      }
+                                      List<StaffStorageRecord>
+                                          containerStaffStorageRecordList =
+                                          snapshot.data!;
+
+                                      return Container(
+                                        decoration: BoxDecoration(),
+                                        child: Visibility(
+                                          visible:
+                                              containerStaffStorageRecordList
+                                                  .isNotEmpty,
+                                          child: Padding(
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    0.0, 20.0, 0.0, 0.0),
                                             child: Column(
                                               mainAxisSize: MainAxisSize.max,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               children: [
                                                 Align(
                                                   alignment:
                                                       AlignmentDirectional(
                                                           -1.0, 0.0),
-                                                  child: Padding(
-                                                    padding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(0.0, 24.0,
-                                                                0.0, 10.0),
-                                                    child: InkWell(
-                                                      splashColor:
-                                                          Colors.transparent,
-                                                      focusColor:
-                                                          Colors.transparent,
-                                                      hoverColor:
-                                                          Colors.transparent,
-                                                      highlightColor:
-                                                          Colors.transparent,
-                                                      onTap: () async {
-                                                        if (_model
-                                                                .categoriesIsOpened[
-                                                            categoriesIndex]) {
-                                                          _model
-                                                              .updateCategoriesIsOpenedAtIndex(
-                                                            categoriesIndex,
-                                                            (_) => false,
-                                                          );
-                                                          setState(() {});
-                                                        } else {
-                                                          _model
-                                                              .updateCategoriesIsOpenedAtIndex(
-                                                            categoriesIndex,
-                                                            (_) => true,
-                                                          );
-                                                          setState(() {});
-                                                        }
-                                                      },
-                                                      child: Text(
-                                                        categoriesItem,
-                                                        style:
-                                                            GoogleFonts.getFont(
-                                                          'Inter',
+                                                  child: Text(
+                                                    FFLocalizations.of(context)
+                                                        .getText(
+                                                      'pho9bxyg' /* Зіпсовані продукти */,
+                                                    ),
+                                                    style: FlutterFlowTheme.of(
+                                                            context)
+                                                        .titleLarge
+                                                        .override(
+                                                          fontFamily: 'Inter',
                                                           color:
                                                               Color(0xFF919191),
                                                           fontSize: 18.0,
+                                                          letterSpacing: 0.0,
                                                         ),
-                                                      ),
-                                                    ),
                                                   ),
                                                 ),
-                                                if (_model.categoriesIsOpened[
-                                                    categoriesIndex])
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, -1.0),
-                                                    child: Container(
-                                                      decoration: BoxDecoration(
-                                                        color: FlutterFlowTheme
-                                                                .of(context)
-                                                            .secondaryBackground,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(16.0),
-                                                      ),
-                                                      child: Align(
-                                                        alignment:
-                                                            AlignmentDirectional(
-                                                                0.0, 0.0),
-                                                        child: Padding(
-                                                          padding:
-                                                              EdgeInsetsDirectional
-                                                                  .fromSTEB(
-                                                                      16.0,
-                                                                      0.0,
-                                                                      16.0,
-                                                                      0.0),
-                                                          child: StreamBuilder<
-                                                              List<
-                                                                  AddItemLibraryRecord>>(
-                                                            stream:
-                                                                queryAddItemLibraryRecord(
-                                                              parent: FFAppState()
-                                                                  .currentUserRef,
-                                                              queryBuilder:
-                                                                  (addItemLibraryRecord) =>
-                                                                      addItemLibraryRecord
-                                                                          .where(
-                                                                            'category',
-                                                                            isEqualTo:
-                                                                                categoriesItem,
-                                                                          )
-                                                                          .where(
-                                                                            'quantity',
-                                                                            isGreaterThan:
-                                                                                0.0,
-                                                                          ),
-                                                            ),
-                                                            builder: (context,
-                                                                snapshot) {
-                                                              // Customize what your widget looks like when it's loading.
-                                                              if (!snapshot
-                                                                  .hasData) {
-                                                                return Center(
-                                                                  child:
-                                                                      SizedBox(
-                                                                    width: 50.0,
-                                                                    height:
-                                                                        50.0,
-                                                                    child:
-                                                                        CircularProgressIndicator(
-                                                                      valueColor:
-                                                                          AlwaysStoppedAnimation<
-                                                                              Color>(
-                                                                        Color(
-                                                                            0xFFF57F44),
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                );
-                                                              }
-                                                              List<AddItemLibraryRecord>
-                                                                  columnAddItemLibraryRecordList =
-                                                                  snapshot
-                                                                      .data!;
+                                                Align(
+                                                  alignment:
+                                                      AlignmentDirectional(
+                                                          0.0, -1.0),
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                      color: FlutterFlowTheme
+                                                              .of(context)
+                                                          .secondaryBackground,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              16.0),
+                                                    ),
+                                                    child: Align(
+                                                      alignment:
+                                                          AlignmentDirectional(
+                                                              0.0, 0.0),
+                                                      child: Padding(
+                                                        padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    16.0,
+                                                                    0.0,
+                                                                    16.0,
+                                                                    0.0),
+                                                        child: Builder(
+                                                          builder: (context) {
+                                                            final list =
+                                                                containerStaffStorageRecordList
+                                                                    .toList();
 
-                                                              return Column(
-                                                                mainAxisSize:
-                                                                    MainAxisSize
-                                                                        .max,
-                                                                children: List.generate(
-                                                                    columnAddItemLibraryRecordList
-                                                                        .length,
-                                                                    (columnIndex) {
-                                                                  final columnAddItemLibraryRecord =
-                                                                      columnAddItemLibraryRecordList[
-                                                                          columnIndex];
-                                                                  return Row(
+                                                            return Column(
+                                                              mainAxisSize:
+                                                                  MainAxisSize
+                                                                      .max,
+                                                              children:
+                                                                  List.generate(
+                                                                      list.length,
+                                                                      (listIndex) {
+                                                                final listItem =
+                                                                    list[
+                                                                        listIndex];
+                                                                return InkWell(
+                                                                  splashColor:
+                                                                      Colors
+                                                                          .transparent,
+                                                                  focusColor: Colors
+                                                                      .transparent,
+                                                                  hoverColor: Colors
+                                                                      .transparent,
+                                                                  highlightColor:
+                                                                      Colors
+                                                                          .transparent,
+                                                                  onTap:
+                                                                      () async {
+                                                                    await showModalBottomSheet(
+                                                                      isScrollControlled:
+                                                                          true,
+                                                                      backgroundColor:
+                                                                          Colors
+                                                                              .transparent,
+                                                                      enableDrag:
+                                                                          false,
+                                                                      context:
+                                                                          context,
+                                                                      builder:
+                                                                          (context) {
+                                                                        return GestureDetector(
+                                                                          onTap:
+                                                                              () {
+                                                                            FocusScope.of(context).unfocus();
+                                                                            FocusManager.instance.primaryFocus?.unfocus();
+                                                                          },
+                                                                          child:
+                                                                              Padding(
+                                                                            padding:
+                                                                                MediaQuery.viewInsetsOf(context),
+                                                                            child:
+                                                                                AddStorageStuffWidget(
+                                                                              stuff: listItem,
+                                                                            ),
+                                                                          ),
+                                                                        );
+                                                                      },
+                                                                    ).then((value) =>
+                                                                        safeSetState(
+                                                                            () {}));
+                                                                  },
+                                                                  child: Row(
                                                                     mainAxisSize:
                                                                         MainAxisSize
                                                                             .max,
@@ -490,37 +499,12 @@ class _StorageFoodWidgetState extends State<StorageFoodWidget> {
                                                                             alignment:
                                                                                 AlignmentDirectional(-1.0, 0.0),
                                                                             child:
-                                                                                InkWell(
-                                                                              splashColor: Colors.transparent,
-                                                                              focusColor: Colors.transparent,
-                                                                              hoverColor: Colors.transparent,
-                                                                              highlightColor: Colors.transparent,
-                                                                              onTap: () async {
-                                                                                await showModalBottomSheet(
-                                                                                  isScrollControlled: true,
-                                                                                  backgroundColor: Colors.transparent,
-                                                                                  enableDrag: false,
-                                                                                  context: context,
-                                                                                  builder: (context) {
-                                                                                    return GestureDetector(
-                                                                                      onTap: () => _model.unfocusNode.canRequestFocus ? FocusScope.of(context).requestFocus(_model.unfocusNode) : FocusScope.of(context).unfocus(),
-                                                                                      child: Padding(
-                                                                                        padding: MediaQuery.viewInsetsOf(context),
-                                                                                        child: EditItemStorageFoodWidget(
-                                                                                          itemInLibrary: columnAddItemLibraryRecord,
-                                                                                        ),
-                                                                                      ),
-                                                                                    );
-                                                                                  },
-                                                                                ).then((value) => safeSetState(() {}));
-                                                                              },
-                                                                              child: Text(
-                                                                                columnAddItemLibraryRecord.name,
-                                                                                style: GoogleFonts.getFont(
-                                                                                  'Inter',
-                                                                                  fontWeight: FontWeight.bold,
-                                                                                  fontSize: 15.0,
-                                                                                ),
+                                                                                Text(
+                                                                              listItem.name,
+                                                                              style: GoogleFonts.getFont(
+                                                                                'Inter',
+                                                                                fontWeight: FontWeight.bold,
+                                                                                fontSize: 15.0,
                                                                               ),
                                                                             ),
                                                                           ),
@@ -543,43 +527,18 @@ class _StorageFoodWidgetState extends State<StorageFoodWidget> {
                                                                             child:
                                                                                 Align(
                                                                               alignment: AlignmentDirectional(1.0, 0.0),
-                                                                              child: InkWell(
-                                                                                splashColor: Colors.transparent,
-                                                                                focusColor: Colors.transparent,
-                                                                                hoverColor: Colors.transparent,
-                                                                                highlightColor: Colors.transparent,
-                                                                                onTap: () async {
-                                                                                  await showModalBottomSheet(
-                                                                                    isScrollControlled: true,
-                                                                                    backgroundColor: Colors.transparent,
-                                                                                    enableDrag: false,
-                                                                                    context: context,
-                                                                                    builder: (context) {
-                                                                                      return GestureDetector(
-                                                                                        onTap: () => _model.unfocusNode.canRequestFocus ? FocusScope.of(context).requestFocus(_model.unfocusNode) : FocusScope.of(context).unfocus(),
-                                                                                        child: Padding(
-                                                                                          padding: MediaQuery.viewInsetsOf(context),
-                                                                                          child: EditItemStorageFoodWidget(
-                                                                                            itemInLibrary: columnAddItemLibraryRecord,
-                                                                                          ),
-                                                                                        ),
-                                                                                      );
-                                                                                    },
-                                                                                  ).then((value) => safeSetState(() {}));
-                                                                                },
-                                                                                child: Text(
-                                                                                  '${formatNumber(
-                                                                                    columnAddItemLibraryRecord.quantity,
-                                                                                    formatType: FormatType.custom,
-                                                                                    format: '####.##',
-                                                                                    locale: '',
-                                                                                  )} ${columnAddItemLibraryRecord.unit}',
-                                                                                  style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                        fontFamily: 'Inter',
-                                                                                        fontSize: 15.0,
-                                                                                        letterSpacing: 0.0,
-                                                                                      ),
-                                                                                ),
+                                                                              child: Text(
+                                                                                '${formatNumber(
+                                                                                  listItem.count,
+                                                                                  formatType: FormatType.custom,
+                                                                                  format: '####.##',
+                                                                                  locale: '',
+                                                                                )} ${listItem.unit?.name}',
+                                                                                style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                      fontFamily: 'Inter',
+                                                                                      fontSize: 15.0,
+                                                                                      letterSpacing: 0.0,
+                                                                                    ),
                                                                               ),
                                                                             ),
                                                                           ),
@@ -605,445 +564,710 @@ class _StorageFoodWidgetState extends State<StorageFoodWidget> {
                                                                             alignment:
                                                                                 AlignmentDirectional(1.0, 0.0),
                                                                             child:
-                                                                                InkWell(
-                                                                              splashColor: Colors.transparent,
-                                                                              focusColor: Colors.transparent,
-                                                                              hoverColor: Colors.transparent,
-                                                                              highlightColor: Colors.transparent,
-                                                                              onTap: () async {
-                                                                                await showModalBottomSheet(
-                                                                                  isScrollControlled: true,
-                                                                                  backgroundColor: Colors.transparent,
-                                                                                  enableDrag: false,
-                                                                                  context: context,
-                                                                                  builder: (context) {
-                                                                                    return GestureDetector(
-                                                                                      onTap: () => _model.unfocusNode.canRequestFocus ? FocusScope.of(context).requestFocus(_model.unfocusNode) : FocusScope.of(context).unfocus(),
-                                                                                      child: Padding(
-                                                                                        padding: MediaQuery.viewInsetsOf(context),
-                                                                                        child: EditItemStorageFoodWidget(
-                                                                                          itemInLibrary: columnAddItemLibraryRecord,
-                                                                                        ),
-                                                                                      ),
-                                                                                    );
-                                                                                  },
-                                                                                ).then((value) => safeSetState(() {}));
-                                                                              },
-                                                                              child: Text(
-                                                                                columnAddItemLibraryRecord.endDate != null
-                                                                                    ? dateTimeFormat(
-                                                                                        'd.M',
-                                                                                        columnAddItemLibraryRecord.endDate!,
-                                                                                        locale: FFLocalizations.of(context).languageCode,
-                                                                                      )
-                                                                                    : '-',
-                                                                                style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                      fontFamily: 'Inter',
-                                                                                      fontSize: 15.0,
-                                                                                      letterSpacing: 0.0,
-                                                                                    ),
-                                                                              ),
+                                                                                Text(
+                                                                              listItem.endOfDate != null
+                                                                                  ? dateTimeFormat(
+                                                                                      "d.M",
+                                                                                      listItem.endOfDate!,
+                                                                                      locale: FFLocalizations.of(context).languageCode,
+                                                                                    )
+                                                                                  : '-',
+                                                                              style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                    fontFamily: 'Inter',
+                                                                                    fontSize: 15.0,
+                                                                                    letterSpacing: 0.0,
+                                                                                  ),
                                                                             ),
                                                                           ),
                                                                         ),
                                                                       ),
                                                                     ],
-                                                                  );
-                                                                }),
-                                                              );
-                                                            },
-                                                          ),
+                                                                  ),
+                                                                );
+                                                              }),
+                                                            );
+                                                          },
                                                         ),
                                                       ),
                                                     ),
                                                   ),
-                                              ],
+                                                ),
+                                              ].divide(SizedBox(height: 5.0)),
                                             ),
-                                          );
-                                        }),
+                                          ),
+                                        ),
                                       );
                                     },
                                   ),
-                                ),
-                                Align(
-                                  alignment: AlignmentDirectional(-1.0, 0.0),
-                                  child: Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 24.0, 0.0, 10.0),
-                                    child: InkWell(
-                                      splashColor: Colors.transparent,
-                                      focusColor: Colors.transparent,
-                                      hoverColor: Colors.transparent,
-                                      highlightColor: Colors.transparent,
-                                      onTap: () async {
-                                        if (_model.isAll) {
-                                          _model.isAll = false;
-                                          setState(() {});
-                                        } else {
-                                          _model.isAll = true;
-                                          setState(() {});
-                                        }
-                                      },
-                                      child: Text(
-                                        FFLocalizations.of(context).getText(
-                                          't5pdmn3v' /* All */,
-                                        ),
-                                        style: GoogleFonts.getFont(
-                                          'Inter',
-                                          color: Color(0xFF919191),
-                                          fontSize: 18.0,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                if (_model.isAll)
                                   Align(
-                                    alignment: AlignmentDirectional(0.0, -1.0),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: FlutterFlowTheme.of(context)
-                                            .secondaryBackground,
-                                        borderRadius:
-                                            BorderRadius.circular(16.0),
+                                    alignment: AlignmentDirectional(0.0, 0.0),
+                                    child: StreamBuilder<
+                                        List<HomeStuffCategoriesRecord>>(
+                                      stream: queryHomeStuffCategoriesRecord(
+                                        parent: FFAppState().currentUserRef,
+                                        queryBuilder:
+                                            (homeStuffCategoriesRecord) =>
+                                                homeStuffCategoriesRecord.where(
+                                          'stuffType',
+                                          isEqualTo:
+                                              HomeStuffEnum.food.serialize(),
+                                        ),
                                       ),
-                                      child: Align(
-                                        alignment:
-                                            AlignmentDirectional(0.0, 0.0),
-                                        child: Padding(
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  16.0, 0.0, 16.0, 0.0),
-                                          child: StreamBuilder<
-                                              List<AddItemLibraryRecord>>(
-                                            stream: queryAddItemLibraryRecord(
-                                              parent:
-                                                  FFAppState().currentUserRef,
-                                              queryBuilder:
-                                                  (addItemLibraryRecord) =>
-                                                      addItemLibraryRecord
-                                                          .orderBy('name'),
+                                      builder: (context, snapshot) {
+                                        // Customize what your widget looks like when it's loading.
+                                        if (!snapshot.hasData) {
+                                          return Center(
+                                            child: SizedBox(
+                                              width: 50.0,
+                                              height: 50.0,
+                                              child: CircularProgressIndicator(
+                                                valueColor:
+                                                    AlwaysStoppedAnimation<
+                                                        Color>(
+                                                  Color(0xFFF57F44),
+                                                ),
+                                              ),
                                             ),
-                                            builder: (context, snapshot) {
-                                              // Customize what your widget looks like when it's loading.
-                                              if (!snapshot.hasData) {
-                                                return Center(
-                                                  child: SizedBox(
-                                                    width: 50.0,
-                                                    height: 50.0,
-                                                    child:
-                                                        CircularProgressIndicator(
-                                                      valueColor:
-                                                          AlwaysStoppedAnimation<
-                                                              Color>(
-                                                        Color(0xFFF57F44),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                );
-                                              }
-                                              List<AddItemLibraryRecord>
-                                                  columnAddItemLibraryRecordList =
-                                                  snapshot.data!;
+                                          );
+                                        }
+                                        List<HomeStuffCategoriesRecord>
+                                            containerHomeStuffCategoriesRecordList =
+                                            snapshot.data!;
+
+                                        return Container(
+                                          decoration: BoxDecoration(),
+                                          child: Builder(
+                                            builder: (context) {
+                                              final categories =
+                                                  containerHomeStuffCategoriesRecordList
+                                                      .map((e) => e.name)
+                                                      .toList()
+                                                      .sortedList(
+                                                          keyOf: (e) => e,
+                                                          desc: false)
+                                                      .toList();
 
                                               return Column(
                                                 mainAxisSize: MainAxisSize.max,
                                                 children: List.generate(
-                                                    columnAddItemLibraryRecordList
-                                                        .length, (columnIndex) {
-                                                  final columnAddItemLibraryRecord =
-                                                      columnAddItemLibraryRecordList[
-                                                          columnIndex];
-                                                  return Row(
-                                                    mainAxisSize:
-                                                        MainAxisSize.max,
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      Padding(
-                                                        padding:
-                                                            EdgeInsetsDirectional
-                                                                .fromSTEB(
-                                                                    0.0,
-                                                                    16.0,
-                                                                    0.0,
-                                                                    16.0),
-                                                        child: Container(
-                                                          width: 140.0,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .secondaryBackground,
-                                                          ),
-                                                          child: Align(
-                                                            alignment:
-                                                                AlignmentDirectional(
-                                                                    -1.0, 0.0),
-                                                            child: InkWell(
-                                                              splashColor: Colors
-                                                                  .transparent,
-                                                              focusColor: Colors
-                                                                  .transparent,
-                                                              hoverColor: Colors
-                                                                  .transparent,
-                                                              highlightColor:
-                                                                  Colors
-                                                                      .transparent,
-                                                              onTap: () async {
-                                                                await showModalBottomSheet(
-                                                                  isScrollControlled:
-                                                                      true,
-                                                                  backgroundColor:
-                                                                      Colors
-                                                                          .transparent,
-                                                                  enableDrag:
-                                                                      false,
-                                                                  context:
-                                                                      context,
-                                                                  builder:
-                                                                      (context) {
-                                                                    return GestureDetector(
-                                                                      onTap: () => _model
-                                                                              .unfocusNode
-                                                                              .canRequestFocus
-                                                                          ? FocusScope.of(context).requestFocus(_model
-                                                                              .unfocusNode)
-                                                                          : FocusScope.of(context)
-                                                                              .unfocus(),
-                                                                      child:
-                                                                          Padding(
-                                                                        padding:
-                                                                            MediaQuery.viewInsetsOf(context),
-                                                                        child:
-                                                                            EditItemStorageFoodWidget(
-                                                                          itemInLibrary:
-                                                                              columnAddItemLibraryRecord,
-                                                                        ),
-                                                                      ),
-                                                                    );
-                                                                  },
-                                                                ).then((value) =>
-                                                                    safeSetState(
-                                                                        () {}));
-                                                              },
-                                                              child: Text(
-                                                                columnAddItemLibraryRecord
-                                                                    .name,
-                                                                style:
-                                                                    GoogleFonts
-                                                                        .getFont(
-                                                                  'Inter',
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  fontSize:
-                                                                      15.0,
-                                                                ),
+                                                    categories.length,
+                                                    (categoriesIndex) {
+                                                  final categoriesItem =
+                                                      categories[
+                                                          categoriesIndex];
+                                                  return StreamBuilder<
+                                                      List<StaffStorageRecord>>(
+                                                    stream:
+                                                        queryStaffStorageRecord(
+                                                      parent: FFAppState()
+                                                          .currentUserRef,
+                                                      queryBuilder:
+                                                          (staffStorageRecord) =>
+                                                              staffStorageRecord
+                                                                  .where(
+                                                                    'category',
+                                                                    isEqualTo:
+                                                                        categoriesItem,
+                                                                  )
+                                                                  .where(
+                                                                    'count',
+                                                                    isGreaterThan: functions
+                                                                        .toInt(
+                                                                            '0')
+                                                                        .toDouble(),
+                                                                  )
+                                                                  .where(
+                                                                    'staffCategoryType',
+                                                                    isEqualTo:
+                                                                        HomeStuffEnum
+                                                                            .food
+                                                                            .serialize(),
+                                                                  ),
+                                                    ),
+                                                    builder:
+                                                        (context, snapshot) {
+                                                      // Customize what your widget looks like when it's loading.
+                                                      if (!snapshot.hasData) {
+                                                        return Center(
+                                                          child: SizedBox(
+                                                            width: 50.0,
+                                                            height: 50.0,
+                                                            child:
+                                                                CircularProgressIndicator(
+                                                              valueColor:
+                                                                  AlwaysStoppedAnimation<
+                                                                      Color>(
+                                                                Color(
+                                                                    0xFFF57F44),
                                                               ),
                                                             ),
                                                           ),
+                                                        );
+                                                      }
+                                                      List<StaffStorageRecord>
+                                                          containerStaffStorageRecordList =
+                                                          snapshot.data!;
+
+                                                      return Container(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color:
+                                                              Color(0x00FFFFFF),
                                                         ),
-                                                      ),
-                                                      Expanded(
-                                                        child: Padding(
-                                                          padding:
-                                                              EdgeInsetsDirectional
-                                                                  .fromSTEB(
-                                                                      0.0,
-                                                                      16.0,
-                                                                      0.0,
-                                                                      16.0),
-                                                          child: Container(
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              color: FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .secondaryBackground,
-                                                            ),
-                                                            child: Align(
-                                                              alignment:
-                                                                  AlignmentDirectional(
-                                                                      1.0, 0.0),
-                                                              child: InkWell(
-                                                                splashColor: Colors
-                                                                    .transparent,
-                                                                focusColor: Colors
-                                                                    .transparent,
-                                                                hoverColor: Colors
-                                                                    .transparent,
-                                                                highlightColor:
-                                                                    Colors
-                                                                        .transparent,
-                                                                onTap:
-                                                                    () async {
-                                                                  await showModalBottomSheet(
-                                                                    isScrollControlled:
-                                                                        true,
-                                                                    backgroundColor:
+                                                        child: Visibility(
+                                                          visible:
+                                                              containerStaffStorageRecordList
+                                                                  .isNotEmpty,
+                                                          child: Column(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .max,
+                                                            children: [
+                                                              Align(
+                                                                alignment:
+                                                                    AlignmentDirectional(
+                                                                        -1.0,
+                                                                        0.0),
+                                                                child: Padding(
+                                                                  padding: EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          0.0,
+                                                                          24.0,
+                                                                          0.0,
+                                                                          10.0),
+                                                                  child:
+                                                                      InkWell(
+                                                                    splashColor:
                                                                         Colors
                                                                             .transparent,
-                                                                    enableDrag:
-                                                                        false,
-                                                                    context:
-                                                                        context,
-                                                                    builder:
-                                                                        (context) {
-                                                                      return GestureDetector(
-                                                                        onTap: () => _model.unfocusNode.canRequestFocus
-                                                                            ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-                                                                            : FocusScope.of(context).unfocus(),
-                                                                        child:
-                                                                            Padding(
-                                                                          padding:
-                                                                              MediaQuery.viewInsetsOf(context),
-                                                                          child:
-                                                                              EditItemStorageFoodWidget(
-                                                                            itemInLibrary:
-                                                                                columnAddItemLibraryRecord,
-                                                                          ),
-                                                                        ),
-                                                                      );
+                                                                    focusColor:
+                                                                        Colors
+                                                                            .transparent,
+                                                                    hoverColor:
+                                                                        Colors
+                                                                            .transparent,
+                                                                    highlightColor:
+                                                                        Colors
+                                                                            .transparent,
+                                                                    onTap:
+                                                                        () async {
+                                                                      if (_model
+                                                                          .categoriesIsOpened
+                                                                          .elementAtOrNull(
+                                                                              categoriesIndex)!) {
+                                                                        _model
+                                                                            .updateCategoriesIsOpenedAtIndex(
+                                                                          categoriesIndex,
+                                                                          (_) =>
+                                                                              false,
+                                                                        );
+                                                                        safeSetState(
+                                                                            () {});
+                                                                      } else {
+                                                                        _model
+                                                                            .updateCategoriesIsOpenedAtIndex(
+                                                                          categoriesIndex,
+                                                                          (_) =>
+                                                                              true,
+                                                                        );
+                                                                        safeSetState(
+                                                                            () {});
+                                                                      }
                                                                     },
-                                                                  ).then((value) =>
-                                                                      safeSetState(
-                                                                          () {}));
-                                                                },
-                                                                child: Text(
-                                                                  '${formatNumber(
-                                                                    columnAddItemLibraryRecord
-                                                                        .quantity,
-                                                                    formatType:
-                                                                        FormatType
-                                                                            .custom,
-                                                                    format:
-                                                                        '####.##',
-                                                                    locale: '',
-                                                                  )} ${columnAddItemLibraryRecord.unit}',
-                                                                  style: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .override(
-                                                                        fontFamily:
-                                                                            'Inter',
+                                                                    child: Text(
+                                                                      categoriesItem,
+                                                                      style: GoogleFonts
+                                                                          .getFont(
+                                                                        'Inter',
+                                                                        color: Color(
+                                                                            0xFF919191),
                                                                         fontSize:
-                                                                            15.0,
-                                                                        letterSpacing:
-                                                                            0.0,
+                                                                            18.0,
                                                                       ),
+                                                                    ),
+                                                                  ),
                                                                 ),
                                                               ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                            EdgeInsetsDirectional
-                                                                .fromSTEB(
-                                                                    0.0,
-                                                                    16.0,
-                                                                    0.0,
-                                                                    16.0),
-                                                        child: Container(
-                                                          width: 80.0,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .secondaryBackground,
-                                                          ),
-                                                          child: Align(
-                                                            alignment:
-                                                                AlignmentDirectional(
-                                                                    1.0, 0.0),
-                                                            child: InkWell(
-                                                              splashColor: Colors
-                                                                  .transparent,
-                                                              focusColor: Colors
-                                                                  .transparent,
-                                                              hoverColor: Colors
-                                                                  .transparent,
-                                                              highlightColor:
-                                                                  Colors
-                                                                      .transparent,
-                                                              onTap: () async {
-                                                                await showModalBottomSheet(
-                                                                  isScrollControlled:
-                                                                      true,
-                                                                  backgroundColor:
-                                                                      Colors
-                                                                          .transparent,
-                                                                  enableDrag:
-                                                                      false,
-                                                                  context:
-                                                                      context,
-                                                                  builder:
-                                                                      (context) {
-                                                                    return GestureDetector(
-                                                                      onTap: () => _model
-                                                                              .unfocusNode
-                                                                              .canRequestFocus
-                                                                          ? FocusScope.of(context).requestFocus(_model
-                                                                              .unfocusNode)
-                                                                          : FocusScope.of(context)
-                                                                              .unfocus(),
-                                                                      child:
-                                                                          Padding(
-                                                                        padding:
-                                                                            MediaQuery.viewInsetsOf(context),
-                                                                        child:
-                                                                            EditItemStorageFoodWidget(
-                                                                          itemInLibrary:
-                                                                              columnAddItemLibraryRecord,
-                                                                        ),
-                                                                      ),
-                                                                    );
-                                                                  },
-                                                                ).then((value) =>
-                                                                    safeSetState(
-                                                                        () {}));
-                                                              },
-                                                              child: Text(
-                                                                columnAddItemLibraryRecord
-                                                                            .endDate !=
-                                                                        null
-                                                                    ? dateTimeFormat(
-                                                                        'd.M',
-                                                                        columnAddItemLibraryRecord
-                                                                            .endDate!,
-                                                                        locale:
-                                                                            FFLocalizations.of(context).languageCode,
-                                                                      )
-                                                                    : '-',
-                                                                style: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .override(
-                                                                      fontFamily:
-                                                                          'Inter',
-                                                                      fontSize:
-                                                                          15.0,
-                                                                      letterSpacing:
+                                                              Align(
+                                                                alignment:
+                                                                    AlignmentDirectional(
+                                                                        0.0,
+                                                                        -1.0),
+                                                                child:
+                                                                    Container(
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    color: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .secondaryBackground,
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            16.0),
+                                                                  ),
+                                                                  child: Align(
+                                                                    alignment:
+                                                                        AlignmentDirectional(
+                                                                            0.0,
+                                                                            0.0),
+                                                                    child:
+                                                                        Padding(
+                                                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                                                          16.0,
                                                                           0.0,
+                                                                          16.0,
+                                                                          0.0),
+                                                                      child:
+                                                                          Builder(
+                                                                        builder:
+                                                                            (context) {
+                                                                          final list =
+                                                                              containerStaffStorageRecordList.toList();
+
+                                                                          return Column(
+                                                                            mainAxisSize:
+                                                                                MainAxisSize.max,
+                                                                            children:
+                                                                                List.generate(list.length, (listIndex) {
+                                                                              final listItem = list[listIndex];
+                                                                              return InkWell(
+                                                                                splashColor: Colors.transparent,
+                                                                                focusColor: Colors.transparent,
+                                                                                hoverColor: Colors.transparent,
+                                                                                highlightColor: Colors.transparent,
+                                                                                onTap: () async {
+                                                                                  await showModalBottomSheet(
+                                                                                    isScrollControlled: true,
+                                                                                    backgroundColor: Colors.transparent,
+                                                                                    enableDrag: false,
+                                                                                    context: context,
+                                                                                    builder: (context) {
+                                                                                      return GestureDetector(
+                                                                                        onTap: () {
+                                                                                          FocusScope.of(context).unfocus();
+                                                                                          FocusManager.instance.primaryFocus?.unfocus();
+                                                                                        },
+                                                                                        child: Padding(
+                                                                                          padding: MediaQuery.viewInsetsOf(context),
+                                                                                          child: AddStorageStuffWidget(
+                                                                                            stuff: listItem,
+                                                                                          ),
+                                                                                        ),
+                                                                                      );
+                                                                                    },
+                                                                                  ).then((value) => safeSetState(() {}));
+                                                                                },
+                                                                                child: Row(
+                                                                                  mainAxisSize: MainAxisSize.max,
+                                                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                                  children: [
+                                                                                    Padding(
+                                                                                      padding: EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 16.0),
+                                                                                      child: Container(
+                                                                                        width: 140.0,
+                                                                                        decoration: BoxDecoration(
+                                                                                          color: FlutterFlowTheme.of(context).secondaryBackground,
+                                                                                        ),
+                                                                                        child: Align(
+                                                                                          alignment: AlignmentDirectional(-1.0, 0.0),
+                                                                                          child: Text(
+                                                                                            listItem.name,
+                                                                                            style: GoogleFonts.getFont(
+                                                                                              'Inter',
+                                                                                              fontWeight: FontWeight.bold,
+                                                                                              fontSize: 15.0,
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                      ),
+                                                                                    ),
+                                                                                    Expanded(
+                                                                                      child: Padding(
+                                                                                        padding: EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 16.0),
+                                                                                        child: Container(
+                                                                                          decoration: BoxDecoration(
+                                                                                            color: FlutterFlowTheme.of(context).secondaryBackground,
+                                                                                          ),
+                                                                                          child: Align(
+                                                                                            alignment: AlignmentDirectional(1.0, 0.0),
+                                                                                            child: Text(
+                                                                                              '${formatNumber(
+                                                                                                listItem.count,
+                                                                                                formatType: FormatType.custom,
+                                                                                                format: '####.##',
+                                                                                                locale: '',
+                                                                                              )} ${listItem.unit?.name}',
+                                                                                              style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                    fontFamily: 'Inter',
+                                                                                                    fontSize: 15.0,
+                                                                                                    letterSpacing: 0.0,
+                                                                                                  ),
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                      ),
+                                                                                    ),
+                                                                                    Padding(
+                                                                                      padding: EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 16.0),
+                                                                                      child: Container(
+                                                                                        width: 80.0,
+                                                                                        decoration: BoxDecoration(
+                                                                                          color: FlutterFlowTheme.of(context).secondaryBackground,
+                                                                                        ),
+                                                                                        child: Align(
+                                                                                          alignment: AlignmentDirectional(1.0, 0.0),
+                                                                                          child: Text(
+                                                                                            listItem.endOfDate != null
+                                                                                                ? dateTimeFormat(
+                                                                                                    "d.M",
+                                                                                                    listItem.endOfDate!,
+                                                                                                    locale: FFLocalizations.of(context).languageCode,
+                                                                                                  )
+                                                                                                : '-',
+                                                                                            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                  fontFamily: 'Inter',
+                                                                                                  fontSize: 15.0,
+                                                                                                  letterSpacing: 0.0,
+                                                                                                ),
+                                                                                          ),
+                                                                                        ),
+                                                                                      ),
+                                                                                    ),
+                                                                                  ],
+                                                                                ),
+                                                                              );
+                                                                            }),
+                                                                          );
+                                                                        },
+                                                                      ),
                                                                     ),
+                                                                  ),
+                                                                ),
                                                               ),
-                                                            ),
+                                                            ],
                                                           ),
                                                         ),
-                                                      ),
-                                                    ],
+                                                      );
+                                                    },
                                                   );
                                                 }),
                                               );
                                             },
                                           ),
-                                        ),
-                                      ),
+                                        );
+                                      },
                                     ),
                                   ),
-                              ],
+                                  Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Align(
+                                        alignment:
+                                            AlignmentDirectional(-1.0, 0.0),
+                                        child: Padding(
+                                          padding:
+                                              EdgeInsetsDirectional.fromSTEB(
+                                                  0.0, 24.0, 0.0, 10.0),
+                                          child: InkWell(
+                                            splashColor: Colors.transparent,
+                                            focusColor: Colors.transparent,
+                                            hoverColor: Colors.transparent,
+                                            highlightColor: Colors.transparent,
+                                            onTap: () async {
+                                              if (_model.isAll) {
+                                                _model.isAll = false;
+                                                safeSetState(() {});
+                                              } else {
+                                                _model.isAll = true;
+                                                safeSetState(() {});
+                                              }
+                                            },
+                                            child: Text(
+                                              FFLocalizations.of(context)
+                                                  .getText(
+                                                't5pdmn3v' /* All */,
+                                              ),
+                                              style: GoogleFonts.getFont(
+                                                'Inter',
+                                                color: Color(0xFF919191),
+                                                fontSize: 18.0,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      if (_model.isAll)
+                                        Align(
+                                          alignment:
+                                              AlignmentDirectional(0.0, -1.0),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .secondaryBackground,
+                                              borderRadius:
+                                                  BorderRadius.circular(16.0),
+                                            ),
+                                            child: Align(
+                                              alignment: AlignmentDirectional(
+                                                  0.0, 0.0),
+                                              child: Padding(
+                                                padding: EdgeInsetsDirectional
+                                                    .fromSTEB(
+                                                        16.0, 0.0, 16.0, 0.0),
+                                                child: StreamBuilder<
+                                                    List<StaffStorageRecord>>(
+                                                  stream:
+                                                      queryStaffStorageRecord(
+                                                    parent: FFAppState()
+                                                        .currentUserRef,
+                                                    queryBuilder:
+                                                        (staffStorageRecord) =>
+                                                            staffStorageRecord
+                                                                .where(
+                                                                  'staffCategoryType',
+                                                                  isEqualTo:
+                                                                      HomeStuffEnum
+                                                                          .food
+                                                                          .serialize(),
+                                                                )
+                                                                .where(
+                                                                  'count',
+                                                                  isGreaterThan:
+                                                                      functions
+                                                                          .toInt(
+                                                                              '0')
+                                                                          .toDouble(),
+                                                                ),
+                                                  ),
+                                                  builder: (context, snapshot) {
+                                                    // Customize what your widget looks like when it's loading.
+                                                    if (!snapshot.hasData) {
+                                                      return Center(
+                                                        child: SizedBox(
+                                                          width: 50.0,
+                                                          height: 50.0,
+                                                          child:
+                                                              CircularProgressIndicator(
+                                                            valueColor:
+                                                                AlwaysStoppedAnimation<
+                                                                    Color>(
+                                                              Color(0xFFF57F44),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      );
+                                                    }
+                                                    List<StaffStorageRecord>
+                                                        columnStaffStorageRecordList =
+                                                        snapshot.data!;
+
+                                                    return Column(
+                                                      mainAxisSize:
+                                                          MainAxisSize.max,
+                                                      children: List.generate(
+                                                          columnStaffStorageRecordList
+                                                              .length,
+                                                          (columnIndex) {
+                                                        final columnStaffStorageRecord =
+                                                            columnStaffStorageRecordList[
+                                                                columnIndex];
+                                                        return InkWell(
+                                                          splashColor: Colors
+                                                              .transparent,
+                                                          focusColor: Colors
+                                                              .transparent,
+                                                          hoverColor: Colors
+                                                              .transparent,
+                                                          highlightColor: Colors
+                                                              .transparent,
+                                                          onTap: () async {
+                                                            await showModalBottomSheet(
+                                                              isScrollControlled:
+                                                                  true,
+                                                              backgroundColor:
+                                                                  Colors
+                                                                      .transparent,
+                                                              enableDrag: false,
+                                                              context: context,
+                                                              builder:
+                                                                  (context) {
+                                                                return GestureDetector(
+                                                                  onTap: () {
+                                                                    FocusScope.of(
+                                                                            context)
+                                                                        .unfocus();
+                                                                    FocusManager
+                                                                        .instance
+                                                                        .primaryFocus
+                                                                        ?.unfocus();
+                                                                  },
+                                                                  child:
+                                                                      Padding(
+                                                                    padding: MediaQuery
+                                                                        .viewInsetsOf(
+                                                                            context),
+                                                                    child:
+                                                                        AddStorageStuffWidget(
+                                                                      stuff:
+                                                                          columnStaffStorageRecord,
+                                                                    ),
+                                                                  ),
+                                                                );
+                                                              },
+                                                            ).then((value) =>
+                                                                safeSetState(
+                                                                    () {}));
+                                                          },
+                                                          child: Row(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .max,
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Padding(
+                                                                padding: EdgeInsetsDirectional
+                                                                    .fromSTEB(
+                                                                        0.0,
+                                                                        16.0,
+                                                                        0.0,
+                                                                        16.0),
+                                                                child:
+                                                                    Container(
+                                                                  width: 140.0,
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    color: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .secondaryBackground,
+                                                                  ),
+                                                                  child: Align(
+                                                                    alignment:
+                                                                        AlignmentDirectional(
+                                                                            -1.0,
+                                                                            0.0),
+                                                                    child: Text(
+                                                                      columnStaffStorageRecord
+                                                                          .name,
+                                                                      style: GoogleFonts
+                                                                          .getFont(
+                                                                        'Inter',
+                                                                        fontWeight:
+                                                                            FontWeight.bold,
+                                                                        fontSize:
+                                                                            15.0,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              Expanded(
+                                                                child: Padding(
+                                                                  padding: EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          0.0,
+                                                                          16.0,
+                                                                          0.0,
+                                                                          16.0),
+                                                                  child:
+                                                                      Container(
+                                                                    decoration:
+                                                                        BoxDecoration(
+                                                                      color: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .secondaryBackground,
+                                                                    ),
+                                                                    child:
+                                                                        Align(
+                                                                      alignment:
+                                                                          AlignmentDirectional(
+                                                                              1.0,
+                                                                              0.0),
+                                                                      child:
+                                                                          Text(
+                                                                        '${formatNumber(
+                                                                          columnStaffStorageRecord
+                                                                              .count,
+                                                                          formatType:
+                                                                              FormatType.custom,
+                                                                          format:
+                                                                              '####.##',
+                                                                          locale:
+                                                                              '',
+                                                                        )} ${columnStaffStorageRecord.unit?.name}',
+                                                                        style: FlutterFlowTheme.of(context)
+                                                                            .bodyMedium
+                                                                            .override(
+                                                                              fontFamily: 'Inter',
+                                                                              fontSize: 15.0,
+                                                                              letterSpacing: 0.0,
+                                                                            ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              Padding(
+                                                                padding: EdgeInsetsDirectional
+                                                                    .fromSTEB(
+                                                                        0.0,
+                                                                        16.0,
+                                                                        0.0,
+                                                                        16.0),
+                                                                child:
+                                                                    Container(
+                                                                  width: 80.0,
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    color: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .secondaryBackground,
+                                                                  ),
+                                                                  child: Align(
+                                                                    alignment:
+                                                                        AlignmentDirectional(
+                                                                            1.0,
+                                                                            0.0),
+                                                                    child: Text(
+                                                                      columnStaffStorageRecord.endOfDate !=
+                                                                              null
+                                                                          ? dateTimeFormat(
+                                                                              "d.M",
+                                                                              columnStaffStorageRecord.endOfDate!,
+                                                                              locale: FFLocalizations.of(context).languageCode,
+                                                                            )
+                                                                          : '-',
+                                                                      style: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .bodyMedium
+                                                                          .override(
+                                                                            fontFamily:
+                                                                                'Inter',
+                                                                            fontSize:
+                                                                                15.0,
+                                                                            letterSpacing:
+                                                                                0.0,
+                                                                          ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        );
+                                                      }),
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -1061,15 +1285,17 @@ class _StorageFoodWidgetState extends State<StorageFoodWidget> {
                                   context: context,
                                   builder: (context) {
                                     return GestureDetector(
-                                      onTap: () => _model
-                                              .unfocusNode.canRequestFocus
-                                          ? FocusScope.of(context)
-                                              .requestFocus(_model.unfocusNode)
-                                          : FocusScope.of(context).unfocus(),
+                                      onTap: () {
+                                        FocusScope.of(context).unfocus();
+                                        FocusManager.instance.primaryFocus
+                                            ?.unfocus();
+                                      },
                                       child: Padding(
                                         padding:
                                             MediaQuery.viewInsetsOf(context),
-                                        child: AddItemStorageFoodWidget(),
+                                        child: AddStorageStuffWidget(
+                                          stuffType: HomeStuffEnum.food,
+                                        ),
                                       ),
                                     );
                                   },

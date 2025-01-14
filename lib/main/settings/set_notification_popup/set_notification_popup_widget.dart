@@ -3,6 +3,7 @@ import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -74,7 +75,7 @@ class _SetNotificationPopupWidgetState
                 ),
                 Text(
                   FFLocalizations.of(context).getText(
-                    '2pffxn0y' /* Set notification time */,
+                    'h5vskndo' /* Оберіть час */,
                   ),
                   style: FlutterFlowTheme.of(context).bodyMedium.override(
                         fontFamily: 'Inter',
@@ -151,7 +152,7 @@ class _SetNotificationPopupWidgetState
                 },
                 text: valueOrDefault<String>(
                   dateTimeFormat(
-                    'Hm',
+                    "Hm",
                     _model.datePicked,
                     locale: FFLocalizations.of(context).languageCode,
                   ),
@@ -193,7 +194,7 @@ class _SetNotificationPopupWidgetState
                   Navigator.pop(context);
                 },
                 text: FFLocalizations.of(context).getText(
-                  'kmfyv7bv' /* Set notification time */,
+                  'kmfyv7bv' /* Обрати */,
                 ),
                 options: FFButtonOptions(
                   width: MediaQuery.sizeOf(context).width * 1.0,

@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 class CheckBoxModel extends FlutterFlowModel<CheckBoxWidget> {
   ///  Local state fields for this component.
 
-  bool setCheckBox = false;
+  bool checkBoxValue = false;
 
   @override
   void initState(BuildContext context) {}

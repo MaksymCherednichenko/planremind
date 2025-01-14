@@ -5,6 +5,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_video_player.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import 'dart:ui';
 import 'recipe_by_steps_page_widget.dart' show RecipeByStepsPageWidget;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_debounce/easy_debounce.dart';
@@ -33,7 +34,6 @@ class RecipeByStepsPageModel extends FlutterFlowModel<RecipeByStepsPageWidget> {
 
   ///  State fields for stateful widgets in this page.
 
-  final unfocusNode = FocusNode();
   // State field(s) for siteCheckbox widget.
   bool? siteCheckboxValue;
   // State field(s) for TextField widget.
@@ -57,7 +57,6 @@ class RecipeByStepsPageModel extends FlutterFlowModel<RecipeByStepsPageWidget> {
 
   @override
   void dispose() {
-    unfocusNode.dispose();
     textFieldFocusNode1?.dispose();
     textController1?.dispose();
 

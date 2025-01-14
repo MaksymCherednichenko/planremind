@@ -1,9 +1,9 @@
-import '/backend/backend.dart';
 import '/backend/schema/enums/enums.dart';
 import '/backend/schema/structs/index.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import 'dart:ui';
 import '/actions/actions.dart' as action_blocks;
 import '/flutter_flow/custom_functions.dart' as functions;
 import 'settings_modules_widget.dart' show SettingsModulesWidget;
@@ -19,7 +19,6 @@ class SettingsModulesModel extends FlutterFlowModel<SettingsModulesWidget> {
 
   ///  State fields for stateful widgets in this page.
 
-  final unfocusNode = FocusNode();
   // State field(s) for Switch widget.
   bool? switchValue1;
   // Stores action output result for [Action Block - updateModuleState] action in Switch widget.
@@ -49,7 +48,5 @@ class SettingsModulesModel extends FlutterFlowModel<SettingsModulesWidget> {
   void initState(BuildContext context) {}
 
   @override
-  void dispose() {
-    unfocusNode.dispose();
-  }
+  void dispose() {}
 }

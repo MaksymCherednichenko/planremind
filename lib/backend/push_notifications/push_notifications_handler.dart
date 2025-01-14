@@ -3,10 +3,11 @@ import 'dart:convert';
 
 import 'serialization_util.dart';
 import '../backend.dart';
-import '../../flutter_flow/flutter_flow_theme.dart';
+import '/flutter_flow/flutter_flow_theme.dart';
 import '../../flutter_flow/flutter_flow_util.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 import '../../index.dart';
 import '../../main.dart';
@@ -45,9 +46,7 @@ class _PushNotificationsHandlerState extends State<PushNotificationsHandler> {
     }
     _handledMessageIds.add(message.messageId);
 
-    if (mounted) {
-      setState(() => _loading = true);
-    }
+    safeSetState(() => _loading = true);
     try {
       final initialPageName = message.data['initialPageName'] as String;
       final initialParameterData = getInitialParameterData(message.data);
@@ -63,16 +62,16 @@ class _PushNotificationsHandlerState extends State<PushNotificationsHandler> {
     } catch (e) {
       print('Error: $e');
     } finally {
-      if (mounted) {
-        setState(() => _loading = false);
-      }
+      safeSetState(() => _loading = false);
     }
   }
 
   @override
   void initState() {
     super.initState();
-    handleOpenedPushNotification();
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      handleOpenedPushNotification();
+    });
   }
 
   @override
@@ -80,7 +79,7 @@ class _PushNotificationsHandlerState extends State<PushNotificationsHandler> {
       ? Container(
           color: Colors.transparent,
           child: Image.asset(
-            'assets/images/ezgif.com-video-to-gif-converter.gif',
+            'assets/images/4-ezgif.com-video-to-gif-converter-2.gif',
             fit: BoxFit.cover,
           ),
         )
@@ -110,16 +109,13 @@ final parametersBuilderMap =
     <String, Future<ParameterData> Function(Map<String, dynamic>)>{
   'Settings': ParameterData.none(),
   'LoginPage': ParameterData.none(),
-  'HubPage': ParameterData.none(),
-  'HomePlannerPage': ParameterData.none(),
-  'AddMealForPlannerPage': (data) async => ParameterData(
+  'HubPage': (data) async => ParameterData(
         allParams: {
-          'listOfDishesRef':
-              getParameter<DocumentReference>(data, 'listOfDishesRef'),
+          'startGuide': getParameter<bool>(data, 'startGuide'),
         },
       ),
+  'HomePlannerPage': ParameterData.none(),
   'HomeShoppingHistory': ParameterData.none(),
-  'HomeShoppingActual': ParameterData.none(),
   'Settings_Notifications': ParameterData.none(),
   'Settings_Storage_HouseholdCategories': ParameterData.none(),
   'Household': ParameterData.none(),
@@ -131,18 +127,6 @@ final parametersBuilderMap =
   'StorageFood': ParameterData.none(),
   'Settings_help_center': ParameterData.none(),
   'SettingsShops': ParameterData.none(),
-  'Menu': ParameterData.none(),
-  'CreateItemInMenu': (data) async => ParameterData(
-        allParams: {
-          'newItemInMenu':
-              getParameter<DocumentReference>(data, 'newItemInMenu'),
-        },
-      ),
-  'MenuAddToPlan': (data) async => ParameterData(
-        allParams: {
-          'itemInMenu': getParameter<DocumentReference>(data, 'itemInMenu'),
-        },
-      ),
   'WellcomePageOld': ParameterData.none(),
   'SetCategoriesFood': (data) async => ParameterData(
         allParams: {
@@ -191,12 +175,6 @@ final parametersBuilderMap =
   'CarServicePlannerPage': ParameterData.none(),
   'CarServiceHistoryPage': ParameterData.none(),
   'CarServiceInformationPage': ParameterData.none(),
-  'MyCarPage': (data) async => ParameterData(
-        allParams: {
-          'car': await getDocumentParameter<CarsRecord>(
-              data, 'car', CarsRecord.fromSnapshot),
-        },
-      ),
   'SparePartsPage': (data) async => ParameterData(
         allParams: {
           'car': await getDocumentParameter<CarsRecord>(
@@ -207,10 +185,9 @@ final parametersBuilderMap =
   'HealthPlannerPage': ParameterData.none(),
   'PetsPlannerPage': ParameterData.none(),
   'SportsPlannerPage': ParameterData.none(),
-  'MyPlantsPageGrid': ParameterData.none(),
   'MyPlantsPageList': ParameterData.none(),
-  'HealthHistoryPage': ParameterData.none(),
-  'HealthInformationPage': ParameterData.none(),
+  'HealthHistoryPageEvents': ParameterData.none(),
+  'AllMedicationPage': ParameterData.none(),
   'WellcomePage': ParameterData.none(),
   'WellcomePageModules': (data) async => ParameterData(
         allParams: {
@@ -219,7 +196,26 @@ final parametersBuilderMap =
         },
       ),
   'SettingsModules': ParameterData.none(),
-  'HomeShoppingActualCopy': ParameterData.none(),
+  'HomeShoppingActual': ParameterData.none(),
+  'TodayMedicationPage': ParameterData.none(),
+  'recipe': (data) async => ParameterData(
+        allParams: {
+          'dishDoc': await getDocumentParameter<ListOfDishesRecord>(
+              data, 'dishDoc', ListOfDishesRecord.fromSnapshot),
+          'name': getParameter<String>(data, 'name'),
+          'addToPlanner': getParameter<bool>(data, 'addToPlanner'),
+        },
+      ),
+  'HealthHistoryPageMedications': ParameterData.none(),
+  'PetsHistoryPage': ParameterData.none(),
+  'PetsPetPage': ParameterData.none(),
+  'SportsHistoryPage': ParameterData.none(),
+  'addNewMeal': (data) async => ParameterData(
+        allParams: {
+          'tag': getParameter<int>(data, 'tag'),
+        },
+      ),
+  'AccountSettings': ParameterData.none(),
 };
 
 Map<String, dynamic> getInitialParameterData(Map<String, dynamic> data) {

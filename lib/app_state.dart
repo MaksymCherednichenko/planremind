@@ -73,6 +73,25 @@ class FFAppState extends ChangeNotifier {
       _setUserUnits =
           await secureStorage.getString('ff_setUserUnits') ?? _setUserUnits;
     });
+    await _safeInitAsync(() async {
+      _isPlantsGridView = await secureStorage.getBool('ff_isPlantsGridView') ??
+          _isPlantsGridView;
+    });
+    await _safeInitAsync(() async {
+      _isPetsGridView =
+          await secureStorage.getBool('ff_isPetsGridView') ?? _isPetsGridView;
+    });
+    await _safeInitAsync(() async {
+      _unitSystem = await secureStorage.read(key: 'ff_unitSystem') != null
+          ? deserializeEnum<UnitSystemsEnum>(
+              (await secureStorage.getString('ff_unitSystem')))
+          : _unitSystem;
+    });
+    await _safeInitAsync(() async {
+      _TodayPlannerNotificationHour =
+          await secureStorage.getInt('ff_TodayPlannerNotificationHour') ??
+              _TodayPlannerNotificationHour;
+    });
   }
 
   void update(VoidCallback callback) {
@@ -614,6 +633,64 @@ class FFAppState extends ChangeNotifier {
 
   void deleteSetUserUnits() {
     secureStorage.delete(key: 'ff_setUserUnits');
+  }
+
+  bool _isPlantsGridView = false;
+  bool get isPlantsGridView => _isPlantsGridView;
+  set isPlantsGridView(bool value) {
+    _isPlantsGridView = value;
+    secureStorage.setBool('ff_isPlantsGridView', value);
+  }
+
+  void deleteIsPlantsGridView() {
+    secureStorage.delete(key: 'ff_isPlantsGridView');
+  }
+
+  int _CustomNumberPickerState = 0;
+  int get CustomNumberPickerState => _CustomNumberPickerState;
+  set CustomNumberPickerState(int value) {
+    _CustomNumberPickerState = value;
+  }
+
+  DateTime? _weekPickerState;
+  DateTime? get weekPickerState => _weekPickerState;
+  set weekPickerState(DateTime? value) {
+    _weekPickerState = value;
+  }
+
+  bool _isPetsGridView = false;
+  bool get isPetsGridView => _isPetsGridView;
+  set isPetsGridView(bool value) {
+    _isPetsGridView = value;
+    secureStorage.setBool('ff_isPetsGridView', value);
+  }
+
+  void deleteIsPetsGridView() {
+    secureStorage.delete(key: 'ff_isPetsGridView');
+  }
+
+  UnitSystemsEnum? _unitSystem = UnitSystemsEnum.imperial;
+  UnitSystemsEnum? get unitSystem => _unitSystem;
+  set unitSystem(UnitSystemsEnum? value) {
+    _unitSystem = value;
+    value != null
+        ? secureStorage.setString('ff_unitSystem', value.serialize())
+        : secureStorage.remove('ff_unitSystem');
+  }
+
+  void deleteUnitSystem() {
+    secureStorage.delete(key: 'ff_unitSystem');
+  }
+
+  int _TodayPlannerNotificationHour = 13;
+  int get TodayPlannerNotificationHour => _TodayPlannerNotificationHour;
+  set TodayPlannerNotificationHour(int value) {
+    _TodayPlannerNotificationHour = value;
+    secureStorage.setInt('ff_TodayPlannerNotificationHour', value);
+  }
+
+  void deleteTodayPlannerNotificationHour() {
+    secureStorage.delete(key: 'ff_TodayPlannerNotificationHour');
   }
 }
 

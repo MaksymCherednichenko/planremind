@@ -3,6 +3,7 @@ import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -47,7 +48,7 @@ class _EditCategoryHouseholdWidgetState
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       _model.itemList =
           widget!.settings!.categoryHousehold.toList().cast<String>();
-      setState(() {});
+      safeSetState(() {});
     });
 
     _model.textController ??= TextEditingController(text: widget!.item);
@@ -72,7 +73,7 @@ class _EditCategoryHouseholdWidgetState
           maxWidth: 700.0,
         ),
         decoration: BoxDecoration(
-          color: Color(0xFFF5F5F5),
+          color: FlutterFlowTheme.of(context).primaryBackground,
           boxShadow: [
             BoxShadow(
               blurRadius: 4.0,
@@ -104,12 +105,13 @@ class _EditCategoryHouseholdWidgetState
                   Flexible(
                     child: Text(
                       FFLocalizations.of(context).getText(
-                        'ufjok3cw' /* Edit Category */,
+                        'ufjok3cw' /* Редагувати */,
                       ),
                       style: FlutterFlowTheme.of(context).bodyMedium.override(
                             fontFamily: 'Inter',
-                            fontSize: 18.0,
+                            fontSize: 20.0,
                             letterSpacing: 0.0,
+                            fontWeight: FontWeight.w500,
                           ),
                     ),
                   ),
@@ -123,7 +125,7 @@ class _EditCategoryHouseholdWidgetState
                     },
                     child: Icon(
                       FFIcons.kclose,
-                      color: Color(0xFF0E0505),
+                      color: FlutterFlowTheme.of(context).primaryText,
                       size: 24.0,
                     ),
                   ),
@@ -141,7 +143,7 @@ class _EditCategoryHouseholdWidgetState
                       obscureText: false,
                       decoration: InputDecoration(
                         labelText: FFLocalizations.of(context).getText(
-                          'k34ja92m' /* Name */,
+                          'k34ja92m' /*  */,
                         ),
                         labelStyle:
                             FlutterFlowTheme.of(context).labelMedium.override(
@@ -161,35 +163,40 @@ class _EditCategoryHouseholdWidgetState
                             color: Color(0xFFE4E4E4),
                             width: 2.0,
                           ),
-                          borderRadius: BorderRadius.circular(15.0),
+                          borderRadius: BorderRadius.circular(13.0),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                             color: Color(0xFFE4E4E4),
                             width: 2.0,
                           ),
-                          borderRadius: BorderRadius.circular(15.0),
+                          borderRadius: BorderRadius.circular(13.0),
                         ),
                         errorBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                             color: FlutterFlowTheme.of(context).error,
                             width: 2.0,
                           ),
-                          borderRadius: BorderRadius.circular(15.0),
+                          borderRadius: BorderRadius.circular(13.0),
                         ),
                         focusedErrorBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                             color: FlutterFlowTheme.of(context).error,
                             width: 2.0,
                           ),
-                          borderRadius: BorderRadius.circular(15.0),
+                          borderRadius: BorderRadius.circular(13.0),
                         ),
+                        filled: true,
+                        fillColor:
+                            FlutterFlowTheme.of(context).secondaryBackground,
                         contentPadding:
                             EdgeInsetsDirectional.fromSTEB(15.0, 0.0, 0.0, 0.0),
                       ),
                       style: FlutterFlowTheme.of(context).bodyMedium.override(
                             fontFamily: 'Inter',
+                            fontSize: 16.0,
                             letterSpacing: 0.0,
+                            fontWeight: FontWeight.w500,
                           ),
                       validator:
                           _model.textControllerValidator.asValidator(context),
@@ -217,7 +224,7 @@ class _EditCategoryHouseholdWidgetState
                               widget!.itemIndex!,
                               (_) => _model.textController.text,
                             );
-                            setState(() {});
+                            safeSetState(() {});
 
                             await widget!.settings!.reference.update({
                               ...mapToFirestore(
@@ -228,12 +235,12 @@ class _EditCategoryHouseholdWidgetState
                             });
                           },
                           text: FFLocalizations.of(context).getText(
-                            'ncg0dyvh' /* Save */,
+                            'ncg0dyvh' /* Зберегти */,
                           ),
                           options: FFButtonOptions(
                             width: MediaQuery.sizeOf(context).width * 1.0,
-                            height: 54.0,
-                            padding: EdgeInsets.all(24.0),
+                            height: 48.0,
+                            padding: EdgeInsets.all(0.0),
                             iconPadding: EdgeInsetsDirectional.fromSTEB(
                                 0.0, 0.0, 0.0, 0.0),
                             color: Color(0xFFF57F44),
@@ -243,13 +250,14 @@ class _EditCategoryHouseholdWidgetState
                                   fontFamily: 'Inter',
                                   color: Colors.white,
                                   letterSpacing: 0.0,
+                                  fontWeight: FontWeight.w500,
                                 ),
                             elevation: 0.0,
                             borderSide: BorderSide(
                               color: Colors.transparent,
                               width: 1.0,
                             ),
-                            borderRadius: BorderRadius.circular(16.0),
+                            borderRadius: BorderRadius.circular(12.0),
                           ),
                         ),
                       ),
@@ -263,7 +271,7 @@ class _EditCategoryHouseholdWidgetState
                             Navigator.pop(context);
                             _model
                                 .removeAtIndexFromItemList(widget!.itemIndex!);
-                            setState(() {});
+                            safeSetState(() {});
 
                             await widget!.settings!.reference.update({
                               ...mapToFirestore(
@@ -274,12 +282,12 @@ class _EditCategoryHouseholdWidgetState
                             });
                           },
                           text: FFLocalizations.of(context).getText(
-                            'g3u98kbj' /* Delete */,
+                            'g3u98kbj' /* Видалити */,
                           ),
                           options: FFButtonOptions(
                             width: MediaQuery.sizeOf(context).width * 1.0,
-                            height: 54.0,
-                            padding: EdgeInsets.all(24.0),
+                            height: 48.0,
+                            padding: EdgeInsets.all(0.0),
                             iconPadding: EdgeInsetsDirectional.fromSTEB(
                                 0.0, 0.0, 0.0, 0.0),
                             color: Color(0xFFF54444),
@@ -295,7 +303,7 @@ class _EditCategoryHouseholdWidgetState
                               color: Colors.transparent,
                               width: 1.0,
                             ),
-                            borderRadius: BorderRadius.circular(16.0),
+                            borderRadius: BorderRadius.circular(12.0),
                           ),
                         ),
                       ),

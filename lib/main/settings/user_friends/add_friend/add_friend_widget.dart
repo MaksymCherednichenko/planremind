@@ -4,6 +4,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/main/settings/user_friends/not_found_friend/not_found_friend_widget.dart';
+import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -147,7 +148,9 @@ class _AddFriendWidgetState extends State<AddFriendWidget> {
                   ),
                   style: FlutterFlowTheme.of(context).bodyMedium.override(
                         fontFamily: 'Inter',
+                        fontSize: 16.0,
                         letterSpacing: 0.0,
+                        fontWeight: FontWeight.w500,
                       ),
                   keyboardType: TextInputType.number,
                   validator:
@@ -216,7 +219,9 @@ class _AddFriendWidgetState extends State<AddFriendWidget> {
                   ),
                   style: FlutterFlowTheme.of(context).bodyMedium.override(
                         fontFamily: 'Inter',
+                        fontSize: 16.0,
                         letterSpacing: 0.0,
+                        fontWeight: FontWeight.w500,
                       ),
                   validator:
                       _model.textController2Validator.asValidator(context),
@@ -283,7 +288,7 @@ class _AddFriendWidgetState extends State<AddFriendWidget> {
 
                         Navigator.pop(context);
 
-                        setState(() {});
+                        safeSetState(() {});
                       },
                       text: FFLocalizations.of(context).getText(
                         'os2rfidm' /* Зберегти */,

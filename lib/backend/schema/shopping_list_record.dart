@@ -27,35 +27,58 @@ class ShoppingListRecord extends FirestoreRecord {
   String get shopName => _shopName ?? '';
   bool hasShopName() => _shopName != null;
 
-  // "unit" field.
-  String? _unit;
-  String get unit => _unit ?? '';
-  bool hasUnit() => _unit != null;
-
   // "quantity" field.
   double? _quantity;
   double get quantity => _quantity ?? 0.0;
   bool hasQuantity() => _quantity != null;
-
-  // "bought" field.
-  bool? _bought;
-  bool get bought => _bought ?? false;
-  bool hasBought() => _bought != null;
 
   // "categoryTag" field.
   String? _categoryTag;
   String get categoryTag => _categoryTag ?? '';
   bool hasCategoryTag() => _categoryTag != null;
 
+  // "categoryFoodOrHousehold" field.
+  String? _categoryFoodOrHousehold;
+  String get categoryFoodOrHousehold => _categoryFoodOrHousehold ?? '';
+  bool hasCategoryFoodOrHousehold() => _categoryFoodOrHousehold != null;
+
+  // "unit" field.
+  UnitsEnum? _unit;
+  UnitsEnum? get unit => _unit;
+  bool hasUnit() => _unit != null;
+
+  // "isBought" field.
+  bool? _isBought;
+  bool get isBought => _isBought ?? false;
+  bool hasIsBought() => _isBought != null;
+
+  // "dateOfBuy" field.
+  DateTime? _dateOfBuy;
+  DateTime? get dateOfBuy => _dateOfBuy;
+  bool hasDateOfBuy() => _dateOfBuy != null;
+
+  // "staffCategory" field.
+  HomeStuffEnum? _staffCategory;
+  HomeStuffEnum? get staffCategory => _staffCategory;
+  bool hasStaffCategory() => _staffCategory != null;
+
   DocumentReference get parentReference => reference.parent.parent!;
 
   void _initializeFields() {
     _name = snapshotData['name'] as String?;
     _shopName = snapshotData['shop_name'] as String?;
-    _unit = snapshotData['unit'] as String?;
     _quantity = castToType<double>(snapshotData['quantity']);
-    _bought = snapshotData['bought'] as bool?;
     _categoryTag = snapshotData['categoryTag'] as String?;
+    _categoryFoodOrHousehold =
+        snapshotData['categoryFoodOrHousehold'] as String?;
+    _unit = snapshotData['unit'] is UnitsEnum
+        ? snapshotData['unit']
+        : deserializeEnum<UnitsEnum>(snapshotData['unit']);
+    _isBought = snapshotData['isBought'] as bool?;
+    _dateOfBuy = snapshotData['dateOfBuy'] as DateTime?;
+    _staffCategory = snapshotData['staffCategory'] is HomeStuffEnum
+        ? snapshotData['staffCategory']
+        : deserializeEnum<HomeStuffEnum>(snapshotData['staffCategory']);
   }
 
   static Query<Map<String, dynamic>> collection([DocumentReference? parent]) =>
@@ -100,19 +123,25 @@ class ShoppingListRecord extends FirestoreRecord {
 Map<String, dynamic> createShoppingListRecordData({
   String? name,
   String? shopName,
-  String? unit,
   double? quantity,
-  bool? bought,
   String? categoryTag,
+  String? categoryFoodOrHousehold,
+  UnitsEnum? unit,
+  bool? isBought,
+  DateTime? dateOfBuy,
+  HomeStuffEnum? staffCategory,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
       'name': name,
       'shop_name': shopName,
-      'unit': unit,
       'quantity': quantity,
-      'bought': bought,
       'categoryTag': categoryTag,
+      'categoryFoodOrHousehold': categoryFoodOrHousehold,
+      'unit': unit,
+      'isBought': isBought,
+      'dateOfBuy': dateOfBuy,
+      'staffCategory': staffCategory,
     }.withoutNulls,
   );
 
@@ -127,15 +156,27 @@ class ShoppingListRecordDocumentEquality
   bool equals(ShoppingListRecord? e1, ShoppingListRecord? e2) {
     return e1?.name == e2?.name &&
         e1?.shopName == e2?.shopName &&
-        e1?.unit == e2?.unit &&
         e1?.quantity == e2?.quantity &&
-        e1?.bought == e2?.bought &&
-        e1?.categoryTag == e2?.categoryTag;
+        e1?.categoryTag == e2?.categoryTag &&
+        e1?.categoryFoodOrHousehold == e2?.categoryFoodOrHousehold &&
+        e1?.unit == e2?.unit &&
+        e1?.isBought == e2?.isBought &&
+        e1?.dateOfBuy == e2?.dateOfBuy &&
+        e1?.staffCategory == e2?.staffCategory;
   }
 
   @override
-  int hash(ShoppingListRecord? e) => const ListEquality().hash(
-      [e?.name, e?.shopName, e?.unit, e?.quantity, e?.bought, e?.categoryTag]);
+  int hash(ShoppingListRecord? e) => const ListEquality().hash([
+        e?.name,
+        e?.shopName,
+        e?.quantity,
+        e?.categoryTag,
+        e?.categoryFoodOrHousehold,
+        e?.unit,
+        e?.isBought,
+        e?.dateOfBuy,
+        e?.staffCategory
+      ]);
 
   @override
   bool isValidKey(Object? o) => o is ShoppingListRecord;

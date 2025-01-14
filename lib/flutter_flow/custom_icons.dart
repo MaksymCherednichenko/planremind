@@ -5,6 +5,7 @@ class FFIcons {
 
   static const String _icomoonFamily = 'Icomoon';
   static const String _mealsFamily = 'Meals';
+  static const String _plantsIconsFamily = 'PlantsIcons';
 
   // icomoon
   static const IconData kboltGrey =
@@ -71,4 +72,12 @@ class FFIcons {
       IconData(0xe903, fontFamily: _mealsFamily);
   static const IconData ksalad2515150 =
       IconData(0xe904, fontFamily: _mealsFamily);
+
+  // plantsIcons
+  static const IconData kwateringCanAndPlantsBlackOutline19370 =
+      IconData(0xe900, fontFamily: _plantsIconsFamily);
+  static const IconData kseedingBlackOutline19388 =
+      IconData(0xe901, fontFamily: _plantsIconsFamily);
+  static const IconData kthermometer1829 =
+      IconData(0xe902, fontFamily: _plantsIconsFamily);
 }

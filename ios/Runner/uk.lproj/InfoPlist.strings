@@ -1,1 +1,4 @@
-PermissionGroupNotification = "Can we send you notifications?";
+NSCameraUsageDescription = "Для того щоб сфотографувати щось, цей додаток потребує доступ до камери";
+NSPhotoLibraryUsageDescription = "Для того щоб додати фото, цей додаток потребує доступу до бібліотеки ";
+PermissionGroupNotification = "Чи можемо ми відправляти Вам сповіщення ? ";
+BGTaskSchedulerPermittedIdentifiers = "backgroundNotificationPermissions";

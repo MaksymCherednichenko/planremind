@@ -5,6 +5,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/main/settings/edit_shop/edit_shop_widget.dart';
+import 'dart:ui';
 import 'settings_shops_widget.dart' show SettingsShopsWidget;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +16,6 @@ import 'package:provider/provider.dart';
 class SettingsShopsModel extends FlutterFlowModel<SettingsShopsWidget> {
   ///  State fields for stateful widgets in this page.
 
-  final unfocusNode = FocusNode();
   // Model for appBar component.
   late AppBarModel appBarModel;
   // State field(s) for TextField widget.
@@ -30,7 +30,6 @@ class SettingsShopsModel extends FlutterFlowModel<SettingsShopsWidget> {
 
   @override
   void dispose() {
-    unfocusNode.dispose();
     appBarModel.dispose();
     textFieldFocusNode?.dispose();
     textController?.dispose();

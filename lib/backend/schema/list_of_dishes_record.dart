@@ -22,11 +22,6 @@ class ListOfDishesRecord extends FirestoreRecord {
   String get tag => _tag ?? '';
   bool hasTag() => _tag != null;
 
-  // "date" field.
-  DateTime? _date;
-  DateTime? get date => _date;
-  bool hasDate() => _date != null;
-
   // "name" field.
   String? _name;
   String get name => _name ?? '';
@@ -59,7 +54,6 @@ class ListOfDishesRecord extends FirestoreRecord {
 
   void _initializeFields() {
     _tag = snapshotData['tag'] as String?;
-    _date = snapshotData['date'] as DateTime?;
     _name = snapshotData['name'] as String?;
     _userID = snapshotData['userID'] as String?;
     _recipe = getDataList(snapshotData['recipe']);
@@ -104,7 +98,6 @@ class ListOfDishesRecord extends FirestoreRecord {
 
 Map<String, dynamic> createListOfDishesRecordData({
   String? tag,
-  DateTime? date,
   String? name,
   String? userID,
   String? recipeFull,
@@ -114,7 +107,6 @@ Map<String, dynamic> createListOfDishesRecordData({
   final firestoreData = mapToFirestore(
     <String, dynamic>{
       'tag': tag,
-      'date': date,
       'name': name,
       'userID': userID,
       'recipeFull': recipeFull,
@@ -134,7 +126,6 @@ class ListOfDishesRecordDocumentEquality
   bool equals(ListOfDishesRecord? e1, ListOfDishesRecord? e2) {
     const listEquality = ListEquality();
     return e1?.tag == e2?.tag &&
-        e1?.date == e2?.date &&
         e1?.name == e2?.name &&
         e1?.userID == e2?.userID &&
         listEquality.equals(e1?.recipe, e2?.recipe) &&
@@ -146,7 +137,6 @@ class ListOfDishesRecordDocumentEquality
   @override
   int hash(ListOfDishesRecord? e) => const ListEquality().hash([
         e?.tag,
-        e?.date,
         e?.name,
         e?.userID,
         e?.recipe,

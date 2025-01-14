@@ -1,53 +1,21 @@
 {
   "indexes": [
     {
-      "collectionGroup": "upcomingData",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "userID",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "date",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "historyShoppingList",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "userID",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "date",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
       "collectionGroup": "Shopping_List",
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "categoryTag",
+          "fieldPath": "isBought",
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "quantity",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "shop_name",
+          "fieldPath": "dateOfBuy",
           "order": "ASCENDING"
         }
       ]
     },
     {
-      "collectionGroup": "Add_Item_Household",
+      "collectionGroup": "staffStorage",
       "queryScope": "COLLECTION",
       "fields": [
         {
@@ -55,21 +23,39 @@
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "quantity",
+          "fieldPath": "staffCategoryType",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "count",
           "order": "ASCENDING"
         }
       ]
     },
     {
-      "collectionGroup": "Add_Item_Library",
+      "collectionGroup": "staffStorage",
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "category",
+          "fieldPath": "staffCategoryType",
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "quantity",
+          "fieldPath": "count",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "staffStorage",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "staffCategoryType",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "endOfDate",
           "order": "ASCENDING"
         }
       ]
@@ -105,40 +91,22 @@
           "order": "ASCENDING"
         }
       ]
-    },
-    {
-      "collectionGroup": "carServiceScheduledDate",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "userID",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "date",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "carServiceScheduledDate",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "userID",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "date",
-          "order": "ASCENDING"
-        }
-      ]
     }
   ],
   "fieldOverrides": [
     {
       "collectionGroup": "fcm_tokens",
       "fieldPath": "fcm_token",
+      "indexes": [
+        {
+          "order": "ASCENDING",
+          "queryScope": "COLLECTION_GROUP"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "healthEventArchive",
+      "fieldPath": "eventReference",
       "indexes": [
         {
           "order": "ASCENDING",

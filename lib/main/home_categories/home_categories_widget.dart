@@ -3,6 +3,7 @@ import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import 'dart:ui';
 import '/custom_code/actions/index.dart' as actions;
 import '/flutter_flow/custom_functions.dart' as functions;
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -37,7 +38,7 @@ class _HomeCategoriesWidgetState extends State<HomeCategoriesWidget> {
       FFAppState().userID = currentUserUid;
       FFAppState().curentMonthsYear =
           functions.createMonthsYear().toList().cast<DateTime>();
-      setState(() {});
+      safeSetState(() {});
       await actions.generateUniqueRandomNumber();
       _model.userSettings = await querySettingsCategoryAndShopRecordOnce(
         parent: FFAppState().currentUserRef,
@@ -50,7 +51,7 @@ class _HomeCategoriesWidgetState extends State<HomeCategoriesWidget> {
             _model.userSettings!.categoryHousehold.toList().cast<String>();
         FFAppState().category =
             _model.userSettings!.categoryFood.toList().cast<String>();
-        setState(() {});
+        safeSetState(() {});
       } else {
         await SettingsCategoryAndShopRecord.createDoc(
                 FFAppState().currentUserRef!)
@@ -73,9 +74,10 @@ class _HomeCategoriesWidgetState extends State<HomeCategoriesWidget> {
     context.watch<FFAppState>();
 
     return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
-          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-          : FocusScope.of(context).unfocus(),
+      onTap: () {
+        FocusScope.of(context).unfocus();
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
@@ -84,54 +86,46 @@ class _HomeCategoriesWidgetState extends State<HomeCategoriesWidget> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 40.0),
+              padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 40.0),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Align(
                     alignment: AlignmentDirectional(0.0, 0.5),
-                    child: Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(10.0, 20.0, 0.0, 0.0),
-                      child: InkWell(
-                        splashColor: Colors.transparent,
-                        focusColor: Colors.transparent,
-                        hoverColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        onTap: () async {},
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
-                          child: Image.asset(
-                            'assets/images/Xnip2023-11-14_15-48-41-removebg.png',
-                            width: 170.0,
-                            height: 70.0,
-                            fit: BoxFit.fitWidth,
-                          ),
+                    child: InkWell(
+                      splashColor: Colors.transparent,
+                      focusColor: Colors.transparent,
+                      hoverColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      onTap: () async {},
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8.0),
+                        child: Image.asset(
+                          'assets/images/Xnip2023-11-14_15-48-41-removebg.png',
+                          width: 172.5,
+                          height: 93.0,
+                          fit: BoxFit.fitWidth,
                         ),
                       ),
                     ),
                   ),
                   Flexible(
                     child: Align(
-                      alignment: AlignmentDirectional(1.0, 0.5),
-                      child: Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            0.0, 50.0, 30.0, 0.0),
-                        child: InkWell(
-                          splashColor: Colors.transparent,
-                          focusColor: Colors.transparent,
-                          hoverColor: Colors.transparent,
-                          highlightColor: Colors.transparent,
-                          onTap: () async {
-                            context.pushNamed('Settings');
-                          },
-                          child: Icon(
-                            FFIcons.ksettingsGrey,
-                            color: FlutterFlowTheme.of(context).secondaryText,
-                            size: 40.0,
-                          ),
+                      alignment: AlignmentDirectional(1.0, 0.0),
+                      child: InkWell(
+                        splashColor: Colors.transparent,
+                        focusColor: Colors.transparent,
+                        hoverColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        onTap: () async {
+                          context.pushNamed('Settings');
+                        },
+                        child: Icon(
+                          FFIcons.ksettings,
+                          color: Colors.black,
+                          size: 24.0,
                         ),
                       ),
                     ),
@@ -148,7 +142,7 @@ class _HomeCategoriesWidgetState extends State<HomeCategoriesWidget> {
                   color: FlutterFlowTheme.of(context).primaryBackground,
                 ),
                 child: Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 2.0),
+                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 2.0),
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -167,10 +161,9 @@ class _HomeCategoriesWidgetState extends State<HomeCategoriesWidget> {
                                 },
                                 text: '',
                                 icon: Icon(
-                                  FFIcons.kaltArrowLeft,
-                                  color: FlutterFlowTheme.of(context)
-                                      .secondaryText,
-                                  size: 20.0,
+                                  Icons.chevron_left,
+                                  color: FlutterFlowTheme.of(context).home,
+                                  size: 24.0,
                                 ),
                                 options: FFButtonOptions(
                                   height: 24.0,
@@ -178,7 +171,8 @@ class _HomeCategoriesWidgetState extends State<HomeCategoriesWidget> {
                                       24.0, 0.0, 24.0, 0.0),
                                   iconPadding: EdgeInsetsDirectional.fromSTEB(
                                       0.0, 0.0, 0.0, 0.0),
-                                  color: Color(0xFFF5F5F5),
+                                  color: FlutterFlowTheme.of(context)
+                                      .primaryBackground,
                                   textStyle: FlutterFlowTheme.of(context)
                                       .titleSmall
                                       .override(
@@ -220,7 +214,11 @@ class _HomeCategoriesWidgetState extends State<HomeCategoriesWidget> {
                                 height: 150.0,
                                 decoration: BoxDecoration(
                                   color: FlutterFlowTheme.of(context).accent4,
-                                  borderRadius: BorderRadius.circular(23.0),
+                                  borderRadius: BorderRadius.circular(13.0),
+                                  border: Border.all(
+                                    color: FlutterFlowTheme.of(context).home,
+                                    width: 1.0,
+                                  ),
                                 ),
                                 child: Column(
                                   mainAxisSize: MainAxisSize.max,
@@ -238,13 +236,14 @@ class _HomeCategoriesWidgetState extends State<HomeCategoriesWidget> {
                                     ),
                                     Text(
                                       FFLocalizations.of(context).getText(
-                                        'kyrfm3yn' /* Kitchen */,
+                                        'kyrfm3yn' /* Кухня */,
                                       ),
                                       style: FlutterFlowTheme.of(context)
                                           .bodyMedium
                                           .override(
                                             fontFamily: 'Inter',
                                             letterSpacing: 0.0,
+                                            fontWeight: FontWeight.w600,
                                           ),
                                     ),
                                   ],
@@ -264,7 +263,11 @@ class _HomeCategoriesWidgetState extends State<HomeCategoriesWidget> {
                                 height: 150.0,
                                 decoration: BoxDecoration(
                                   color: FlutterFlowTheme.of(context).accent4,
-                                  borderRadius: BorderRadius.circular(23.0),
+                                  borderRadius: BorderRadius.circular(13.0),
+                                  border: Border.all(
+                                    color: Color(0xFFDA1FCF),
+                                    width: 1.0,
+                                  ),
                                 ),
                                 child: Column(
                                   mainAxisSize: MainAxisSize.max,
@@ -282,7 +285,7 @@ class _HomeCategoriesWidgetState extends State<HomeCategoriesWidget> {
                                     ),
                                     Text(
                                       FFLocalizations.of(context).getText(
-                                        'yb70sw9r' /* Birthdays */,
+                                        'yb70sw9r' /* Дні Народження */,
                                       ),
                                       style: FlutterFlowTheme.of(context)
                                           .bodyMedium
@@ -291,6 +294,7 @@ class _HomeCategoriesWidgetState extends State<HomeCategoriesWidget> {
                                             color: FlutterFlowTheme.of(context)
                                                 .primaryText,
                                             letterSpacing: 0.0,
+                                            fontWeight: FontWeight.w600,
                                           ),
                                     ),
                                   ],

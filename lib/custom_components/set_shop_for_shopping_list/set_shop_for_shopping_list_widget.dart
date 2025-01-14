@@ -1,6 +1,7 @@
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -61,7 +62,7 @@ class _SetShopForShoppingListWidgetState
             children: [
               Text(
                 FFLocalizations.of(context).getText(
-                  'vnptuhqz' /* Вибрати магазин */,
+                  'j17wpdne' /* Вибрати магазин */,
                 ),
                 style: FlutterFlowTheme.of(context).bodyMedium.override(
                       fontFamily: 'Inter',

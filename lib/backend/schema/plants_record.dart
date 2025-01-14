@@ -33,18 +33,31 @@ class PlantsRecord extends FirestoreRecord {
   bool hasAmountOfWater() => _amountOfWater != null;
 
   // "wateringFrequency" field.
-  String? _wateringFrequency;
-  String get wateringFrequency => _wateringFrequency ?? '';
+  WateringFrequencyStruct? _wateringFrequency;
+  WateringFrequencyStruct get wateringFrequency =>
+      _wateringFrequency ?? WateringFrequencyStruct();
   bool hasWateringFrequency() => _wateringFrequency != null;
 
+  // "solidChangeFrequency" field.
+  SolidChangeFrequencyStruct? _solidChangeFrequency;
+  SolidChangeFrequencyStruct get solidChangeFrequency =>
+      _solidChangeFrequency ?? SolidChangeFrequencyStruct();
+  bool hasSolidChangeFrequency() => _solidChangeFrequency != null;
+
+  // "fertilizationFrequency" field.
+  FertilizationFrequencyStruct? _fertilizationFrequency;
+  FertilizationFrequencyStruct get fertilizationFrequency =>
+      _fertilizationFrequency ?? FertilizationFrequencyStruct();
+  bool hasFertilizationFrequency() => _fertilizationFrequency != null;
+
   // "lighting" field.
-  String? _lighting;
-  String get lighting => _lighting ?? '';
+  PlantLightingEnum? _lighting;
+  PlantLightingEnum? get lighting => _lighting;
   bool hasLighting() => _lighting != null;
 
   // "temperature" field.
-  String? _temperature;
-  String get temperature => _temperature ?? '';
+  PlantTemperatureEnum? _temperature;
+  PlantTemperatureEnum? get temperature => _temperature;
   bool hasTemperature() => _temperature != null;
 
   DocumentReference get parentReference => reference.parent.parent!;
@@ -53,9 +66,27 @@ class PlantsRecord extends FirestoreRecord {
     _photo = snapshotData['photo'] as String?;
     _name = snapshotData['name'] as String?;
     _amountOfWater = castToType<int>(snapshotData['amountOfWater']);
-    _wateringFrequency = snapshotData['wateringFrequency'] as String?;
-    _lighting = snapshotData['lighting'] as String?;
-    _temperature = snapshotData['temperature'] as String?;
+    _wateringFrequency =
+        snapshotData['wateringFrequency'] is WateringFrequencyStruct
+            ? snapshotData['wateringFrequency']
+            : WateringFrequencyStruct.maybeFromMap(
+                snapshotData['wateringFrequency']);
+    _solidChangeFrequency =
+        snapshotData['solidChangeFrequency'] is SolidChangeFrequencyStruct
+            ? snapshotData['solidChangeFrequency']
+            : SolidChangeFrequencyStruct.maybeFromMap(
+                snapshotData['solidChangeFrequency']);
+    _fertilizationFrequency =
+        snapshotData['fertilizationFrequency'] is FertilizationFrequencyStruct
+            ? snapshotData['fertilizationFrequency']
+            : FertilizationFrequencyStruct.maybeFromMap(
+                snapshotData['fertilizationFrequency']);
+    _lighting = snapshotData['lighting'] is PlantLightingEnum
+        ? snapshotData['lighting']
+        : deserializeEnum<PlantLightingEnum>(snapshotData['lighting']);
+    _temperature = snapshotData['temperature'] is PlantTemperatureEnum
+        ? snapshotData['temperature']
+        : deserializeEnum<PlantTemperatureEnum>(snapshotData['temperature']);
   }
 
   static Query<Map<String, dynamic>> collection([DocumentReference? parent]) =>
@@ -100,20 +131,36 @@ Map<String, dynamic> createPlantsRecordData({
   String? photo,
   String? name,
   int? amountOfWater,
-  String? wateringFrequency,
-  String? lighting,
-  String? temperature,
+  WateringFrequencyStruct? wateringFrequency,
+  SolidChangeFrequencyStruct? solidChangeFrequency,
+  FertilizationFrequencyStruct? fertilizationFrequency,
+  PlantLightingEnum? lighting,
+  PlantTemperatureEnum? temperature,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
       'photo': photo,
       'name': name,
       'amountOfWater': amountOfWater,
-      'wateringFrequency': wateringFrequency,
+      'wateringFrequency': WateringFrequencyStruct().toMap(),
+      'solidChangeFrequency': SolidChangeFrequencyStruct().toMap(),
+      'fertilizationFrequency': FertilizationFrequencyStruct().toMap(),
       'lighting': lighting,
       'temperature': temperature,
     }.withoutNulls,
   );
+
+  // Handle nested data for "wateringFrequency" field.
+  addWateringFrequencyStructData(
+      firestoreData, wateringFrequency, 'wateringFrequency');
+
+  // Handle nested data for "solidChangeFrequency" field.
+  addSolidChangeFrequencyStructData(
+      firestoreData, solidChangeFrequency, 'solidChangeFrequency');
+
+  // Handle nested data for "fertilizationFrequency" field.
+  addFertilizationFrequencyStructData(
+      firestoreData, fertilizationFrequency, 'fertilizationFrequency');
 
   return firestoreData;
 }
@@ -127,6 +174,8 @@ class PlantsRecordDocumentEquality implements Equality<PlantsRecord> {
         e1?.name == e2?.name &&
         e1?.amountOfWater == e2?.amountOfWater &&
         e1?.wateringFrequency == e2?.wateringFrequency &&
+        e1?.solidChangeFrequency == e2?.solidChangeFrequency &&
+        e1?.fertilizationFrequency == e2?.fertilizationFrequency &&
         e1?.lighting == e2?.lighting &&
         e1?.temperature == e2?.temperature;
   }
@@ -137,6 +186,8 @@ class PlantsRecordDocumentEquality implements Equality<PlantsRecord> {
         e?.name,
         e?.amountOfWater,
         e?.wateringFrequency,
+        e?.solidChangeFrequency,
+        e?.fertilizationFrequency,
         e?.lighting,
         e?.temperature
       ]);

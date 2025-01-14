@@ -37,6 +37,11 @@ class UsersFriendsRecord extends FirestoreRecord {
   int get friendCode => _friendCode ?? 0;
   bool hasFriendCode() => _friendCode != null;
 
+  // "userId" field.
+  DocumentReference? _userId;
+  DocumentReference? get userId => _userId;
+  bool hasUserId() => _userId != null;
+
   DocumentReference get parentReference => reference.parent.parent!;
 
   void _initializeFields() {
@@ -44,6 +49,7 @@ class UsersFriendsRecord extends FirestoreRecord {
     _uid = snapshotData['uid'] as String?;
     _photo = snapshotData['photo'] as String?;
     _friendCode = castToType<int>(snapshotData['friendCode']);
+    _userId = snapshotData['userId'] as DocumentReference?;
   }
 
   static Query<Map<String, dynamic>> collection([DocumentReference? parent]) =>
@@ -90,6 +96,7 @@ Map<String, dynamic> createUsersFriendsRecordData({
   String? uid,
   String? photo,
   int? friendCode,
+  DocumentReference? userId,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
@@ -97,6 +104,7 @@ Map<String, dynamic> createUsersFriendsRecordData({
       'uid': uid,
       'photo': photo,
       'friendCode': friendCode,
+      'userId': userId,
     }.withoutNulls,
   );
 
@@ -112,12 +120,13 @@ class UsersFriendsRecordDocumentEquality
     return e1?.name == e2?.name &&
         e1?.uid == e2?.uid &&
         e1?.photo == e2?.photo &&
-        e1?.friendCode == e2?.friendCode;
+        e1?.friendCode == e2?.friendCode &&
+        e1?.userId == e2?.userId;
   }
 
   @override
-  int hash(UsersFriendsRecord? e) =>
-      const ListEquality().hash([e?.name, e?.uid, e?.photo, e?.friendCode]);
+  int hash(UsersFriendsRecord? e) => const ListEquality()
+      .hash([e?.name, e?.uid, e?.photo, e?.friendCode, e?.userId]);
 
   @override
   bool isValidKey(Object? o) => o is UsersFriendsRecord;

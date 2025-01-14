@@ -1,5 +1,6 @@
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -43,7 +44,7 @@ class _NotFoundFriendWidgetState extends State<NotFoundFriendWidget> {
         width: 150.0,
         height: 150.0,
         decoration: BoxDecoration(
-          color: Color(0xFFF5F5F5),
+          color: FlutterFlowTheme.of(context).primaryBackground,
           borderRadius: BorderRadius.circular(15.0),
           border: Border.all(
             color: Color(0xFF963434),
@@ -70,7 +71,7 @@ class _NotFoundFriendWidgetState extends State<NotFoundFriendWidget> {
                     },
                     child: Icon(
                       FFIcons.kclose,
-                      color: FlutterFlowTheme.of(context).secondaryText,
+                      color: FlutterFlowTheme.of(context).primaryText,
                       size: 24.0,
                     ),
                   ),
@@ -86,8 +87,9 @@ class _NotFoundFriendWidgetState extends State<NotFoundFriendWidget> {
                     textAlign: TextAlign.center,
                     style: FlutterFlowTheme.of(context).bodyMedium.override(
                           fontFamily: 'Inter',
-                          fontSize: 19.0,
+                          fontSize: 20.0,
                           letterSpacing: 0.0,
+                          fontWeight: FontWeight.w500,
                         ),
                   ),
                 ),

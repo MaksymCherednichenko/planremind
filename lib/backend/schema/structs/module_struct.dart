@@ -11,7 +11,7 @@ import '/flutter_flow/flutter_flow_util.dart';
 
 class ModuleStruct extends FFFirebaseStruct {
   ModuleStruct({
-    Module? name,
+    ModulesEnum? name,
     bool? active,
     FirestoreUtilData firestoreUtilData = const FirestoreUtilData(),
   })  : _name = name,
@@ -19,9 +19,9 @@ class ModuleStruct extends FFFirebaseStruct {
         super(firestoreUtilData);
 
   // "name" field.
-  Module? _name;
-  Module get name => _name ?? Module.Home;
-  set name(Module? val) => _name = val;
+  ModulesEnum? _name;
+  ModulesEnum get name => _name ?? ModulesEnum.Home;
+  set name(ModulesEnum? val) => _name = val;
 
   bool hasName() => _name != null;
 
@@ -33,7 +33,9 @@ class ModuleStruct extends FFFirebaseStruct {
   bool hasActive() => _active != null;
 
   static ModuleStruct fromMap(Map<String, dynamic> data) => ModuleStruct(
-        name: deserializeEnum<Module>(data['name']),
+        name: data['name'] is ModulesEnum
+            ? data['name']
+            : deserializeEnum<ModulesEnum>(data['name']),
         active: data['active'] as bool?,
       );
 
@@ -59,7 +61,7 @@ class ModuleStruct extends FFFirebaseStruct {
 
   static ModuleStruct fromSerializableMap(Map<String, dynamic> data) =>
       ModuleStruct(
-        name: deserializeParam<Module>(
+        name: deserializeParam<ModulesEnum>(
           data['name'],
           ParamType.Enum,
           false,
@@ -86,7 +88,7 @@ class ModuleStruct extends FFFirebaseStruct {
 }
 
 ModuleStruct createModuleStruct({
-  Module? name,
+  ModulesEnum? name,
   bool? active,
   Map<String, dynamic> fieldValues = const {},
   bool clearUnsetFields = true,

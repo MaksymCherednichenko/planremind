@@ -108,17 +108,17 @@ Future<bool?> updateModuleState(
 
     await FFAppState().modulesDocRef!.update(createModuleStatesRecordData(
           home: functions.getModuleState(
-              FFAppState().moduleStates.toList(), Module.Home),
+              FFAppState().moduleStates.toList(), ModulesEnum.Home),
           car: functions.getModuleState(
-              FFAppState().moduleStates.toList(), Module.Car),
+              FFAppState().moduleStates.toList(), ModulesEnum.Car),
           plants: functions.getModuleState(
-              FFAppState().moduleStates.toList(), Module.Plants),
+              FFAppState().moduleStates.toList(), ModulesEnum.Plants),
           health: functions.getModuleState(
-              FFAppState().moduleStates.toList(), Module.Health),
+              FFAppState().moduleStates.toList(), ModulesEnum.Health),
           pets: functions.getModuleState(
-              FFAppState().moduleStates.toList(), Module.Pets),
+              FFAppState().moduleStates.toList(), ModulesEnum.Pets),
           sport: functions.getModuleState(
-              FFAppState().moduleStates.toList(), Module.Sport),
+              FFAppState().moduleStates.toList(), ModulesEnum.Sport),
         ));
   } else {
     canDisable = await action_blocks.canDisableModule(
@@ -141,17 +141,17 @@ Future<bool?> updateModuleState(
 
       await FFAppState().modulesDocRef!.update(createModuleStatesRecordData(
             home: functions.getModuleState(
-                FFAppState().moduleStates.toList(), Module.Home),
+                FFAppState().moduleStates.toList(), ModulesEnum.Home),
             car: functions.getModuleState(
-                FFAppState().moduleStates.toList(), Module.Car),
+                FFAppState().moduleStates.toList(), ModulesEnum.Car),
             plants: functions.getModuleState(
-                FFAppState().moduleStates.toList(), Module.Plants),
+                FFAppState().moduleStates.toList(), ModulesEnum.Plants),
             health: functions.getModuleState(
-                FFAppState().moduleStates.toList(), Module.Health),
+                FFAppState().moduleStates.toList(), ModulesEnum.Health),
             pets: functions.getModuleState(
-                FFAppState().moduleStates.toList(), Module.Pets),
+                FFAppState().moduleStates.toList(), ModulesEnum.Pets),
             sport: functions.getModuleState(
-                FFAppState().moduleStates.toList(), Module.Sport),
+                FFAppState().moduleStates.toList(), ModulesEnum.Sport),
           ));
     } else {
       return false;
@@ -159,4 +159,42 @@ Future<bool?> updateModuleState(
   }
 
   return true;
+}
+
+Future<String?> tryToAddHomeStuffCategory(
+  BuildContext context, {
+  required HomeStuffEnum? stuffType,
+  required String? name,
+}) async {
+  int? countOutput;
+
+  if (name == null || name == '') {
+    return null;
+  }
+
+  if ((name == '') || functions.stringHasSpacesOnly(name!)) {
+    return null;
+  }
+  // подія створена для додавання нової категорії до бази даних таким чином, щоб не утворювати копії
+  //
+  countOutput = await queryHomeStuffCategoriesRecordCount(
+    parent: FFAppState().currentUserRef,
+    queryBuilder: (homeStuffCategoriesRecord) => homeStuffCategoriesRecord
+        .where(
+          'stuffType',
+          isEqualTo: stuffType?.serialize(),
+        )
+        .where(
+          'name',
+          isEqualTo: name,
+        ),
+  );
+  if (countOutput! <= 0) {
+    await HomeStuffCategoriesRecord.createDoc(FFAppState().currentUserRef!)
+        .set(createHomeStuffCategoriesRecordData(
+      stuffType: stuffType,
+      name: name,
+    ));
+  }
+  return name;
 }

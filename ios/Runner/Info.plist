@@ -59,11 +59,13 @@
 	<true/>
 
 	<key>NSCameraUsageDescription</key>
-    <string>In order to take a picture or video, this app requires permission to access the camera.</string>
+    <string>Для того щоб сфотографувати щось, цей додаток потребує доступ до камери</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-    <string>In order to upload data, this app requires permission to access the photo library.</string>
+    <string>Для того щоб додати фото, цей додаток потребує доступу до бібліотеки </string>
 	<key>PermissionGroupNotification</key>
-    <string>Can we send you notifications?</string>
+    <string>Чи можемо ми відправляти Вам сповіщення ? </string>
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+    <string>backgroundNotificationPermissions</string>
     <key>UIBackgroundModes</key>
     <array>
         <string>fetch</string>

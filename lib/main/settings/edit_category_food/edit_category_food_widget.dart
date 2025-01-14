@@ -3,6 +3,7 @@ import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +46,7 @@ class _EditCategoryFoodWidgetState extends State<EditCategoryFoodWidget> {
     // On component load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       _model.itemList = widget!.settings!.categoryFood.toList().cast<String>();
-      setState(() {});
+      safeSetState(() {});
     });
 
     _model.textController ??= TextEditingController(text: widget!.item);
@@ -70,7 +71,7 @@ class _EditCategoryFoodWidgetState extends State<EditCategoryFoodWidget> {
           maxWidth: 700.0,
         ),
         decoration: BoxDecoration(
-          color: Color(0xFFF5F5F5),
+          color: FlutterFlowTheme.of(context).primaryBackground,
           boxShadow: [
             BoxShadow(
               blurRadius: 4.0,
@@ -102,12 +103,13 @@ class _EditCategoryFoodWidgetState extends State<EditCategoryFoodWidget> {
                   Flexible(
                     child: Text(
                       FFLocalizations.of(context).getText(
-                        'edgbxrjm' /* Edit Category */,
+                        'edgbxrjm' /* Редагування */,
                       ),
                       style: FlutterFlowTheme.of(context).bodyMedium.override(
                             fontFamily: 'Inter',
-                            fontSize: 18.0,
+                            fontSize: 20.0,
                             letterSpacing: 0.0,
+                            fontWeight: FontWeight.w500,
                           ),
                     ),
                   ),
@@ -139,15 +141,12 @@ class _EditCategoryFoodWidgetState extends State<EditCategoryFoodWidget> {
                         '_model.textController',
                         Duration(milliseconds: 2000),
                         () async {
-                          setState(() {});
+                          safeSetState(() {});
                         },
                       ),
                       autofocus: false,
                       obscureText: false,
                       decoration: InputDecoration(
-                        labelText: FFLocalizations.of(context).getText(
-                          '9h6ww385' /* Name */,
-                        ),
                         labelStyle:
                             FlutterFlowTheme.of(context).labelMedium.override(
                                   fontFamily: 'Inter',
@@ -166,35 +165,40 @@ class _EditCategoryFoodWidgetState extends State<EditCategoryFoodWidget> {
                             color: Color(0xFFE4E4E4),
                             width: 2.0,
                           ),
-                          borderRadius: BorderRadius.circular(15.0),
+                          borderRadius: BorderRadius.circular(13.0),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                             color: Color(0xFFE4E4E4),
                             width: 2.0,
                           ),
-                          borderRadius: BorderRadius.circular(15.0),
+                          borderRadius: BorderRadius.circular(13.0),
                         ),
                         errorBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                             color: FlutterFlowTheme.of(context).error,
                             width: 2.0,
                           ),
-                          borderRadius: BorderRadius.circular(15.0),
+                          borderRadius: BorderRadius.circular(13.0),
                         ),
                         focusedErrorBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                             color: FlutterFlowTheme.of(context).error,
                             width: 2.0,
                           ),
-                          borderRadius: BorderRadius.circular(15.0),
+                          borderRadius: BorderRadius.circular(13.0),
                         ),
+                        filled: true,
+                        fillColor:
+                            FlutterFlowTheme.of(context).secondaryBackground,
                         contentPadding:
                             EdgeInsetsDirectional.fromSTEB(15.0, 0.0, 0.0, 0.0),
                       ),
                       style: FlutterFlowTheme.of(context).bodyMedium.override(
                             fontFamily: 'Inter',
+                            fontSize: 16.0,
                             letterSpacing: 0.0,
+                            fontWeight: FontWeight.w500,
                           ),
                       validator:
                           _model.textControllerValidator.asValidator(context),
@@ -222,7 +226,7 @@ class _EditCategoryFoodWidgetState extends State<EditCategoryFoodWidget> {
                               widget!.itemIndex!,
                               (_) => _model.textController.text,
                             );
-                            setState(() {});
+                            safeSetState(() {});
 
                             await widget!.settings!.reference.update({
                               ...mapToFirestore(
@@ -233,12 +237,12 @@ class _EditCategoryFoodWidgetState extends State<EditCategoryFoodWidget> {
                             });
                           },
                           text: FFLocalizations.of(context).getText(
-                            'smy1660v' /* Save */,
+                            'smy1660v' /* Зберегти */,
                           ),
                           options: FFButtonOptions(
                             width: MediaQuery.sizeOf(context).width * 1.0,
-                            height: 54.0,
-                            padding: EdgeInsets.all(24.0),
+                            height: 48.0,
+                            padding: EdgeInsets.all(0.0),
                             iconPadding: EdgeInsetsDirectional.fromSTEB(
                                 0.0, 0.0, 0.0, 0.0),
                             color: Color(0xFFF57F44),
@@ -248,14 +252,14 @@ class _EditCategoryFoodWidgetState extends State<EditCategoryFoodWidget> {
                                   fontFamily: 'Inter',
                                   color: Colors.white,
                                   letterSpacing: 0.0,
-                                  fontWeight: FontWeight.normal,
+                                  fontWeight: FontWeight.w500,
                                 ),
                             elevation: 0.0,
                             borderSide: BorderSide(
                               color: Colors.transparent,
                               width: 1.0,
                             ),
-                            borderRadius: BorderRadius.circular(16.0),
+                            borderRadius: BorderRadius.circular(12.0),
                           ),
                         ),
                       ),
@@ -269,7 +273,7 @@ class _EditCategoryFoodWidgetState extends State<EditCategoryFoodWidget> {
                             Navigator.pop(context);
                             _model
                                 .removeAtIndexFromItemList(widget!.itemIndex!);
-                            setState(() {});
+                            safeSetState(() {});
 
                             await widget!.settings!.reference.update({
                               ...mapToFirestore(
@@ -280,12 +284,12 @@ class _EditCategoryFoodWidgetState extends State<EditCategoryFoodWidget> {
                             });
                           },
                           text: FFLocalizations.of(context).getText(
-                            '2iqzk95b' /* Delete */,
+                            '2iqzk95b' /* Видалити */,
                           ),
                           options: FFButtonOptions(
                             width: double.infinity,
-                            height: 54.0,
-                            padding: EdgeInsets.all(24.0),
+                            height: 48.0,
+                            padding: EdgeInsets.all(0.0),
                             iconPadding: EdgeInsetsDirectional.fromSTEB(
                                 0.0, 0.0, 0.0, 0.0),
                             color: Color(0xFFF54444),
@@ -295,14 +299,14 @@ class _EditCategoryFoodWidgetState extends State<EditCategoryFoodWidget> {
                                   fontFamily: 'Inter',
                                   color: Colors.white,
                                   letterSpacing: 0.0,
-                                  fontWeight: FontWeight.normal,
+                                  fontWeight: FontWeight.w500,
                                 ),
                             elevation: 0.0,
                             borderSide: BorderSide(
                               color: Colors.transparent,
                               width: 1.0,
                             ),
-                            borderRadius: BorderRadius.circular(16.0),
+                            borderRadius: BorderRadius.circular(12.0),
                           ),
                         ),
                       ),

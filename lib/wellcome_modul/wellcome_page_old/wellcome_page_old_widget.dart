@@ -5,6 +5,7 @@ import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/wellcome_modul/add_units_of_measurement/add_units_of_measurement_widget.dart';
 import '/wellcome_modul/select_language/select_language_widget.dart';
+import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -41,9 +42,10 @@ class _WellcomePageOldWidgetState extends State<WellcomePageOldWidget> {
           context: context,
           builder: (context) {
             return GestureDetector(
-              onTap: () => _model.unfocusNode.canRequestFocus
-                  ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-                  : FocusScope.of(context).unfocus(),
+              onTap: () {
+                FocusScope.of(context).unfocus();
+                FocusManager.instance.primaryFocus?.unfocus();
+              },
               child: Padding(
                 padding: MediaQuery.viewInsetsOf(context),
                 child: SelectLanguageWidget(),
@@ -62,7 +64,7 @@ class _WellcomePageOldWidgetState extends State<WellcomePageOldWidget> {
       }
       FFAppState().visitWellcomePageCount =
           FFAppState().visitWellcomePageCount + 1;
-      setState(() {});
+      safeSetState(() {});
     });
   }
 
@@ -78,9 +80,10 @@ class _WellcomePageOldWidgetState extends State<WellcomePageOldWidget> {
     context.watch<FFAppState>();
 
     return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
-          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-          : FocusScope.of(context).unfocus(),
+      onTap: () {
+        FocusScope.of(context).unfocus();
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: Color(0xFFF5F5F5),
@@ -539,14 +542,13 @@ class _WellcomePageOldWidgetState extends State<WellcomePageOldWidget> {
                                                 context: context,
                                                 builder: (context) {
                                                   return GestureDetector(
-                                                    onTap: () => _model
-                                                            .unfocusNode
-                                                            .canRequestFocus
-                                                        ? FocusScope.of(context)
-                                                            .requestFocus(_model
-                                                                .unfocusNode)
-                                                        : FocusScope.of(context)
-                                                            .unfocus(),
+                                                    onTap: () {
+                                                      FocusScope.of(context)
+                                                          .unfocus();
+                                                      FocusManager
+                                                          .instance.primaryFocus
+                                                          ?.unfocus();
+                                                    },
                                                     child: Padding(
                                                       padding: MediaQuery
                                                           .viewInsetsOf(

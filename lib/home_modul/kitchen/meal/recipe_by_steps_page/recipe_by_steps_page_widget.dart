@@ -5,6 +5,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_video_player.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
@@ -44,54 +45,50 @@ class _RecipeByStepsPageWidgetState extends State<RecipeByStepsPageWidget> {
       if (widget!.mealDocFromPlanner != null) {
         FFAppState().recipeSteps =
             widget!.mealDocFromPlanner!.recipe.toList().cast<String>();
-        setState(() {});
+        safeSetState(() {});
         _model.siteLink = widget!.mealDocFromPlanner?.siteLink;
         _model.videoLink = widget!.mealDocFromPlanner?.videoLink;
-        setState(() {});
+        safeSetState(() {});
         if (!(FFAppState().recipeSteps.isNotEmpty)) {
           FFAppState().addToRecipeSteps(' ');
-          setState(() {});
+          safeSetState(() {});
         }
       } else if (widget!.manuDoc != null) {
         FFAppState().recipeSteps =
             widget!.manuDoc!.recipe.toList().cast<String>();
-        setState(() {});
+        safeSetState(() {});
         _model.siteLink = widget!.manuDoc?.siteLink;
         _model.videoLink = widget!.manuDoc?.videoLink;
-        setState(() {});
+        safeSetState(() {});
         if (!(FFAppState().recipeSteps.isNotEmpty)) {
           FFAppState().addToRecipeSteps(' ');
-          setState(() {});
+          safeSetState(() {});
         }
       }
 
       _model.indOpacity = 0;
       _model.stepOpacity = [];
-      setState(() {});
+      safeSetState(() {});
       while (_model.indOpacity! < FFAppState().recipeSteps.length) {
         _model.addToStepOpacity(_model.indOpacity!);
-        setState(() {});
+        safeSetState(() {});
         _model.indOpacity = _model.indOpacity! + 1;
-        setState(() {});
+        safeSetState(() {});
       }
       if (_model.siteLink != null && _model.siteLink != '') {
-        setState(() {
+        safeSetState(() {
           _model.siteCheckboxValue = true;
         });
-        setState(() {
+        safeSetState(() {
           _model.textController1?.text = _model.siteLink!;
-          _model.textController1?.selection = TextSelection.collapsed(
-              offset: _model.textController1!.text.length);
         });
       }
       if (_model.videoLink != null && _model.videoLink != '') {
-        setState(() {
+        safeSetState(() {
           _model.videoCheckboxValue = true;
         });
-        setState(() {
+        safeSetState(() {
           _model.textController2?.text = _model.videoLink!;
-          _model.textController2?.selection = TextSelection.collapsed(
-              offset: _model.textController2!.text.length);
         });
       }
     });
@@ -115,9 +112,10 @@ class _RecipeByStepsPageWidgetState extends State<RecipeByStepsPageWidget> {
     context.watch<FFAppState>();
 
     return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
-          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-          : FocusScope.of(context).unfocus(),
+      onTap: () {
+        FocusScope.of(context).unfocus();
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
@@ -347,7 +345,7 @@ class _RecipeByStepsPageWidgetState extends State<RecipeByStepsPageWidget> {
                                         value: _model.siteCheckboxValue ??=
                                             false,
                                         onChanged: (newValue) async {
-                                          setState(() => _model
+                                          safeSetState(() => _model
                                               .siteCheckboxValue = newValue!);
                                         },
                                         side: BorderSide(
@@ -369,11 +367,11 @@ class _RecipeByStepsPageWidgetState extends State<RecipeByStepsPageWidget> {
                                       highlightColor: Colors.transparent,
                                       onTap: () async {
                                         if (_model.siteCheckboxValue!) {
-                                          setState(() {
+                                          safeSetState(() {
                                             _model.siteCheckboxValue = false;
                                           });
                                         } else {
-                                          setState(() {
+                                          safeSetState(() {
                                             _model.siteCheckboxValue = true;
                                           });
                                         }
@@ -406,7 +404,7 @@ class _RecipeByStepsPageWidgetState extends State<RecipeByStepsPageWidget> {
                                         () async {
                                           _model.siteLink =
                                               _model.textController1.text;
-                                          setState(() {});
+                                          safeSetState(() {});
                                         },
                                       ),
                                       autofocus: false,
@@ -500,7 +498,7 @@ class _RecipeByStepsPageWidgetState extends State<RecipeByStepsPageWidget> {
                                           value: _model.videoCheckboxValue ??=
                                               false,
                                           onChanged: (newValue) async {
-                                            setState(() =>
+                                            safeSetState(() =>
                                                 _model.videoCheckboxValue =
                                                     newValue!);
                                           },
@@ -523,11 +521,11 @@ class _RecipeByStepsPageWidgetState extends State<RecipeByStepsPageWidget> {
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
                                           if (_model.videoCheckboxValue!) {
-                                            setState(() {
+                                            safeSetState(() {
                                               _model.videoCheckboxValue = false;
                                             });
                                           } else {
-                                            setState(() {
+                                            safeSetState(() {
                                               _model.videoCheckboxValue = true;
                                             });
                                           }
@@ -561,7 +559,7 @@ class _RecipeByStepsPageWidgetState extends State<RecipeByStepsPageWidget> {
                                         () async {
                                           _model.videoLink =
                                               _model.textController2.text;
-                                          setState(() {});
+                                          safeSetState(() {});
                                         },
                                       ),
                                       autofocus: false,
@@ -677,54 +675,61 @@ class _RecipeByStepsPageWidgetState extends State<RecipeByStepsPageWidget> {
                                                   highlightColor:
                                                       Colors.transparent,
                                                   onTap: () async {
-                                                    if (_model.stepOpacity[
-                                                            stepsIndex] ==
+                                                    if (_model.stepOpacity
+                                                            .elementAtOrNull(
+                                                                stepsIndex) ==
                                                         stepsIndex) {
                                                       _model
                                                           .updateStepOpacityAtIndex(
                                                         stepsIndex,
                                                         (_) => -1,
                                                       );
-                                                      setState(() {});
+                                                      safeSetState(() {});
                                                     } else {
                                                       _model
                                                           .updateStepOpacityAtIndex(
                                                         stepsIndex,
                                                         (_) => stepsIndex,
                                                       );
-                                                      setState(() {});
+                                                      safeSetState(() {});
                                                     }
                                                   },
                                                   onLongPress: () async {
                                                     FFAppState()
                                                         .removeAtIndexFromRecipeSteps(
                                                             stepsIndex);
-                                                    setState(() {});
+                                                    safeSetState(() {});
                                                   },
-                                                  child: ListTile(
-                                                    title: Text(
-                                                      '${FFLocalizations.of(context).getVariableText(
-                                                        ukText: 'Крок',
-                                                        enText: 'Step',
-                                                      )} ${(stepsIndex + 1).toString()}',
-                                                      style: FlutterFlowTheme
-                                                              .of(context)
-                                                          .titleLarge
-                                                          .override(
-                                                            fontFamily: 'Inter',
-                                                            fontSize: 15.0,
-                                                            letterSpacing: 0.0,
-                                                          ),
+                                                  child: Material(
+                                                    color: Colors.transparent,
+                                                    child: ListTile(
+                                                      title: Text(
+                                                        '${FFLocalizations.of(context).getVariableText(
+                                                          ukText: 'Крок',
+                                                          enText: 'Step',
+                                                        )} ${(stepsIndex + 1).toString()}',
+                                                        style: FlutterFlowTheme
+                                                                .of(context)
+                                                            .titleLarge
+                                                            .override(
+                                                              fontFamily:
+                                                                  'Inter',
+                                                              fontSize: 15.0,
+                                                              letterSpacing:
+                                                                  0.0,
+                                                            ),
+                                                      ),
+                                                      tileColor:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .primaryBackground,
+                                                      dense: false,
                                                     ),
-                                                    tileColor:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .primaryBackground,
-                                                    dense: false,
                                                   ),
                                                 ),
-                                                if (_model.stepOpacity[
-                                                        stepsIndex] ==
+                                                if (_model.stepOpacity
+                                                        .elementAtOrNull(
+                                                            stepsIndex) ==
                                                     stepsIndex)
                                                   Align(
                                                     alignment:
@@ -748,8 +753,9 @@ class _RecipeByStepsPageWidgetState extends State<RecipeByStepsPageWidget> {
                                                       ),
                                                     ),
                                                   ),
-                                                if (_model.stepOpacity[
-                                                        stepsIndex] !=
+                                                if (_model.stepOpacity
+                                                        .elementAtOrNull(
+                                                            stepsIndex) !=
                                                     stepsIndex)
                                                   Align(
                                                     alignment:
@@ -776,7 +782,9 @@ class _RecipeByStepsPageWidgetState extends State<RecipeByStepsPageWidget> {
                                               ],
                                             ),
                                           ),
-                                          if (_model.stepOpacity[stepsIndex] ==
+                                          if (_model.stepOpacity
+                                                  .elementAtOrNull(
+                                                      stepsIndex) ==
                                               stepsIndex)
                                             wrapWithModel(
                                               model: _model
@@ -786,7 +794,7 @@ class _RecipeByStepsPageWidgetState extends State<RecipeByStepsPageWidget> {
                                                 stepsIndex,
                                               ),
                                               updateCallback: () =>
-                                                  setState(() {}),
+                                                  safeSetState(() {}),
                                               updateOnChange: true,
                                               child: StepDescriptionWidget(
                                                 key: Key(
@@ -810,7 +818,7 @@ class _RecipeByStepsPageWidgetState extends State<RecipeByStepsPageWidget> {
                               child: FFButtonWidget(
                                 onPressed: () async {
                                   FFAppState().addToRecipeSteps(' ');
-                                  setState(() {});
+                                  safeSetState(() {});
                                 },
                                 text: '',
                                 icon: Icon(
@@ -888,10 +896,10 @@ class _RecipeByStepsPageWidgetState extends State<RecipeByStepsPageWidget> {
 
                               context.safePop();
                               FFAppState().recipeSteps = [];
-                              setState(() {});
+                              safeSetState(() {});
                               _model.siteLink = '';
                               _model.videoLink = '';
-                              setState(() {});
+                              safeSetState(() {});
                             },
                             text: FFLocalizations.of(context).getText(
                               'n7guhjsm' /* Зберегти */,

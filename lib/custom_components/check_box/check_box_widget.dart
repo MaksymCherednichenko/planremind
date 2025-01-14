@@ -11,9 +11,11 @@ class CheckBoxWidget extends StatefulWidget {
   const CheckBoxWidget({
     super.key,
     this.setCheckBox,
+    required this.setValue,
   });
 
   final bool? setCheckBox;
+  final Future Function(bool value)? setValue;
 
   @override
   State<CheckBoxWidget> createState() => _CheckBoxWidgetState();
@@ -36,13 +38,8 @@ class _CheckBoxWidgetState extends State<CheckBoxWidget> {
     // On component load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       if (widget!.setCheckBox != null) {
-        if (widget!.setCheckBox!) {
-          _model.setCheckBox = true;
-          setState(() {});
-        } else {
-          _model.setCheckBox = false;
-          setState(() {});
-        }
+        _model.checkBoxValue = widget!.setCheckBox!;
+        _model.updatePage(() {});
       }
     });
   }
@@ -64,8 +61,11 @@ class _CheckBoxWidgetState extends State<CheckBoxWidget> {
           hoverColor: Colors.transparent,
           highlightColor: Colors.transparent,
           onTap: () async {
-            _model.setCheckBox = false;
-            setState(() {});
+            _model.checkBoxValue = true;
+            _model.updatePage(() {});
+            await widget.setValue?.call(
+              _model.checkBoxValue,
+            );
           },
           child: Container(
             width: 24.0,
@@ -81,15 +81,18 @@ class _CheckBoxWidgetState extends State<CheckBoxWidget> {
             ),
           ),
         ),
-        if (_model.setCheckBox)
+        if (_model.checkBoxValue)
           InkWell(
             splashColor: Colors.transparent,
             focusColor: Colors.transparent,
             hoverColor: Colors.transparent,
             highlightColor: Colors.transparent,
             onTap: () async {
-              _model.setCheckBox = true;
-              setState(() {});
+              _model.checkBoxValue = false;
+              _model.updatePage(() {});
+              await widget.setValue?.call(
+                _model.checkBoxValue,
+              );
             },
             child: Container(
               width: 24.0,

@@ -57,6 +57,11 @@ class CarsRecord extends FirestoreRecord {
   String get photo => _photo ?? '';
   bool hasPhoto() => _photo != null;
 
+  // "lastDateOfChangeMileage" field.
+  DateTime? _lastDateOfChangeMileage;
+  DateTime? get lastDateOfChangeMileage => _lastDateOfChangeMileage;
+  bool hasLastDateOfChangeMileage() => _lastDateOfChangeMileage != null;
+
   DocumentReference get parentReference => reference.parent.parent!;
 
   void _initializeFields() {
@@ -68,6 +73,8 @@ class CarsRecord extends FirestoreRecord {
     _bodyClass = snapshotData['bodyClass'] as String?;
     _mileage = castToType<int>(snapshotData['mileage']);
     _photo = snapshotData['photo'] as String?;
+    _lastDateOfChangeMileage =
+        snapshotData['lastDateOfChangeMileage'] as DateTime?;
   }
 
   static Query<Map<String, dynamic>> collection([DocumentReference? parent]) =>
@@ -117,6 +124,7 @@ Map<String, dynamic> createCarsRecordData({
   String? bodyClass,
   int? mileage,
   String? photo,
+  DateTime? lastDateOfChangeMileage,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
@@ -128,6 +136,7 @@ Map<String, dynamic> createCarsRecordData({
       'bodyClass': bodyClass,
       'mileage': mileage,
       'photo': photo,
+      'lastDateOfChangeMileage': lastDateOfChangeMileage,
     }.withoutNulls,
   );
 
@@ -146,7 +155,8 @@ class CarsRecordDocumentEquality implements Equality<CarsRecord> {
         e1?.engineType == e2?.engineType &&
         e1?.bodyClass == e2?.bodyClass &&
         e1?.mileage == e2?.mileage &&
-        e1?.photo == e2?.photo;
+        e1?.photo == e2?.photo &&
+        e1?.lastDateOfChangeMileage == e2?.lastDateOfChangeMileage;
   }
 
   @override
@@ -158,7 +168,8 @@ class CarsRecordDocumentEquality implements Equality<CarsRecord> {
         e?.engineType,
         e?.bodyClass,
         e?.mileage,
-        e?.photo
+        e?.photo,
+        e?.lastDateOfChangeMileage
       ]);
 
   @override

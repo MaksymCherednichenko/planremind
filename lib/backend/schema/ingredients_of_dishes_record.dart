@@ -32,11 +32,6 @@ class IngredientsOfDishesRecord extends FirestoreRecord {
   bool get inStock => _inStock ?? false;
   bool hasInStock() => _inStock != null;
 
-  // "unit" field.
-  String? _unit;
-  String get unit => _unit ?? '';
-  bool hasUnit() => _unit != null;
-
   // "removeToShopList" field.
   String? _removeToShopList;
   String get removeToShopList => _removeToShopList ?? '';
@@ -47,16 +42,29 @@ class IngredientsOfDishesRecord extends FirestoreRecord {
   double get storageFoodOldQuantity => _storageFoodOldQuantity ?? 0.0;
   bool hasStorageFoodOldQuantity() => _storageFoodOldQuantity != null;
 
+  // "category" field.
+  String? _category;
+  String get category => _category ?? '';
+  bool hasCategory() => _category != null;
+
+  // "unit" field.
+  UnitsEnum? _unit;
+  UnitsEnum? get unit => _unit;
+  bool hasUnit() => _unit != null;
+
   DocumentReference get parentReference => reference.parent.parent!;
 
   void _initializeFields() {
     _name = snapshotData['name'] as String?;
     _quantity = castToType<double>(snapshotData['quantity']);
     _inStock = snapshotData['inStock'] as bool?;
-    _unit = snapshotData['unit'] as String?;
     _removeToShopList = snapshotData['removeToShopList'] as String?;
     _storageFoodOldQuantity =
         castToType<double>(snapshotData['storageFoodOldQuantity']);
+    _category = snapshotData['category'] as String?;
+    _unit = snapshotData['unit'] is UnitsEnum
+        ? snapshotData['unit']
+        : deserializeEnum<UnitsEnum>(snapshotData['unit']);
   }
 
   static Query<Map<String, dynamic>> collection([DocumentReference? parent]) =>
@@ -103,18 +111,20 @@ Map<String, dynamic> createIngredientsOfDishesRecordData({
   String? name,
   double? quantity,
   bool? inStock,
-  String? unit,
   String? removeToShopList,
   double? storageFoodOldQuantity,
+  String? category,
+  UnitsEnum? unit,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
       'name': name,
       'quantity': quantity,
       'inStock': inStock,
-      'unit': unit,
       'removeToShopList': removeToShopList,
       'storageFoodOldQuantity': storageFoodOldQuantity,
+      'category': category,
+      'unit': unit,
     }.withoutNulls,
   );
 
@@ -130,9 +140,10 @@ class IngredientsOfDishesRecordDocumentEquality
     return e1?.name == e2?.name &&
         e1?.quantity == e2?.quantity &&
         e1?.inStock == e2?.inStock &&
-        e1?.unit == e2?.unit &&
         e1?.removeToShopList == e2?.removeToShopList &&
-        e1?.storageFoodOldQuantity == e2?.storageFoodOldQuantity;
+        e1?.storageFoodOldQuantity == e2?.storageFoodOldQuantity &&
+        e1?.category == e2?.category &&
+        e1?.unit == e2?.unit;
   }
 
   @override
@@ -140,9 +151,10 @@ class IngredientsOfDishesRecordDocumentEquality
         e?.name,
         e?.quantity,
         e?.inStock,
-        e?.unit,
         e?.removeToShopList,
-        e?.storageFoodOldQuantity
+        e?.storageFoodOldQuantity,
+        e?.category,
+        e?.unit
       ]);
 
   @override

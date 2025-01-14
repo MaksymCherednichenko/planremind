@@ -5,6 +5,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/main/settings/edit_category_food/edit_category_food_widget.dart';
+import 'dart:ui';
 import '/custom_code/actions/index.dart' as actions;
 import 'settings_storage_food_categories_widget.dart'
     show SettingsStorageFoodCategoriesWidget;
@@ -17,15 +18,14 @@ class SettingsStorageFoodCategoriesModel
     extends FlutterFlowModel<SettingsStorageFoodCategoriesWidget> {
   ///  State fields for stateful widgets in this page.
 
-  final unfocusNode = FocusNode();
   // Model for appBar component.
   late AppBarModel appBarModel;
-  // Stores action output result for [Custom Action - reorderItem] action in ListView widget.
-  List<String>? updatedList;
   // State field(s) for TextField widget.
   FocusNode? textFieldFocusNode;
   TextEditingController? textController;
   String? Function(BuildContext, String?)? textControllerValidator;
+  // Stores action output result for [Custom Action - reorderItem] action in ListView widget.
+  List<String>? updatedList;
 
   @override
   void initState(BuildContext context) {
@@ -34,7 +34,6 @@ class SettingsStorageFoodCategoriesModel
 
   @override
   void dispose() {
-    unfocusNode.dispose();
     appBarModel.dispose();
     textFieldFocusNode?.dispose();
     textController?.dispose();

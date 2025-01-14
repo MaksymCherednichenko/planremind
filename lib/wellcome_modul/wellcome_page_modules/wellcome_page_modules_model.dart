@@ -5,6 +5,7 @@ import '/backend/schema/structs/index.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import 'dart:ui';
 import '/custom_code/actions/index.dart' as actions;
 import '/flutter_flow/custom_functions.dart' as functions;
 import 'wellcome_page_modules_widget.dart' show WellcomePageModulesWidget;
@@ -24,7 +25,6 @@ class WellcomePageModulesModel
 
   ///  State fields for stateful widgets in this page.
 
-  final unfocusNode = FocusNode();
   // Stores action output result for [Firestore Query - Query a collection] action in WellcomePageModules widget.
   ModuleStatesRecord? moduleStatesIsExist;
   // Stores action output result for [Backend Call - Create Document] action in WellcomePageModules widget.
@@ -33,6 +33,8 @@ class WellcomePageModulesModel
   ModuleStatesRecord? moduleStatesVar;
   // Stores action output result for [Custom Action - updateModuleState] action in WellcomePageModules widget.
   List<ModuleStruct>? moduleList;
+  // Stores action output result for [Backend Call - Read Document] action in Text widget.
+  UsersRecord? userOutput;
   // State field(s) for PageView widget.
   PageController? pageViewController;
 
@@ -70,7 +72,5 @@ class WellcomePageModulesModel
   void initState(BuildContext context) {}
 
   @override
-  void dispose() {
-    unfocusNode.dispose();
-  }
+  void dispose() {}
 }

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -76,18 +77,47 @@ class FFLocalizations {
   };
 }
 
+/// Used if the locale is not supported by GlobalMaterialLocalizations.
+class FallbackMaterialLocalizationDelegate
+    extends LocalizationsDelegate<MaterialLocalizations> {
+  const FallbackMaterialLocalizationDelegate();
+
+  @override
+  bool isSupported(Locale locale) => _isSupportedLocale(locale);
+
+  @override
+  Future<MaterialLocalizations> load(Locale locale) async =>
+      SynchronousFuture<MaterialLocalizations>(
+        const DefaultMaterialLocalizations(),
+      );
+
+  @override
+  bool shouldReload(FallbackMaterialLocalizationDelegate old) => false;
+}
+
+/// Used if the locale is not supported by GlobalCupertinoLocalizations.
+class FallbackCupertinoLocalizationDelegate
+    extends LocalizationsDelegate<CupertinoLocalizations> {
+  const FallbackCupertinoLocalizationDelegate();
+
+  @override
+  bool isSupported(Locale locale) => _isSupportedLocale(locale);
+
+  @override
+  Future<CupertinoLocalizations> load(Locale locale) =>
+      SynchronousFuture<CupertinoLocalizations>(
+        const DefaultCupertinoLocalizations(),
+      );
+
+  @override
+  bool shouldReload(FallbackCupertinoLocalizationDelegate old) => false;
+}
+
 class FFLocalizationsDelegate extends LocalizationsDelegate<FFLocalizations> {
   const FFLocalizationsDelegate();
 
   @override
-  bool isSupported(Locale locale) {
-    final language = locale.toString();
-    return FFLocalizations.languages().contains(
-      language.endsWith('_')
-          ? language.substring(0, language.length - 1)
-          : language,
-    );
-  }
+  bool isSupported(Locale locale) => _isSupportedLocale(locale);
 
   @override
   Future<FFLocalizations> load(Locale locale) =>
@@ -103,6 +133,15 @@ Locale createLocale(String language) => language.contains('_')
         scriptCode: language.split('_').last,
       )
     : Locale(language);
+
+bool _isSupportedLocale(Locale locale) {
+  final language = locale.toString();
+  return FFLocalizations.languages().contains(
+    language.endsWith('_')
+        ? language.substring(0, language.length - 1)
+        : language,
+  );
+}
 
 final kTranslationsMap = <Map<String, Map<String, String>>>[
   // Settings
@@ -120,15 +159,15 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
       'en': 'UKR',
     },
     'f8o72jix': {
-      'uk': 'Рецепти',
+      'uk': 'Профіль та підписки',
       'en': 'Menu',
     },
     'dotf426g': {
-      'uk': 'Категорії товарів',
+      'uk': 'Категорії для Сховку',
       'en': 'Storage Categories',
     },
     's8i5pqoh': {
-      'uk': 'Список магазинів',
+      'uk': 'Магазини',
       'en': 'Shops',
     },
     'aqiihlos': {
@@ -136,12 +175,12 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
       'en': 'Friends',
     },
     'r5sk7oja': {
-      'uk': 'Modules',
-      'en': 'Help Center',
+      'uk': 'Модулі',
+      'en': 'Modules',
     },
     'wm7q3olv': {
-      'uk': 'Одиниці виміру',
-      'en': '',
+      'uk': 'Система виміру',
+      'en': 'Одиниці виміру',
     },
     'm3ynx9bc': {
       'uk': 'Euro',
@@ -149,11 +188,19 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
     },
     'vnptuhqz': {
       'uk': 'US',
-      'en': 'Select a store',
+      'en': 'US',
     },
     '6ihuaggm': {
-      'uk': 'Help Center',
-      'en': '',
+      'uk': 'Сповіщення',
+      'en': 'Help center',
+    },
+    'e8fyqq2k': {
+      'uk': 'Пройти гайд заново',
+      'en': 'Help center',
+    },
+    'r4me0mej': {
+      'uk': 'Допомога',
+      'en': 'Help center',
     },
     'x12o8hkx': {
       'uk': 'Home',
@@ -163,11 +210,11 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
   // LoginPage
   {
     'fmkm4vpe': {
-      'uk': 'Sign in with Google',
+      'uk': 'Вхід з Google',
       'en': 'Sign in with Google',
     },
     'z0vadp7z': {
-      'uk': 'Sign in with Apple',
+      'uk': 'Вхід з Apple',
       'en': 'Sign in with Apple',
     },
     '3krdywht': {
@@ -177,29 +224,37 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
   },
   // HubPage
   {
-    'ii3li55q': {
-      'uk': 'Home',
-      'en': '',
+    '320asavf': {
+      'uk': 'Сьогодні',
+      'en': 'Today',
     },
-    'wf3zrvcr': {
-      'uk': 'Car Service',
-      'en': '',
+    'hf1ytjcl': {
+      'uk': 'Дім',
+      'en': 'Home',
     },
-    'gq551s7l': {
-      'uk': 'Plants',
-      'en': '',
+    'vkc0ptx5': {
+      'uk': 'Гараж',
+      'en': 'Garage',
     },
-    '0x4mdkzs': {
-      'uk': 'Health',
-      'en': '',
+    '9dvs4lp2': {
+      'uk': 'Рослини',
+      'en': 'Plants',
     },
-    '2wabq28u': {
-      'uk': 'Pets',
-      'en': '',
+    'bwxexx4u': {
+      'uk': 'Здоровʼя',
+      'en': 'Health',
     },
-    'r4bs96wt': {
-      'uk': 'Sport',
-      'en': '',
+    'i7demk40': {
+      'uk': 'Улюбленці',
+      'en': 'Pets',
+    },
+    '1h1idrun': {
+      'uk': 'Спорт',
+      'en': 'Sport',
+    },
+    '67wciw7h': {
+      'uk': 'У найближчі дні',
+      'en': 'Upcoming',
     },
     'q4xxo63k': {
       'uk': 'Home',
@@ -210,15 +265,15 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
   {
     'fah9820a': {
       'uk': 'Shopping',
-      'en': 'Shopping',
+      'en': 'Список покупок',
     },
     '2uxti7t7': {
       'uk': 'Planner',
-      'en': 'Planner',
+      'en': 'Планер',
     },
     'xlw47m23': {
       'uk': 'Storage',
-      'en': 'Storage',
+      'en': 'Сховок',
     },
     '250mxy60': {
       'uk': 'Сніданок',
@@ -236,74 +291,7 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
       'uk': 'Інше',
       'en': 'Other',
     },
-    'fqvk97u3': {
-      'uk': 'Виходить термін',
-      'en': 'Upcoming',
-    },
-    'ormc4x80': {
-      'uk': 'Home',
-      'en': 'Home',
-    },
     'mzsui0x9': {
-      'uk': 'Home',
-      'en': 'Home',
-    },
-  },
-  // AddMealForPlannerPage
-  {
-    '9oijar81': {
-      'uk': 'Додати страву',
-      'en': 'Add a meal',
-    },
-    'p4a6hhem': {
-      'uk': 'Button',
-      'en': 'Button',
-    },
-    'pzx0q4ri': {
-      'uk': 'Назва',
-      'en': 'Name',
-    },
-    'vghxvaz0': {
-      'uk': 'Інгредієнт',
-      'en': 'Ingredient',
-    },
-    '25cuicol': {
-      'uk': 'Проміжок дат',
-      'en': 'Date range',
-    },
-    'ldkeap1b': {
-      'uk': 'Сніданок',
-      'en': 'Breakfast',
-    },
-    'dgefvyj2': {
-      'uk': 'Обід',
-      'en': 'Lunch',
-    },
-    'lez9arqj': {
-      'uk': 'Вечеря',
-      'en': 'Dinner',
-    },
-    'f0x4u85m': {
-      'uk': 'Інше',
-      'en': 'Other',
-    },
-    '2nqq997t': {
-      'uk': 'Додати рецепт',
-      'en': 'Add a recipe',
-    },
-    'kc9tfw40': {
-      'uk': 'Додати',
-      'en': 'Add',
-    },
-    '9b14ehge': {
-      'uk': 'Please enter a name',
-      'en': 'Будь ласка введіть назву',
-    },
-    'lb4r3r62': {
-      'uk': 'Please choose an option from the dropdown',
-      'en': 'Будь ласка оберіть варіант зі списку',
-    },
-    'hkowi7u3': {
       'uk': 'Home',
       'en': 'Home',
     },
@@ -335,86 +323,87 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
       'en': 'Home',
     },
   },
-  // HomeShoppingActual
-  {
-    't63gma71': {
-      'uk': 'Shopping',
-      'en': 'Shopping',
-    },
-    '1z01i2jb': {
-      'uk': 'Planner',
-      'en': 'Planner',
-    },
-    'j2e8qmsz': {
-      'uk': 'Storage',
-      'en': 'Storage',
-    },
-    'wdwvnmuq': {
-      'uk': 'Поточний список',
-      'en': 'Actual',
-    },
-    'aixiys2i': {
-      'uk': 'Історія',
-      'en': 'History',
-    },
-    'k4i5ux94': {
-      'uk': 'Сортувати по категоріям',
-      'en': 'Sort by categories',
-    },
-    'm3y37i0j': {
-      'uk': 'Все',
-      'en': 'All',
-    },
-    'ctgd4508': {
-      'uk': 'Їжа',
-      'en': 'Food',
-    },
-    'eaz5e3eb': {
-      'uk': 'Побутове',
-      'en': 'Household',
-    },
-    'v6pckmv2': {
-      'uk': 'Сортувати по магазинам',
-      'en': 'Sort by stores',
-    },
-    'm62wgjbg': {
-      'uk': 'В історію',
-      'en': 'Move to history',
-    },
-    'fdoo8lpk': {
-      'uk': 'Вибрати все',
-      'en': 'Select all',
-    },
-    '1t126lbs': {
-      'uk': 'Home',
-      'en': 'Home',
-    },
-  },
   // Settings_Notifications
   {
-    'cgik6w8b': {
-      'uk': 'Notifications',
-      'en': 'Сповіщення',
-    },
-    'bu0u7yza': {
-      'uk': 'Option 1',
-      'en': 'Option 1',
+    '6y8vuvih': {
+      'uk': 'Година, о которій надходять сповіщення про присутні події',
+      'en': '',
     },
     '9lawvclt': {
-      'uk': 'Home',
+      'uk': 'Оберіть час сповіщень',
       'en': 'Home',
     },
     'yt24jwsl': {
       'uk': 'Search for an item...',
       'en': 'Search for an item...',
     },
-    '4wg4r2no': {
-      'uk': 'Set notification time',
-      'en': 'Обрати',
+    '4tp145uv': {
+      'uk': '05:00',
+      'en': '',
+    },
+    '8x7xb1p7': {
+      'uk': '06:00',
+      'en': '',
+    },
+    'tjx1jvng': {
+      'uk': '07:00',
+      'en': '',
+    },
+    'g000n8bv': {
+      'uk': '08:00',
+      'en': '',
+    },
+    'jta2por3': {
+      'uk': '09:00',
+      'en': '',
+    },
+    'ta48ajxw': {
+      'uk': '10:00',
+      'en': '',
+    },
+    'gjbdoh0l': {
+      'uk': '11:00',
+      'en': '',
+    },
+    'lklfc3b4': {
+      'uk': '12:00',
+      'en': '',
+    },
+    'isnca8z2': {
+      'uk': '13:00',
+      'en': '',
+    },
+    'voe8ig9o': {
+      'uk': '14:00',
+      'en': '',
+    },
+    '6beriiu6': {
+      'uk': '15:00',
+      'en': '',
+    },
+    'i6giq53o': {
+      'uk': '16:00',
+      'en': '',
+    },
+    'm0azsprf': {
+      'uk': '17:00',
+      'en': '',
+    },
+    'qay86yu4': {
+      'uk': '18:00',
+      'en': '',
+    },
+    'rka9l64u': {
+      'uk': '19:00',
+      'en': '',
+    },
+    '6jmqefyq': {
+      'uk': '20:00',
+      'en': '',
     },
     'vvzp9nru': {
-      'uk': 'Settings',
-      'en': 'Налаштування',
+      'uk': 'Сповіщення',
+      'en': 'Settings',
     },
     'xni6yr8o': {
       'uk': 'Home',
@@ -435,13 +424,17 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
       'uk': 'Побутові',
       'en': 'Household',
     },
-    'v7jqtrvi': {
+    'ux008bwm': {
       'uk': '',
       'en': '',
     },
-    'ux008bwm': {
+    'w733wy0w': {
       'uk': 'Додати категорію',
-      'en': 'New category...',
+      'en': 'New category',
+    },
+    'v7jqtrvi': {
+      'uk': '',
+      'en': '',
     },
     '7cmzanly': {
       'uk': 'Home',
@@ -463,12 +456,12 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
       'en': 'Storage',
     },
     'j992yftb': {
-      'uk': 'Food',
-      'en': 'Їжа',
+      'uk': 'Їжа',
+      'en': 'Food',
     },
     'inbtnljl': {
-      'uk': 'Household',
-      'en': 'Побутові',
+      'uk': 'Побутові',
+      'en': 'Household',
     },
     'fwi0ci0j': {
       'uk': 'All ',
@@ -484,6 +477,10 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
     'zinv9nzw': {
       'uk': 'Рецепт',
       'en': 'Recipe',
+    },
+    'ahoiw0ly': {
+      'uk': 'Відмінусувати продукти',
+      'en': '',
     },
     'yr9c2g40': {
       'uk': 'Meal Ingredients',
@@ -514,11 +511,15 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
     },
     'zkc22otq': {
       'uk': 'Food',
-      'en': 'Їжа',
+      'en': '',
     },
     'eu821lyn': {
-      'uk': 'Household',
-      'en': 'Побутові',
+      'uk': 'Побутові',
+      'en': 'Household',
+    },
+    'pho9bxyg': {
+      'uk': 'Зіпсовані продукти',
+      'en': '',
     },
     't5pdmn3v': {
       'uk': 'All',
@@ -532,7 +533,7 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
   // Settings_help_center
   {
     'm8i3hlwj': {
-      'uk': 'FAQs',
+      'uk': 'FAQ',
       'en': 'FAQs',
     },
     '4s058e08': {
@@ -579,10 +580,6 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
       'uk': 'Так, для цього є кнопка в самому низу сторінки',
       'en': 'Yes, you can use the bottom page button for that',
     },
-    'uhetf1um': {
-      'uk': 'Я не розумію як користуватись застосунком.',
-      'en': 'I don\'t understand how to use the application.',
-    },
     '5fzz11qw': {
       'uk':
           'Ми записали інструкції по користуванню застосунком в нашому інстаграм та телеграм каналі. Нижче є посилання на них.',
@@ -590,7 +587,7 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
           'We have recorded instructions for using the application on our Instagram and Telegram channel. Above are the lnks on them.',
     },
     'kf0yu637': {
-      'uk': 'Contact Support',
+      'uk': 'Підтримка',
       'en': 'Contact Support',
     },
     'mp40ei30': {
@@ -602,7 +599,7 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
       'en': 'plan_remind_app ',
     },
     't6h1yaa5': {
-      'uk': 'About App',
+      'uk': 'Про додаток',
       'en': 'About App',
     },
     'gq3n0m30': {
@@ -617,21 +614,9 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
       'en':
           'Starting from planning meals for the week, ending with reminders to pay off debt. Currently, all modules are under development, regarding the schedule of releases - rely on the information in the Instagram profile.',
     },
-    'w6qjm06n': {
-      'uk': 'Tutorials',
-      'en': 'Tutorials',
-    },
-    '95htra8c': {
-      'uk': 'Tutorials',
-      'en': '',
-    },
     'faitvbj8': {
       'uk': 'Видалити обліковий запис',
       'en': 'Remove account',
-    },
-    '0d2npccs': {
-      'uk': 'Налаштування',
-      'en': 'Settings',
     },
   },
   // SettingsShops
@@ -641,8 +626,8 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
       'en': 'Settings',
     },
     '7qiz0h7d': {
-      'uk': 'Shops',
-      'en': 'Список магазинів',
+      'uk': 'Список магазинів',
+      'en': 'Shops',
     },
     'efg3sbcq': {
       'uk': '',
@@ -657,87 +642,6 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
       'en': 'Shop name...',
     },
     'jaywcc7d': {
-      'uk': 'Home',
-      'en': 'Home',
-    },
-  },
-  // Menu
-  {
-    '3gu498bx': {
-      'uk': 'Меню',
-      'en': 'Menu',
-    },
-    'ipx53x5c': {
-      'uk': 'Home',
-      'en': 'Home',
-    },
-  },
-  // CreateItemInMenu
-  {
-    'soukpnst': {
-      'uk': 'Додати нову страву',
-      'en': 'Add a new meal',
-    },
-    'h8za9l3f': {
-      'uk': 'Назва',
-      'en': 'Name',
-    },
-    '6wjk3bms': {
-      'uk': 'Інгредієнт',
-      'en': 'Ingredient',
-    },
-    'bduo0ju1': {
-      'uk': 'Додати рецепт',
-      'en': 'Add a recipe',
-    },
-    '7ai47qpu': {
-      'uk': 'Зберегти',
-      'en': 'Save',
-    },
-    'z3nm8kzw': {
-      'uk': 'Please enter a name',
-      'en': 'Введіть назву',
-    },
-    'tal5pzm2': {
-      'uk': 'Please choose an option from the dropdown',
-      'en': 'Please choose an option from the dropdown',
-    },
-    'pcv9t3yp': {
-      'uk': 'Меню',
-      'en': 'Menu',
-    },
-    'zq9kyzus': {
-      'uk': 'Button',
-      'en': 'Button',
-    },
-    'yi02sgog': {
-      'uk': 'Home',
-      'en': 'Home',
-    },
-  },
-  // MenuAddToPlan
-  {
-    'ypgknqj2': {
-      'uk': 'Ingridient',
-      'en': 'Інгрідієнт',
-    },
-    '7mpd2klg': {
-      'uk': 'Рецепт',
-      'en': 'Recipe',
-    },
-    '3uwn55vj': {
-      'uk': 'Add to plan',
-      'en': 'Додати до плану',
-    },
-    'kptsxgdy': {
-      'uk': 'Меню',
-      'en': 'Menu',
-    },
-    'ltdvl5jj': {
-      'uk': 'Button',
-      'en': 'Button',
-    },
-    'oqixzrgs': {
       'uk': 'Home',
       'en': 'Home',
     },
@@ -908,13 +812,17 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
       'uk': 'Побутові',
       'en': 'Household',
     },
-    'i2jxcrb1': {
+    'duxjve90': {
       'uk': '',
       'en': '',
     },
-    'duxjve90': {
+    'zsum884p': {
       'uk': 'Додати категорію',
-      'en': 'New category...',
+      'en': 'New category',
+    },
+    'i2jxcrb1': {
+      'uk': '',
+      'en': '',
     },
     '6thosw0o': {
       'uk': 'Home',
@@ -924,11 +832,11 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
   // HomeCategories
   {
     'kyrfm3yn': {
-      'uk': 'Kitchen',
+      'uk': 'Кухня',
       'en': 'Kitchen',
     },
     'yb70sw9r': {
-      'uk': 'Birthdays',
+      'uk': 'Дні Народження',
       'en': 'Birthdays',
     },
     '4tswk39s': {
@@ -943,11 +851,11 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
       'en': 'Add',
     },
     'pp2uiufa': {
-      'uk': 'Upcoming',
-      'en': 'Найближчі дні народження',
+      'uk': 'Найближчі дні народження',
+      'en': 'Upcoming dates',
     },
     'wmcckhso': {
-      'uk': 'Birthdays',
+      'uk': 'Дні народження',
       'en': 'Birthdays',
     },
     '7xsfj1v8': {
@@ -988,6 +896,10 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
   },
   // FriendsPage
   {
+    'rlry4jie': {
+      'uk': 'Друзі',
+      'en': 'Friends',
+    },
     'l7weqcz4': {
       'uk': 'Ваше ім\'я:',
       'en': 'Your name:',
@@ -997,16 +909,16 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
       'en': 'Share your account with a friend',
     },
     'qon919zz': {
+      'uk': 'Дні народження',
+      'en': 'Add friend',
+    },
+    'iz9xbws1': {
       'uk': 'Додати друга',
       'en': 'Add friend',
     },
     'ibcabmde': {
       'uk': 'Мої друзі',
       'en': 'My friends',
-    },
-    'sh4s7ega': {
-      'uk': 'Друзі',
-      'en': 'Friends',
     },
     'lqc4gnos': {
       'uk': 'Home',
@@ -1046,33 +958,41 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
   },
   // CarServicePlannerPage
   {
-    'sgdpqk3z': {
+    'uh8fq1zt': {
       'uk': 'Автосервіс',
-      'en': 'Vehicle service',
+      'en': '',
     },
-    'cz14pkeq': {
+    '60ilb9ez': {
       'uk': 'History',
       'en': '',
     },
-    '9tzn45qn': {
+    'igksda1e': {
       'uk': 'Planner',
       'en': '',
     },
-    'fn7dv4m6': {
-      'uk': 'Information',
+    'dbxvnea0': {
+      'uk': 'Cars',
       'en': '',
     },
-    'i90izz9d': {
-      'uk': 'На обрану дату немає подій',
-      'en': '',
+    'imsyeq13': {
+      'uk': 'Сьогодні',
+      'en': 'Today',
     },
-    'cnynrq5m': {
-      'uk': 'Заплановані події',
-      'en': '',
+    'fqjhe8t1': {
+      'uk': 'Завтра',
+      'en': 'Tomorrow',
     },
-    'b6x1ydwz': {
-      'uk': 'Button',
-      'en': 'No',
+    '7ifivmvv': {
+      'uk': 'Найближчими днями',
+      'en': 'Upcoming',
+    },
+    '71b605ay': {
+      'uk': 'Усі події',
+      'en': 'Upcoming',
+    },
+    'rkaf1hz0': {
+      'uk': 'Наразі записи відсутні',
+      'en': '',
     },
     'tu55ca6z': {
       'uk': 'Home',
@@ -1081,21 +1001,25 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
   },
   // CarServiceHistoryPage
   {
-    '36brf3kb': {
-      'uk': 'History',
-      'en': 'History',
+    'ntdcufx2': {
+      'uk': 'Історія пуста',
+      'en': '',
     },
-    'jobe2x3d': {
-      'uk': 'Planner',
-      'en': 'Planner',
-    },
-    'g8jn0hs3': {
-      'uk': 'Information',
-      'en': 'Information',
-    },
-    'f1u84pij': {
+    'nlw9iu1d': {
       'uk': 'Автосервіс',
-      'en': 'Vehicle service',
+      'en': '',
+    },
+    'vvoci361': {
+      'uk': 'History',
+      'en': '',
+    },
+    'h0xg8eny': {
+      'uk': 'Planner',
+      'en': '',
+    },
+    'xj0i5vj4': {
+      'uk': 'Cars',
+      'en': '',
     },
     'pel2t2a0': {
       'uk': 'Home',
@@ -1104,58 +1028,51 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
   },
   // CarServiceInformationPage
   {
-    'twf4runv': {
-      'uk': 'History',
-      'en': 'History',
-    },
-    'c47mvbkx': {
-      'uk': 'Planner',
-      'en': 'Planner',
-    },
-    't8f8sfmm': {
-      'uk': 'Information',
-      'en': 'Information',
-    },
-    'qawrkgv4': {
-      'uk': 'Моя машина',
-      'en': 'My car',
-    },
-    'j9t5z0gk': {
-      'uk': 'Запчастини',
-      'en': 'Spare parts',
-    },
-    'a0cxb4ln': {
-      'uk': 'Автосервіс',
-      'en': 'Vehicle service',
-    },
-    'r5ugbrcb': {
-      'uk': 'Home',
-      'en': '',
-    },
-  },
-  // MyCarPage
-  {
-    'eqnj6cdl': {
-      'uk': 'Моя машина',
-      'en': 'My car',
-    },
-    'oru4pvt2': {
-      'uk': ' рік випуску',
-      'en': '',
-    },
-    'p26mausp': {
-      'uk': 'VIN code',
+    'uytfmpqr': {
+      'uk': 'VIN Код',
       'en': 'VIN code',
     },
-    'c9q9o1mb': {
-      'uk': 'Mileage',
+    'xzt8styy': {
+      'uk': 'Пробіг',
+      'en': 'Mileage',
+    },
+    '0gk0z1bj': {
+      'uk': 'Змінити',
       'en': '',
     },
-    'owdm7yba': {
-      'uk': 'Зберегти',
-      'en': 'Save',
+    'pp6w629r': {
+      'uk': 'Add new car',
+      'en': '',
     },
-    '6hqiwq1w': {
+    'isf4xiuj': {
+      'uk': 'Видалити запис',
+      'en': '',
+    },
+    'eyj5nape': {
+      'uk': 'Список деталей порожній',
+      'en': '',
+    },
+    'a5cmkbb4': {
+      'uk': 'Для того, щоб добавити деталь, вам потрібен автомобіль',
+      'en': '',
+    },
+    '1s04ulm1': {
+      'uk': 'Автосервіс',
+      'en': '',
+    },
+    '14br83qu': {
+      'uk': 'History',
+      'en': '',
+    },
+    'mo75osbx': {
+      'uk': 'Planner',
+      'en': '',
+    },
+    'rng5134w': {
+      'uk': 'Cars',
+      'en': '',
+    },
+    'r5ugbrcb': {
       'uk': 'Home',
       'en': '',
     },
@@ -1173,21 +1090,61 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
   },
   // PlantsPlannerPage
   {
-    'bb25ymrm': {
-      'uk': 'My plants',
-      'en': 'My plants',
+    'zojps4qi': {
+      'uk': 'Plants',
+      'en': '',
     },
-    'rbyay931': {
+    'e0l9n5en': {
+      'uk': 'My Plants',
+      'en': '',
+    },
+    'fthligmm': {
       'uk': 'Planner',
-      'en': 'Planner',
+      'en': '',
     },
-    'kb22etia': {
-      'uk': 'Заплановані події',
-      'en': 'Upcoming',
+    'c7efo504': {
+      'uk': 'Today',
+      'en': '',
     },
-    'j5zx4wot': {
-      'uk': 'Рослини',
-      'en': 'Plants',
+    '0h9pa4rr': {
+      'uk': 'Watering',
+      'en': '',
+    },
+    'hz5rktxk': {
+      'uk': 'Fertilization',
+      'en': '',
+    },
+    'c9dfq7mv': {
+      'uk': 'Solig change',
+      'en': '',
+    },
+    'uf6oj82u': {
+      'uk': 'Tomorrow',
+      'en': '',
+    },
+    '8da6pfz6': {
+      'uk': 'Hello World',
+      'en': '',
+    },
+    'oqo7uaqa': {
+      'uk': 'Hello World',
+      'en': '',
+    },
+    'i588zz5q': {
+      'uk': 'Hello World',
+      'en': '',
+    },
+    'jradev7j': {
+      'uk': 'Hello World',
+      'en': '',
+    },
+    'px8fcort': {
+      'uk': 'Upcoming',
+      'en': '',
+    },
+    'j0qh5m3j': {
+      'uk': 'Наразі записи відсутні',
+      'en': '',
     },
     '2zf5062w': {
       'uk': 'Home',
@@ -1196,6 +1153,14 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
   },
   // HealthPlannerPage
   {
+    'i96u2hf6': {
+      'uk': 'На сьогоднi подiй немає',
+      'en': '',
+    },
+    'ols081o9': {
+      'uk': 'Здоров\'я',
+      'en': 'Health',
+    },
     'cz14pkeq': {
       'uk': 'History',
       'en': '',
@@ -1205,16 +1170,8 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
       'en': '',
     },
     'fn7dv4m6': {
-      'uk': 'Information',
+      'uk': 'Medication',
       'en': '',
-    },
-    'cnynrq5m': {
-      'uk': 'Заплановані події',
-      'en': '',
-    },
-    'ols081o9': {
-      'uk': 'Здоров\'я',
-      'en': 'Health',
     },
     'toqfag5z': {
       'uk': 'Home',
@@ -1223,23 +1180,23 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
   },
   // PetsPlannerPage
   {
-    'iv5pd1u3': {
+    '90lfitav': {
+      'uk': 'На сьогоднi подiй немає',
+      'en': '',
+    },
+    '85xeb4fi': {
+      'uk': 'Улюбленці',
+      'en': '',
+    },
+    '6kiv45ok': {
       'uk': 'History',
       'en': '',
     },
-    'xawnto2m': {
+    '0umoppk5': {
       'uk': 'Planner',
       'en': '',
     },
-    'vtogz4fo': {
-      'uk': 'Information',
-      'en': '',
-    },
-    'xzp7f4u8': {
-      'uk': 'Заплановані події',
-      'en': '',
-    },
-    'xwllt4gb': {
+    '9rxpnkej': {
       'uk': 'Pets',
       'en': '',
     },
@@ -1258,89 +1215,62 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
       'uk': 'Planner',
       'en': '',
     },
-    'b0mcl9ix': {
-      'uk': 'Information',
-      'en': '',
-    },
-    '86g9g8nj': {
-      'uk': 'Заплановані події',
-      'en': '',
-    },
-    '8y4xscor': {
-      'uk': 'Sports',
-      'en': '',
-    },
     'pkgctbvk': {
-      'uk': 'Home',
-      'en': '',
-    },
-  },
-  // MyPlantsPageGrid
-  {
-    't4eb7djb': {
-      'uk': 'My plants',
-      'en': 'My plants',
-    },
-    'pigmnprn': {
-      'uk': 'Planner',
-      'en': 'Planner',
-    },
-    '31nmn6id': {
-      'uk': 'Рослини',
-      'en': 'Plants',
-    },
-    'n77zompm': {
       'uk': 'Home',
       'en': '',
     },
   },
   // MyPlantsPageList
   {
-    'mvc1sw9x': {
-      'uk': 'My plants',
-      'en': 'My plants',
+    'egoz7e3h': {
+      'uk': 'Plants',
+      'en': '',
     },
-    '7v6o0ezx': {
+    'uehksx1x': {
+      'uk': 'My Plants',
+      'en': '',
+    },
+    'l8frloi3': {
       'uk': 'Planner',
-      'en': 'Planner',
+      'en': '',
     },
-    '66750enz': {
-      'uk': 'Рослини',
-      'en': 'Plants',
+    'o11bfnel': {
+      'uk': 'Наразі список пустий',
+      'en': '',
     },
     'yf55bmnn': {
       'uk': 'Home',
       'en': '',
     },
   },
-  // HealthHistoryPage
+  // HealthHistoryPageEvents
   {
-    '0ytv7o1f': {
-      'uk': 'History',
-      'en': '',
-    },
-    '9iys252w': {
-      'uk': 'Planner',
-      'en': '',
-    },
-    'ygt58vv5': {
-      'uk': 'Information',
-      'en': '',
-    },
-    'ltjczawv': {
-      'uk': 'Hello World',
-      'en': '',
-    },
-    'qprac007': {
-      'uk': 'Hello World',
-      'en': '',
-    },
-    'd3vf3hrq': {
-      'uk': 'Hello World',
+    'd51pzp09': {
+      'uk': 'Наразі архів пустий',
       'en': '',
     },
     '7cln47t1': {
       'uk': 'Здоров\'я',
+      'en': '',
+    },
+    'u7hbfnua': {
+      'uk': 'History',
+      'en': '',
+    },
+    '5f7o3io7': {
+      'uk': 'Planner',
+      'en': '',
+    },
+    'r5bch8g0': {
+      'uk': 'Medication',
+      'en': '',
+    },
+    'pz6z95c4': {
+      'uk': 'Події',
+      'en': '',
+    },
+    '5l4fet8o': {
+      'uk': 'Ліки',
       'en': '',
     },
     '84tug3kc': {
@@ -1348,38 +1278,34 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
       'en': '',
     },
   },
-  // HealthInformationPage
+  // AllMedicationPage
   {
-    'e5x7f20u': {
+    '01yqzd3x': {
+      'uk': 'Здоров\'я',
+      'en': '',
+    },
+    'bvrvvw82': {
+      'uk': '',
+      'en': '',
+    },
+    'fefi9874': {
       'uk': 'History',
       'en': '',
     },
-    'jr15kz27': {
+    'ok1hoeu7': {
       'uk': 'Planner',
       'en': '',
     },
-    'j9eppe54': {
-      'uk': 'Information',
+    'q8djr5ib': {
+      'uk': 'Medication',
       'en': '',
     },
-    'ilqlbi9p': {
-      'uk': 'Моя медична карта',
-      'en': 'My medical card',
-    },
-    'ywnfmky2': {
-      'uk': '',
+    'y42i8id4': {
+      'uk': 'Сьогодні',
       'en': '',
     },
-    '9ct43s2m': {
-      'uk': 'Мої ліки',
-      'en': '',
-    },
-    'thjyih1r': {
-      'uk': '',
-      'en': '',
-    },
-    '01yqzd3x': {
-      'uk': 'Здоров\'я',
+    'sr8218zd': {
+      'uk': 'Всі ліки',
       'en': '',
     },
     'xj69o1rm': {
@@ -1548,43 +1474,43 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
   // SettingsModules
   {
     'wgo4exuw': {
-      'uk': 'Modules',
-      'en': '',
+      'uk': 'Модулі',
+      'en': 'Modules',
     },
     'wwpn6oqg': {
-      'uk': 'Home',
-      'en': '',
+      'uk': 'Дім',
+      'en': 'Home',
     },
     'w61ibmzz': {
-      'uk': 'Car',
-      'en': '',
+      'uk': 'Гараж',
+      'en': 'Garage',
     },
     '3sktvdg4': {
-      'uk': 'Plants',
-      'en': '',
+      'uk': 'Рослини',
+      'en': 'Plants',
     },
     '2b0o1674': {
-      'uk': 'Health',
-      'en': '',
+      'uk': 'Здоровʼя',
+      'en': 'Health',
     },
     'yhy9h8la': {
-      'uk': 'Pets',
-      'en': '',
+      'uk': 'Улюбленці',
+      'en': 'Pets',
     },
     'irgzrda4': {
-      'uk': 'Sport',
-      'en': '',
+      'uk': 'Спорт',
+      'en': 'Sport',
     },
     'rfykjd8z': {
       'uk': 'Налаштування',
-      'en': '',
+      'en': 'Settings',
     },
     'n11pqh5i': {
       'uk': 'Home',
       'en': '',
     },
   },
-  // HomeShoppingActualCopy
+  // HomeShoppingActual
   {
     '7b3i19op': {
       'uk': 'Shopping',
@@ -1606,138 +1532,348 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
       'uk': 'Історія',
       'en': '',
     },
-    'gzhtxnft': {
-      'uk': 'В історію',
+    'mald2apg': {
+      'uk': 'Нові пропозиції у скрині',
       'en': '',
     },
-    'b72tksvn': {
-      'uk': 'Вибрати все',
+    '6k4cmnpp': {
+      'uk': 'Виконано усе',
+      'en': '',
+    },
+    '5ij3uo5j': {
+      'uk': 'Скасувати',
+      'en': '',
+    },
+    'db9h64vt': {
+      'uk': 'Вибрати',
+      'en': '',
+    },
+    '6tpidpvc': {
+      'uk': 'Обрати все ',
       'en': '',
     },
     'ii3li55q': {
       'uk': 'Home',
+      'en': 'Home',
+    },
+  },
+  // TodayMedicationPage
+  {
+    '68633igz': {
+      'uk': 'Здоров\'я',
+      'en': '',
+    },
+    'b87x90if': {
+      'uk': 'History',
+      'en': '',
+    },
+    'zfq2ui0v': {
+      'uk': 'Planner',
+      'en': '',
+    },
+    'cjrwigpl': {
+      'uk': 'Medication',
+      'en': '',
+    },
+    '03oz1zjj': {
+      'uk': 'Сьогодні',
+      'en': '',
+    },
+    'kjnofc5f': {
+      'uk': 'Всі ліки',
+      'en': '',
+    },
+    'mqftq2wt': {
+      'uk': 'Home',
       'en': '',
     },
   },
-  // Calendar_popup
+  // recipe
   {
-    'nifdpk9b': {
-      'uk': 'Choose a date',
-      'en': 'Оберіть дату',
+    '79flm69b': {
+      'uk': 'Рецепт',
+      'en': 'recipe',
     },
-    'qt439pau': {
-      'uk': 'Choose',
-      'en': 'Обрати',
+    'uqyed7c4': {
+      'uk': '',
+      'en': '',
+    },
+    '6i37tgwm': {
+      'uk': 'Посилання на сайт з рецептом',
+      'en': 'Link to the site with the recipe',
+    },
+    'ljd19j9l': {
+      'uk': 'Посилання...',
+      'en': 'Link...',
+    },
+    '2q25issc': {
+      'uk': 'Посилання на відео з рецептом',
+      'en': 'Link to the recipe video',
+    },
+    'gw4ay7iu': {
+      'uk': 'Посилання...',
+      'en': '',
+    },
+    'n0iwel69': {
+      'uk': 'Основні інгедієнти',
+      'en': 'Main ingredients',
+    },
+    'xo9nzrwo': {
+      'uk': '+ Інгредієнт',
+      'en': '+ Ingredient',
+    },
+    'qbyu4uvq': {
+      'uk': 'Зберегти',
+      'en': 'Save',
+    },
+    '6ov9ulwk': {
+      'uk': 'Home',
+      'en': '',
+    },
+  },
+  // HealthHistoryPageMedications
+  {
+    '9uuypv19': {
+      'uk': 'Наразі архів пустий',
+      'en': '',
+    },
+    'd8pdcuqb': {
+      'uk': 'Здоров\'я',
+      'en': '',
+    },
+    'p6dtlo56': {
+      'uk': 'History',
+      'en': '',
+    },
+    'okm2xulq': {
+      'uk': 'Planner',
+      'en': '',
+    },
+    'xbdq4cnw': {
+      'uk': 'Medication',
+      'en': '',
+    },
+    '05ca9wby': {
+      'uk': 'Події',
+      'en': '',
+    },
+    'ahwbe5je': {
+      'uk': 'Ліки',
+      'en': '',
+    },
+    'tbnxhq8e': {
+      'uk': 'Home',
+      'en': '',
+    },
+  },
+  // PetsHistoryPage
+  {
+    '6nyt1ny1': {
+      'uk': 'Улюбленці',
+      'en': '',
+    },
+    'k5f4vqqs': {
+      'uk': 'History',
+      'en': '',
+    },
+    'h57516fr': {
+      'uk': 'Planner',
+      'en': '',
+    },
+    'y6qfka56': {
+      'uk': 'Pets',
+      'en': '',
+    },
+    '0j5aaf9g': {
+      'uk': 'Home',
+      'en': '',
+    },
+  },
+  // PetsPetPage
+  {
+    'pe72nt66': {
+      'uk': 'Улюбленці',
+      'en': '',
+    },
+    'fhwf7j73': {
+      'uk': 'History',
+      'en': '',
+    },
+    'iepikk51': {
+      'uk': 'Planner',
+      'en': '',
+    },
+    'qfvj64uu': {
+      'uk': 'Pets',
+      'en': '',
+    },
+    'gezjj0j8': {
+      'uk': 'Годування',
+      'en': '',
+    },
+    'yti2npiu': {
+      'uk': 'Home',
+      'en': '',
+    },
+  },
+  // SportsHistoryPage
+  {
+    'q1ej2p0p': {
+      'uk': 'History',
+      'en': '',
+    },
+    'x8vvr2zh': {
+      'uk': 'Planner',
+      'en': '',
+    },
+    'v0ggtre5': {
+      'uk': 'Home',
+      'en': '',
+    },
+  },
+  // addNewMeal
+  {
+    'pobgksgg': {
+      'uk': 'Додати нову страву',
+      'en': 'Add a new dish',
+    },
+    '8uu9hrrg': {
+      'uk': '',
+      'en': '',
+    },
+    'jkmu9njs': {
+      'uk': 'Назва страви',
+      'en': 'The name of the dish',
+    },
+    'btwrnmgf': {
+      'uk': 'Сніданок',
+      'en': '',
+    },
+    'u7ny6ffc': {
+      'uk': 'Обід',
+      'en': '',
+    },
+    'qxqditcj': {
+      'uk': 'Вечеря',
+      'en': '',
+    },
+    'eqq8jzvz': {
+      'uk': 'Інше',
+      'en': '',
+    },
+    '4w8lqeow': {
+      'uk': 'Інгредієнт',
+      'en': 'Ingredient',
+    },
+    'woub5a5p': {
+      'uk': 'Додати',
+      'en': '',
+    },
+    'n8rl6eu6': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    '3ypp4810': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
+    },
+    'nu4c1bbz': {
+      'uk': 'Home',
+      'en': '',
+    },
+  },
+  // AccountSettings
+  {
+    '96s660xm': {
+      'uk': 'Інформація про акаунт ',
+      'en': '',
+    },
+    'q7vvudq9': {
+      'uk': 'Username',
+      'en': '',
+    },
+    'jfulacto': {
+      'uk': 'Email',
+      'en': '',
+    },
+    '1l4mmft9': {
+      'uk': 'Стан підписки',
+      'en': '',
+    },
+    'qxqz94sf': {
+      'uk': 'Статус',
+      'en': '',
+    },
+    'mniqz467': {
+      'uk': 'Активна',
+      'en': '',
+    },
+    'juy69d67': {
+      'uk': 'Ваша підписка активна до кінця тестового періоду',
+      'en': '',
+    },
+    'e396gh5q': {
+      'uk': 'Деталі підписки',
+      'en': '',
+    },
+    '3e8zblpi': {
+      'uk': 'Вийти з акаунту',
+      'en': '',
+    },
+    'l2bei0yb': {
+      'uk': 'Профіль та підписки',
+      'en': '',
     },
   },
   // addingridientspopup
   {
-    'avhahze2': {
-      'uk': 'Додати інгредієнти',
-      'en': 'Add ingridients',
-    },
     'q56fk39m': {
-      'uk': 'Назва',
-      'en': 'Name',
-    },
-    '99weeg34': {
-      'uk': 'Маю це вдома',
-      'en': 'I have it at home',
-    },
-    'g488qv0n': {
-      'uk': 'Додати',
-      'en': 'Add',
-    },
-    '56l6ewt4': {
-      'uk': 'Please enter a name',
-      'en': 'Введіть назву',
-    },
-    '2qxfi55v': {
-      'uk': 'Field is required',
-      'en': 'Обовʼязкове поле',
-    },
-    '5wzxvh1m': {
-      'uk': 'Please choose an option from the dropdown',
-      'en': 'Оберіть опцію зі списку',
-    },
-  },
-  // MST2
-  {
-    '66iy46vm': {
-      'uk':
-          'Sorry, but currently this module is under development. It is going to be available soon. Stay tuned!',
-      'en':
-          'Вибачте, але наразі цей модуль у розробці. Він дуже скоро буде доступний для користування. Слідкуйте за новинами! ',
-    },
-    '68t3eh4i': {
-      'uk': 'Go back',
-      'en': 'Назад',
-    },
-  },
-  // AddItemStorageFood
-  {
-    '5k8bilzj': {
-      'uk': 'Add Item',
-      'en': 'Додати',
-    },
-    'o52nu8ma': {
-      'uk': '',
+      'uk': 'Назва продукту *',
       'en': '',
     },
-    'm5mrp35b': {
-      'uk': 'Category',
-      'en': 'Категорія',
+    'lrlk6zvk': {
+      'uk': 'Кількість *',
+      'en': '',
     },
-    '766fe0ao': {
-      'uk': 'Search for an item...',
-      'en': 'Search for an item...',
+    '2nzlbbln': {
+      'uk': 'Select...',
+      'en': '',
     },
-    'ahykxczv': {
-      'uk': 'Name',
-      'en': 'Назва',
+    'bcvbkr79': {
+      'uk': 'Search...',
+      'en': '',
     },
-    'h72iauws': {
-      'uk': 'Add',
-      'en': 'Додати',
+    'n9ofupeu': {
+      'uk': 'Категорія',
+      'en': '',
     },
-    'x3kgmpuy': {
-      'uk': 'Please enter a name',
-      'en': 'Введіть назву',
+    '9xknaat5': {
+      'uk': '* Обов\'язкові поля',
+      'en': '',
     },
-    'txhv6ekr': {
+    's9hy3zmc': {
+      'uk': 'Назва продукту is required',
+      'en': '',
+    },
+    '8ve9hep4': {
       'uk': 'Please choose an option from the dropdown',
-      'en': 'Оберіть опцію зі списку',
+      'en': '',
     },
-    'osyyt98t': {
-      'uk': 'Field is required',
-      'en': 'Обовʼязкове поле',
+    'glmqdb60': {
+      'uk': 'Кількість is required',
+      'en': '',
     },
-    'ros4ntfa': {
+    'e0si4rz1': {
       'uk': 'Please choose an option from the dropdown',
-      'en': 'Оберіть опцію зі списку',
+      'en': '',
     },
-  },
-  // editingridientspopup
-  {
-    'eorckk0k': {
-      'uk': 'Редагування',
-      'en': 'Edit ingridient',
-    },
-    'ti5ic8ic': {
-      'uk': 'Name',
-      'en': 'Назва',
-    },
-    '5eh02cc8': {
-      'uk': 'Маю це вдома',
-      'en': 'I have it at home',
-    },
-    '9jolfibk': {
+    'g488qv0n': {
       'uk': 'Зберегти',
-      'en': 'Save',
+      'en': 'Add',
     },
-    'ttr784yp': {
-      'uk': 'Видалити',
-      'en': 'Delete',
+    'ruj9jqqd': {
+      'uk': 'Скасувати',
+      'en': '',
     },
   },
   // deleteMeal
@@ -1757,49 +1893,85 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
   },
   // addingridientspopupShopping
   {
-    'mlq1lemq': {
-      'uk': 'Add item',
-      'en': 'Додати',
+    '8gfb397n': {
+      'uk': '0',
+      'en': '',
     },
-    '3uvss4ji': {
-      'uk': 'Виберіть категорію (обов\'язково)',
-      'en': 'Choose category (required)',
+    '2aqa2pr0': {
+      'uk': '',
+      'en': '',
     },
-    'atmucw4o': {
+    'ubt0o9vz': {
+      'uk': 'Search...',
+      'en': '',
+    },
+    'swdtyqvc': {
       'uk': 'Їжа',
-      'en': 'Food',
+      'en': '',
     },
-    'qg0w4nb1': {
-      'uk': 'Побутові',
-      'en': 'Household',
+    'pfpk7aaa': {
+      'uk': 'Побутове',
+      'en': '',
     },
-    'n9omhaoc': {
-      'uk': 'Name',
-      'en': 'Назва',
+    '10adsm53': {
+      'uk': 'Назва *',
+      'en': '',
+    },
+    'tclmk8d6': {
+      'uk': 'Кількість *',
+      'en': '',
+    },
+    '56yvuxku': {
+      'uk': '1',
+      'en': '',
+    },
+    'pv8i95rp': {
+      'uk': 'Оберіть',
+      'en': '',
+    },
+    'dsclgjad': {
+      'uk': 'Search...',
+      'en': '',
+    },
+    'wqxutxm0': {
+      'uk': 'Категорія',
+      'en': '',
+    },
+    '2ln10z5h': {
+      'uk': 'Option 1',
+      'en': '',
     },
     'jrlmymk2': {
       'uk': 'Назва магазину',
       'en': 'Shop name',
     },
+    'cht4nwwu': {
+      'uk': '* Обов\'язкові поля',
+      'en': '',
+    },
     'zhycvxat': {
-      'uk': 'Додати',
+      'uk': 'Зберегти',
       'en': 'Add',
     },
-    'qriytoz1': {
-      'uk': 'Please enter a name',
-      'en': 'Введіть назву',
+    'wktplc8v': {
+      'uk': 'Скасувати',
+      'en': '',
     },
-    'ppeussnb': {
-      'uk': 'Please choose an option from the dropdown',
-      'en': 'Оберіть опцію зі списку',
-    },
-    'kn5uex3e': {
+    'bh5ndgso': {
       'uk': 'Field is required',
-      'en': 'Обовʼязкове поле',
+      'en': '',
     },
-    'b33ols0c': {
+    '9m0z3jti': {
       'uk': 'Please choose an option from the dropdown',
-      'en': 'Оберіть опцію зі списку',
+      'en': '',
+    },
+    '1ujf89n4': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    'p06uougz': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
     },
     'e63tgpp4': {
       'uk': 'Field is required',
@@ -1808,185 +1980,6 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
     's7g6lw30': {
       'uk': 'Please choose an option from the dropdown',
       'en': 'Оберіть опцію зі списку',
-    },
-  },
-  // editingridientspopupShopping
-  {
-    '4mdgsiq6': {
-      'uk': 'Edit item',
-      'en': 'Редагування',
-    },
-    '0h31jphx': {
-      'uk': 'Виберіть категорію (обов\'язково)',
-      'en': 'Choose category (required)',
-    },
-    'ggme409s': {
-      'uk': 'Їжа',
-      'en': 'Food',
-    },
-    '2s6n5x1f': {
-      'uk': 'Побутові',
-      'en': 'Household',
-    },
-    'fe4k9c8v': {
-      'uk': 'Name',
-      'en': 'Назва',
-    },
-    'a91artj7': {
-      'uk': 'Shop name',
-      'en': 'Назва магазину',
-    },
-    '8shfq9za': {
-      'uk': 'Save',
-      'en': 'Зберегти',
-    },
-    'xugw4jjd': {
-      'uk': 'Delete',
-      'en': 'Видалити',
-    },
-  },
-  // deleteOrAddToShoppingList
-  {
-    'oo6sx37j': {
-      'uk': 'Додати до списку покупок чи видалити?',
-      'en': 'Add to shopping list or remove?',
-    },
-    '5a21wms2': {
-      'uk': 'Add to list',
-      'en': 'До списку',
-    },
-    'cwmhipz1': {
-      'uk': 'Remove',
-      'en': 'Видалити',
-    },
-  },
-  // editItemStorageFood
-  {
-    'dglcnn9m': {
-      'uk': 'Edit Item',
-      'en': 'Редагування',
-    },
-    's6f7vn6m': {
-      'uk': 'Category',
-      'en': 'Категорія',
-    },
-    '2blgmbry': {
-      'uk': 'Search for an item...',
-      'en': 'Search for an item...',
-    },
-    '64t722l3': {
-      'uk': 'Name',
-      'en': 'Назва',
-    },
-    'jgc8h2vb': {
-      'uk': 'Save',
-      'en': 'Зберегти',
-    },
-    'pgjbz0tx': {
-      'uk': 'Delete',
-      'en': 'Видалити',
-    },
-    'dskcc5x7': {
-      'uk': 'Введіть назву',
-      'en': '',
-    },
-    'mjj4ys1v': {
-      'uk': 'Please choose an option from the dropdown',
-      'en': '',
-    },
-    'ax1bo7g5': {
-      'uk': 'Field is required',
-      'en': '',
-    },
-    '5hhqrbub': {
-      'uk': 'Please choose an option from the dropdown',
-      'en': '',
-    },
-  },
-  // AddItemHousehold
-  {
-    'w20g3btr': {
-      'uk': 'Add Item',
-      'en': 'Додати',
-    },
-    'm05sntdr': {
-      'uk': '',
-      'en': '',
-    },
-    'dtmrc0cg': {
-      'uk': 'Category',
-      'en': 'Категорія',
-    },
-    'iwky96rl': {
-      'uk': 'Search for an item...',
-      'en': 'Search for an item...',
-    },
-    '5zhf0k0n': {
-      'uk': 'Name',
-      'en': 'Назва',
-    },
-    'xu6vuxzq': {
-      'uk': 'Add',
-      'en': 'Додати',
-    },
-    'le9phul3': {
-      'uk': 'Please enter a name',
-      'en': 'Введіть назву',
-    },
-    'x1vm86ch': {
-      'uk': 'Please choose an option from the dropdown',
-      'en': 'Please choose an option from the dropdown',
-    },
-    '8j9p2wyi': {
-      'uk': 'Field is required',
-      'en': 'Field is required',
-    },
-    'peiivbzn': {
-      'uk': 'Please choose an option from the dropdown',
-      'en': 'Please choose an option from the dropdown',
-    },
-  },
-  // editItemHousehold
-  {
-    'b4g1jhdg': {
-      'uk': 'Edit Item',
-      'en': 'Редагувати',
-    },
-    'g1djl29i': {
-      'uk': 'Category',
-      'en': 'Категорія',
-    },
-    '5y9j8u3s': {
-      'uk': 'Search for an item...',
-      'en': 'Search for an item...',
-    },
-    'imwol8nc': {
-      'uk': 'Name',
-      'en': 'Назва',
-    },
-    'v62ipaar': {
-      'uk': 'Save',
-      'en': 'Зберегти',
-    },
-    '4wpo2wsd': {
-      'uk': 'Delete',
-      'en': 'Видалити',
-    },
-    '7q5u8o8i': {
-      'uk': 'Введіть назву',
-      'en': '',
-    },
-    'fk6vf1mo': {
-      'uk': 'Please choose an option from the dropdown',
-      'en': '',
-    },
-    '318cmude': {
-      'uk': 'Field is required',
-      'en': '',
-    },
-    '44csp5qe': {
-      'uk': 'Please choose an option from the dropdown',
-      'en': '',
     },
   },
   // notFieldError
@@ -1999,163 +1992,68 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
   // EditCategoryFood
   {
     'edgbxrjm': {
-      'uk': 'Edit Category',
-      'en': 'Редагування',
+      'uk': 'Редагування',
+      'en': 'Edit Category',
     },
     '9h6ww385': {
-      'uk': 'Name',
-      'en': 'Назва',
+      'uk': '',
+      'en': '',
     },
     'smy1660v': {
-      'uk': 'Save',
-      'en': 'Зберегти',
+      'uk': 'Зберегти',
+      'en': 'Save',
     },
     '2iqzk95b': {
-      'uk': 'Delete',
-      'en': 'Видалити',
+      'uk': 'Видалити',
+      'en': 'Delete',
     },
   },
   // EditShop
   {
     'ikrnvozy': {
-      'uk': 'Edit Shop',
-      'en': 'Редагувати',
+      'uk': 'Редагувати',
+      'en': 'Edit Shop',
     },
     '4aav85gm': {
-      'uk': 'Name',
-      'en': 'Назва',
+      'uk': '',
+      'en': '',
     },
     'pafhsuyi': {
-      'uk': 'Save',
-      'en': 'Зберегти',
+      'uk': 'Зберегти',
+      'en': 'Save',
     },
     'v0eus9vp': {
-      'uk': 'Delete',
-      'en': 'Видалити',
-    },
-  },
-  // editingridientspopupMenu
-  {
-    '2egjgcni': {
-      'uk': 'Редагувати',
-      'en': 'Edit ingridient',
-    },
-    'aqh32xk2': {
-      'uk': 'Name',
-      'en': 'Назва',
-    },
-    'suwx5810': {
-      'uk': 'Save',
-      'en': 'Зберегти',
-    },
-    '9q0emc6f': {
-      'uk': 'Delete',
-      'en': 'Видалити',
-    },
-  },
-  // addMenuToPlanPopup
-  {
-    'vshdl7tr': {
-      'uk': 'Проміжок дат',
-      'en': 'Date range',
-    },
-    'shl6gc0k': {
-      'uk': 'Сніданок',
-      'en': 'Breakfast',
-    },
-    'amak5n4u': {
-      'uk': 'Обід',
-      'en': 'Lunch',
-    },
-    'nfzpiijv': {
-      'uk': 'Вечеря',
-      'en': 'Dinner',
-    },
-    'f8qmjixs': {
-      'uk': 'Інше',
-      'en': 'Other',
-    },
-    'yileuecv': {
-      'uk': 'Додати',
-      'en': 'Add',
+      'uk': 'Видалити',
+      'en': 'Delete',
     },
   },
   // EditCategoryHousehold
   {
     'ufjok3cw': {
-      'uk': 'Edit Category',
-      'en': 'Редагувати',
+      'uk': 'Редагувати',
+      'en': 'Edit Category',
     },
     'k34ja92m': {
-      'uk': 'Name',
-      'en': 'Навза',
+      'uk': '',
+      'en': '',
     },
     'ncg0dyvh': {
-      'uk': 'Save',
-      'en': 'Зберегти',
+      'uk': 'Зберегти',
+      'en': 'Save',
     },
     'g3u98kbj': {
-      'uk': 'Delete',
-      'en': 'Видалити',
-    },
-  },
-  // deleteHistory
-  {
-    '5n2qe8q1': {
-      'uk': 'Ви впевнені, що хочете видалити?',
-      'en': 'Are you sure that you want to delete?',
-    },
-    '3yu0u5zp': {
-      'uk': 'Yes',
-      'en': 'Так',
-    },
-    'k3tri10l': {
-      'uk': 'No',
-      'en': 'Ні',
-    },
-  },
-  // totalSum
-  {
-    'zlrvi890': {
-      'uk': 'Загальна сума',
-      'en': 'Total sum',
-    },
-  },
-  // addingridientspopupMenu
-  {
-    '1l91d4ca': {
-      'uk': 'Додати інгредієнт',
-      'en': 'Add ingridients',
-    },
-    'kk324goy': {
-      'uk': 'Назва',
-      'en': 'Name',
-    },
-    '0mpkdkhw': {
-      'uk': 'Додати',
-      'en': 'Add',
-    },
-    '93n6hfgr': {
-      'uk': 'Please enter a name',
-      'en': 'Введіть назву',
-    },
-    'v7qzgr8o': {
-      'uk': 'Field is required',
-      'en': 'Field is required',
-    },
-    'yhse1odq': {
-      'uk': 'Please choose an option from the dropdown',
-      'en': 'Please choose an option from the dropdown',
+      'uk': 'Видалити',
+      'en': 'Delete',
     },
   },
   // setNotificationPopup
   {
-    '2pffxn0y': {
-      'uk': 'Set notification time',
+    'h5vskndo': {
+      'uk': 'Оберіть час',
       'en': 'Set notification time',
     },
     'kmfyv7bv': {
-      'uk': 'Set notification time',
+      'uk': 'Обрати',
       'en': 'Set notification time',
     },
   },
@@ -2166,12 +2064,12 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
       'en': 'Add Birthday',
     },
     'e0h5brg7': {
-      'uk': 'Name',
-      'en': 'Імʼя',
+      'uk': 'Імʼя',
+      'en': 'Name',
     },
     'zuj1zuad': {
-      'uk': 'Add',
-      'en': 'Додати',
+      'uk': 'Додати',
+      'en': 'Add',
     },
     'edjc5wn7': {
       'uk': 'Поле обовʼязкове',
@@ -2202,11 +2100,11 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
     },
     'ritcealq': {
       'uk': 'Зберегти',
-      'en': 'Зберегти',
+      'en': 'Save',
     },
     '6t2bm3am': {
       'uk': 'Видалити',
-      'en': 'Видалити',
+      'en': 'Delete',
     },
     'tcu5rgah': {
       'uk': 'Field is required',
@@ -2223,21 +2121,6 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
     'eyuyq3x0': {
       'uk': 'Please choose an option from the dropdown',
       'en': '',
-    },
-  },
-  // deleteAccount
-  {
-    'q9bt0wrb': {
-      'uk': 'Ви впевнені, що хочете видалити?',
-      'en': 'Ви впевнені, що хочете видалити ?',
-    },
-    'iuvnb3c3': {
-      'uk': 'Yes',
-      'en': 'Так',
-    },
-    '8ba5obb1': {
-      'uk': 'No',
-      'en': 'Ні',
     },
   },
   // selectLanguage
@@ -2257,13 +2140,6 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
     'uvpyaga4': {
       'uk': 'UKR',
       'en': 'UKR',
-    },
-  },
-  // notFieldCategory
-  {
-    'xnfx9cnh': {
-      'uk': 'Категорія не вибрана',
-      'en': 'Category not selected',
     },
   },
   // addFriend
@@ -2304,173 +2180,171 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
       'en': 'Friend not found',
     },
   },
-  // shareShopingListTo
-  {
-    'wfiz4n9e': {
-      'uk': 'Поділитися',
-      'en': 'Share',
-    },
-    '7tsu3xv3': {
-      'uk': 'Відправити',
-      'en': 'Send',
-    },
-  },
   // addServiceTaskPopup
   {
-    'vz65ah4p': {
-      'uk': 'Новий запис',
-      'en': '',
-    },
-    'ei8i5o0y': {
+    'aov6xr51': {
       'uk': 'Назва',
-      'en': 'Title',
+      'en': '',
     },
-    'lty5p5cb': {
+    'mdsqyukv': {
       'uk': 'Місце',
-      'en': 'Place',
+      'en': '',
     },
-    'ckaqzxra': {
+    '1izp7b2f': {
       'uk': 'Опис',
-      'en': 'Description',
+      'en': '',
     },
-    'hjt93poi': {
+    'tcb0t5pi': {
+      'uk': 'Оберіть автомобіль',
+      'en': '',
+    },
+    'v14xyggf': {
+      'uk': 'Search for an item...',
+      'en': '',
+    },
+    'hluuull3': {
       'uk': 'Дата',
       'en': '',
     },
-    'wd9p8248': {
-      'uk': 'Додати',
+    'w7ju1ebp': {
+      'uk': 'Зберегти',
       'en': '',
     },
-    'pahk93dx': {
+    'fyv0g2oj': {
+      'uk': 'Позначити як виконане',
+      'en': 'Set as Done',
+    },
+    'v8hx8urn': {
+      'uk': 'Виконано',
+      'en': 'Done',
+    },
+    '74ncemub': {
+      'uk': 'Скасувати',
+      'en': '',
+    },
+    'mu1s390k': {
       'uk': 'Field is required',
       'en': '',
     },
-    '3ifdcnd5': {
+    '9xib41u0': {
       'uk': 'Please choose an option from the dropdown',
       'en': '',
     },
-    'dz072gm7': {
+    '2awv8xl8': {
       'uk': 'Field is required',
       'en': '',
     },
-    'dgbmyhhw': {
+    'l84aiqcm': {
       'uk': 'Please choose an option from the dropdown',
       'en': '',
     },
-    '4s2x40ay': {
+    '661n7l0z': {
       'uk': 'Field is required',
       'en': '',
     },
-    'j84jtqpm': {
+    'ig785cc5': {
       'uk': 'Please choose an option from the dropdown',
       'en': '',
     },
-  },
-  // serviceTaskInfoPopup
-  {
-    'ks71qmem': {
-      'uk': 'Місце',
-      'en': 'Place',
-    },
-    'gnwkay1q': {
-      'uk': 'Опис',
-      'en': 'Description',
-    },
-    'z8n60pm0': {
-      'uk': 'Дата',
+    '18cy0gvd': {
+      'uk': 'Field is required',
       'en': '',
     },
-    'm8zb8s8l': {
-      'uk': 'Видалити',
+    '4k1vtl9q': {
+      'uk': 'Please choose an option from the dropdown',
       'en': '',
     },
   },
   // addCarPopup
   {
-    'irsu59v7': {
+    '83wlbnd1': {
       'uk': 'Додати новий автомобіль',
-      'en': 'Add new car',
+      'en': '',
     },
-    '3yqy939i': {
-      'uk': 'Car brand',
+    '1c3t4b6d': {
+      'uk': 'Марка авто',
       'en': 'Car brand',
     },
-    'cd54u1vv': {
-      'uk': 'Model',
+    'r501hjjz': {
+      'uk': 'Модель',
       'en': 'Model',
     },
-    '1ysfk5iu': {
-      'uk': 'Model year',
-      'en': 'Model year',
+    'xcd12wjy': {
+      'uk': 'Рік випуску',
+      'en': 'Year',
     },
-    '3jqwa39u': {
-      'uk': 'VIN code',
+    'b1esa7c0': {
+      'uk': 'VIN код',
       'en': 'VIN code',
     },
-    '9nrmte7t': {
-      'uk': 'Mileage',
-      'en': '',
+    'ul5blfi1': {
+      'uk': 'Актуальнний Пробіг',
+      'en': 'Actual mileage',
     },
-    '7xkc6vrz': {
+    'xq0sc0en': {
       'uk': 'Додати',
-      'en': 'Add',
+      'en': '',
     },
-    'knb62h8n': {
+    '45p2dt80': {
+      'uk': 'Скасувати',
+      'en': '',
+    },
+    '2c4ns005': {
       'uk': 'Field is required',
       'en': '',
     },
-    '8ve9hep4': {
+    'c7sz9zix': {
       'uk': 'Please choose an option from the dropdown',
       'en': '',
     },
-    'yygt9hq0': {
+    'tw7qca0t': {
       'uk': 'Field is required',
       'en': '',
     },
-    'e0si4rz1': {
+    'qkj0vs4e': {
       'uk': 'Please choose an option from the dropdown',
       'en': '',
     },
-    'vlcp7mij': {
+    'emydreiv': {
       'uk': 'Field is required',
       'en': '',
     },
-    '418iggit': {
+    'henbefjg': {
       'uk': 'Please choose an option from the dropdown',
       'en': '',
     },
-    '2enb0ytz': {
+    '4d12qsl0': {
       'uk': 'Field is required',
       'en': '',
     },
-    'chzm72x1': {
+    'nb7lno0m': {
       'uk': 'Please choose an option from the dropdown',
       'en': '',
     },
-    'i2tlnqaa': {
+    'uedb6bia': {
       'uk': 'Field is required',
       'en': '',
     },
-    'h6l05f8e': {
+    '3yrhaw9w': {
       'uk': 'Please choose an option from the dropdown',
       'en': '',
     },
-    'qdp4do2m': {
+    '6byytdfn': {
       'uk': 'Field is required',
       'en': '',
     },
-    'h74vwbhf': {
+    'h7cuivnx': {
       'uk': 'Please choose an option from the dropdown',
       'en': '',
     },
   },
   // carSparePartMileage
   {
-    'nqnby8he': {
+    'h7mufkty': {
       'uk': 'Заміна',
       'en': '',
     },
-    '55qf5czo': {
+    'o0sfjjk0': {
       'uk': 'Заміна через',
       'en': '',
     },
@@ -2485,16 +2359,16 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
       'uk': 'Назва',
       'en': 'Name',
     },
-    'wbojl1sf': {
-      'uk': 'Пробіг авто при встановленні',
-      'en': '',
-    },
     'nw28tlal': {
-      'uk': 'Пробіг на заміну',
+      'uk': 'Замінити через',
       'en': '',
     },
     'hjv03mcl': {
       'uk': 'Додати',
+      'en': '',
+    },
+    'j710sql5': {
+      'uk': 'Скасувати',
       'en': '',
     },
     'm8ovx5lt': {
@@ -2533,23 +2407,8 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
       'en': '',
     },
   },
-  // chooseCarPopup
-  {
-    'z4i7qj3r': {
-      'uk': 'Виберіть автомобіль',
-      'en': 'Choose the car',
-    },
-    'tl50ndyp': {
-      'uk': 'Продовжити',
-      'en': 'No',
-    },
-  },
   // addNewPlantPopup
   {
-    '6imvsrea': {
-      'uk': 'Додайте нову рослину',
-      'en': 'Add new plant',
-    },
     'gvzk7tdu': {
       'uk': 'Назва',
       'en': 'Name',
@@ -2562,320 +2421,276 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
       'uk': '',
       'en': '',
     },
-    'h1t9gnxc': {
-      'uk': '',
+    'u92dvqvs': {
+      'uk': 'Every X day',
       'en': '',
     },
-    'zuuyt48x': {
-      'uk': '',
+    'ddcdhnif': {
+      'uk': 'Please select...',
       'en': '',
     },
-    'mnm39lje': {
-      'uk': '',
+    '2ihsnqsg': {
+      'uk': 'Search for an item...',
       'en': '',
     },
-    'tqruerss': {
-      'uk': 'Додати',
-      'en': 'Add',
-    },
-    'vug32xsy': {
-      'uk': 'Кожен день',
-      'en': 'Every day',
-    },
-    'vuxtw3u0': {
-      'uk': 'Кожні два дні',
-      'en': 'Every two days',
-    },
-    't7jjfaha': {
-      'uk': 'Двічі на тиждень',
-      'en': 'Twice a week',
-    },
-    'qetrsvvq': {
-      'uk': 'Раз на тиждень',
-      'en': 'Once a week',
-    },
-    'akkljpsh': {
-      'uk': 'Пряме яскраве світло',
+    'nsv0ne01': {
+      'uk': 'Частота поливу',
       'en': '',
     },
-    'u3tme48e': {
-      'uk': 'Яскраве розсіяне світло',
+    'ncmftx1c': {
+      'uk': 'Кожного дня',
+      'en': 'Everyday',
+    },
+    'ocb9ir7l': {
+      'uk': 'Повторювати через',
+      'en': 'Every X days',
+    },
+    'pr2agijx': {
+      'uk': 'Конкретні дні неділі',
+      'en': 'Specific day of the week',
+    },
+    'sot48n9r': {
+      'uk': 'Введіть кількість днів',
       'en': '',
     },
-    'x8a7j84q': {
-      'uk': 'Розсіяне світло',
+    '6zrf53h4': {
+      'uk': 'Оберіть необхідні дні',
       'en': '',
     },
-    'd9q7c8do': {
+    'bkz6e2u6': {
+      'uk': 'Пн',
+      'en': 'Mon',
+    },
+    'th35yak3': {
+      'uk': 'Вт',
+      'en': 'Tue',
+    },
+    'rbj1h0a1': {
+      'uk': 'Ср',
+      'en': 'Wed',
+    },
+    'p553lgar': {
+      'uk': 'Чт',
+      'en': 'Thr',
+    },
+    'r3xld6ld': {
+      'uk': 'Пт',
+      'en': 'Fri',
+    },
+    'xyrti9s4': {
+      'uk': 'Сб',
+      'en': 'Sat',
+    },
+    'sod1kkz2': {
+      'uk': 'Нд',
+      'en': 'Sun',
+    },
+    'fm5ifrd3': {
+      'uk': 'Вами не обрано жодного дня',
+      'en': '',
+    },
+    'uq6li9q0': {
+      'uk': 'Підживлювати через (дні)',
+      'en': '',
+    },
+    'cv9queyr': {
+      'uk': 'Every X day',
+      'en': '',
+    },
+    '4oms8e44': {
+      'uk': 'Освітлення',
+      'en': '',
+    },
+    '2k27vfvz': {
+      'uk': 'Search for an item...',
+      'en': '',
+    },
+    'zx8ezj22': {
+      'uk': 'Освітлення',
+      'en': '',
+    },
+    '0nzhrsed': {
       'uk': 'Тінь',
       'en': '',
     },
-    'vplp3m4r': {
-      'uk': '20-25°C',
+    'p4cjune3': {
+      'uk': 'Розсіяне світло',
       'en': '',
     },
-    'reec4l9p': {
-      'uk': '18-20°C',
+    's9j8ygut': {
+      'uk': 'Яскраве розсіяне світло',
       'en': '',
     },
-    'ipp1535o': {
+    'ax884523': {
+      'uk': 'Пряме яскраве світло',
+      'en': '',
+    },
+    'zsee6ps3': {
+      'uk': '',
+      'en': '',
+    },
+    'geykfr35': {
+      'uk': 'Every X day',
+      'en': '',
+    },
+    'ara75qvv': {
+      'uk': 'Температура',
+      'en': '',
+    },
+    'tmberwf1': {
+      'uk': 'Search for an item...',
+      'en': '',
+    },
+    'anbe8a18': {
+      'uk': 'Тепература',
+      'en': '',
+    },
+    '39dropzj': {
+      'uk': '5-10°C',
+      'en': '',
+    },
+    'w0cnzdff': {
+      'uk': '10-15°C',
+      'en': '',
+    },
+    'enxyvohv': {
       'uk': '15-18°C',
       'en': '',
     },
-    '2o58tdah': {
-      'uk': '10-15°C',
+    '31pqivcj': {
+      'uk': '18-20°C',
+      'en': '',
+    },
+    '6xxmyc9c': {
+      'uk': '20-25°C',
+      'en': '',
+    },
+    'p28llj5c': {
+      'uk': '',
+      'en': '',
+    },
+    'sq8f0vyn': {
+      'uk': 'Every X day',
+      'en': '',
+    },
+    'e6s8lby7': {
+      'uk': 'Заміна грунту',
+      'en': '',
+    },
+    'u39t8ud7': {
+      'uk': 'Search for an item...',
+      'en': '',
+    },
+    'y08lxz97': {
+      'uk': 'Заміна ґрунту',
+      'en': '',
+    },
+    'il2pnskm': {
+      'uk': 'Раз на рік',
+      'en': '',
+    },
+    'uxwdikb6': {
+      'uk': 'Раз на два роки',
+      'en': '',
+    },
+    'y524vboz': {
+      'uk': 'Раз на три роки',
+      'en': '',
+    },
+    'tqruerss': {
+      'uk': 'Зберегти',
+      'en': 'Add',
+    },
+    '8flu07m0': {
+      'uk': 'Скасувати',
+      'en': '',
+    },
+    '2hwc5gxx': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    'p3g1nhd4': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
+    },
+    '0e77gi1t': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    'aswcby24': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
+    },
+    '4q9m7h7t': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    '30thducm': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
+    },
+    'h24iosxm': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    'bfk5e2tc': {
+      'uk': 'Please choose an option from the dropdown',
       'en': '',
     },
   },
   // newEventPopup
   {
-    '90wg3b7g': {
-      'uk': 'Нова подія',
-      'en': 'New event',
-    },
     'f5v8719l': {
       'uk': 'Назва',
+      'en': '',
+    },
+    'q4m2mb81': {
+      'uk': 'Дата та час',
       'en': '',
     },
     'g2ig1vwt': {
       'uk': 'Додаткова інформація',
       'en': '',
     },
-    'qqqigaa1': {
-      'uk': '',
+    'vmh143s0': {
+      'uk': 'Field is required',
       'en': '',
     },
-    '56yvuxku': {
-      'uk': '1',
+    'oolz3n9w': {
+      'uk': 'Please choose an option from the dropdown',
       'en': '',
     },
-    'rotm90a2': {
-      'uk': '2',
+    '3gm8qy7i': {
+      'uk': 'Field is required',
       'en': '',
     },
-    '5lsj6g8f': {
-      'uk': '3',
+    'vw2r2m7f': {
+      'uk': 'Please choose an option from the dropdown',
       'en': '',
     },
-    '6b7ymrfj': {
-      'uk': '4',
+    '8w2bvke1': {
+      'uk': 'Field is required',
       'en': '',
     },
-    'apy9vcsv': {
-      'uk': '5',
+    'rk82b609': {
+      'uk': 'Please choose an option from the dropdown',
       'en': '',
-    },
-    'ighcy6s5': {
-      'uk': '6',
-      'en': '',
-    },
-    'czy34qgu': {
-      'uk': '7',
-      'en': '',
-    },
-    'av7t2l7m': {
-      'uk': '8',
-      'en': '',
-    },
-    'mcwv8fk8': {
-      'uk': '9',
-      'en': '',
-    },
-    'b2gionnd': {
-      'uk': '10',
-      'en': '',
-    },
-    '82g2hpl1': {
-      'uk': '11',
-      'en': '',
-    },
-    'gp9tcylz': {
-      'uk': '12',
-      'en': '',
-    },
-    '7xezcx4u': {
-      'uk': '13',
-      'en': '',
-    },
-    'p6mrylf0': {
-      'uk': '14',
-      'en': '',
-    },
-    'ji1t44wb': {
-      'uk': '15',
-      'en': '',
-    },
-    'ij0z6drc': {
-      'uk': '16',
-      'en': '',
-    },
-    'kiok14jk': {
-      'uk': '17',
-      'en': '',
-    },
-    'fqlhmooa': {
-      'uk': '18',
-      'en': '',
-    },
-    'qgp8wlxx': {
-      'uk': '19',
-      'en': '',
-    },
-    '57p38v9z': {
-      'uk': '20',
-      'en': '',
-    },
-    'ixsp2nka': {
-      'uk': '21',
-      'en': '',
-    },
-    'ftjtj40a': {
-      'uk': '22',
-      'en': '',
-    },
-    'h70yiqhm': {
-      'uk': '23',
-      'en': '',
-    },
-    'x113seec': {
-      'uk': '24',
-      'en': '',
-    },
-    'gjm4e7dl': {
-      'uk': '25',
-      'en': '',
-    },
-    'fwtw85hy': {
-      'uk': '26',
-      'en': '',
-    },
-    '2jlcu6a3': {
-      'uk': '27',
-      'en': '',
-    },
-    'i7zqorbi': {
-      'uk': '28',
-      'en': '',
-    },
-    'l1agxqt7': {
-      'uk': '29',
-      'en': '',
-    },
-    'uu3iuz1b': {
-      'uk': '30',
-      'en': '',
-    },
-    'bpml10fs': {
-      'uk': '31',
-      'en': '',
-    },
-    'd8jzv21h': {
-      'uk': 'День',
-      'en': '',
-    },
-    '8vdtkb5p': {
-      'uk': '',
-      'en': '',
-    },
-    'zqyhazl3': {
-      'uk': '1',
-      'en': '',
-    },
-    'ures7hh4': {
-      'uk': '2',
-      'en': '',
-    },
-    '4cy6kjiv': {
-      'uk': '3',
-      'en': '',
-    },
-    'fguklyl1': {
-      'uk': '4',
-      'en': '',
-    },
-    'z7jh3o0l': {
-      'uk': '5',
-      'en': '',
-    },
-    '518m7jao': {
-      'uk': '6',
-      'en': '',
-    },
-    'onzlizm3': {
-      'uk': '7',
-      'en': '',
-    },
-    '441fa6um': {
-      'uk': '8',
-      'en': '',
-    },
-    'n962qlit': {
-      'uk': '9',
-      'en': '',
-    },
-    '9j0ifp1b': {
-      'uk': '10',
-      'en': '',
-    },
-    'seuwgdj3': {
-      'uk': '11',
-      'en': '',
-    },
-    'r3jtbsjz': {
-      'uk': '12',
-      'en': '',
-    },
-    'qxoyts81': {
-      'uk': 'Місяць',
-      'en': '',
-    },
-    'aj5yooqz': {
-      'uk': 'Search for an item...',
-      'en': '',
-    },
-    'vecyetgm': {
-      'uk': '2020',
-      'en': '',
-    },
-    'a0zap7vz': {
-      'uk': '2021',
-      'en': '',
-    },
-    '753ndceg': {
-      'uk': '2022',
-      'en': '',
-    },
-    'o5gkuawv': {
-      'uk': '2023',
-      'en': '',
-    },
-    '87hplv5c': {
-      'uk': '2024',
-      'en': '',
-    },
-    '0600m2k4': {
-      'uk': '2025',
-      'en': '',
-    },
-    'x4vpj6om': {
-      'uk': 'Рік',
-      'en': '',
-    },
-    'aeudgs1o': {
-      'uk': 'Search for an item...',
-      'en': '',
-    },
-    '8ynlfv48': {
-      'uk': '',
-      'en': '',
-    },
-    'x3z47lez': {
-      'uk': 'Час',
-      'en': 'Time',
     },
     'olv1uxoh': {
-      'uk': 'Додати',
+      'uk': 'Зберегти',
       'en': 'Add',
+    },
+    'wcrugdcf': {
+      'uk': 'Позначити як виконане',
+      'en': '',
+    },
+    'jv7n4d1q': {
+      'uk': 'Виконано',
+      'en': '',
+    },
+    'jwz3ck0d': {
+      'uk': 'Скасувати',
+      'en': '',
     },
   },
   // plantInfoPopup
@@ -2887,85 +2702,6 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
     'jpckhfj9': {
       'uk': 'Моя рослина',
       'en': 'My plant',
-    },
-  },
-  // editPlantPopup
-  {
-    'ty0e1h4h': {
-      'uk': 'Відредагуйте рослину',
-      'en': '',
-    },
-    'xzvjzj6t': {
-      'uk': 'Назва',
-      'en': '',
-    },
-    'vltyqyh2': {
-      'uk': 'Кількість води',
-      'en': '',
-    },
-    'jya35bl1': {
-      'uk': '',
-      'en': '',
-    },
-    'lb20beie': {
-      'uk': '',
-      'en': '',
-    },
-    'dwztl1sx': {
-      'uk': '',
-      'en': '',
-    },
-    'bw5jki8h': {
-      'uk': 'Зберегти',
-      'en': '',
-    },
-    'og9texh2': {
-      'uk': 'Кожен день',
-      'en': '',
-    },
-    'utqyisru': {
-      'uk': 'Кожні два дні',
-      'en': '',
-    },
-    '0svuec4n': {
-      'uk': 'Двічі на тиждень',
-      'en': '',
-    },
-    '24a29mon': {
-      'uk': 'Раз на тиждень',
-      'en': '',
-    },
-    '1n9eiiyu': {
-      'uk': 'Пряме яскраве світло',
-      'en': '',
-    },
-    'y2zfadi6': {
-      'uk': 'Яскраве розсіяне світло',
-      'en': '',
-    },
-    '3t3yrz1n': {
-      'uk': 'Розсіяне світло',
-      'en': '',
-    },
-    'xg44j5sa': {
-      'uk': 'Тінь',
-      'en': '',
-    },
-    'cibfgdm0': {
-      'uk': '20-25°C',
-      'en': '',
-    },
-    '7jnhs6cn': {
-      'uk': '18-20°C',
-      'en': '',
-    },
-    'zacod5qh': {
-      'uk': '15-18°C',
-      'en': '',
-    },
-    '093ehwyi': {
-      'uk': '10-15°C',
-      'en': '',
     },
   },
   // chooseDate
@@ -3030,7 +2766,7 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
       'en': '',
     },
   },
-  // delete
+  // DeleteConfirmationPopup
   {
     's5zxoadi': {
       'uk': 'Ви дійсно бажаєте видалити?',
@@ -3062,23 +2798,1681 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
   },
   // setShopForShoppingList
   {
-    'vnptuhqz': {
+    'j17wpdne': {
       'uk': 'Вибрати магазин',
       'en': 'Select a store',
     },
   },
+  // MyCarPopup
+  {
+    'q9t2tuiu': {
+      'uk': ' рік випуску',
+      'en': '',
+    },
+    'z6w2g9sm': {
+      'uk': 'VIN code',
+      'en': '',
+    },
+    'npil8gc9': {
+      'uk': 'Mileage',
+      'en': '',
+    },
+    '0exgcyzp': {
+      'uk': 'Зберегти зміни',
+      'en': '',
+    },
+    'oe278818': {
+      'uk': 'Скасувати',
+      'en': '',
+    },
+  },
+  // ExpandedFloatMenu
+  {
+    '1tgiptdv': {
+      'uk': 'Додати Авто',
+      'en': 'Add a Car',
+    },
+    '4pfnjhkd': {
+      'uk': 'Додати Запчастину',
+      'en': 'Add spare part',
+    },
+  },
+  // wateringFrequencyPopup
+  {
+    'zp7w1b58': {
+      'uk': 'Частота поливу',
+      'en': '',
+    },
+    'ydgcbr97': {
+      'uk': 'Every X day',
+      'en': '',
+    },
+    'wkeqkgj1': {
+      'uk': 'Please select...',
+      'en': '',
+    },
+    'mfyqppvu': {
+      'uk': 'Search for an item...',
+      'en': '',
+    },
+    'd7k3ocwl': {
+      'uk': 'Кожного дня',
+      'en': 'Everyday',
+    },
+    'sqa9k30b': {
+      'uk': 'Кожні Х днів',
+      'en': 'Every X days',
+    },
+    'kr4hdvsc': {
+      'uk': 'Конкретний день тижня',
+      'en': 'Specific day of the week',
+    },
+    'pjagmstp': {
+      'uk': 'Введіть кількість днів',
+      'en': '',
+    },
+    'bnzce9nl': {
+      'uk': 'Оберіть необхідний день неділі',
+      'en': '',
+    },
+    '0738rh8j': {
+      'uk': 'Пн',
+      'en': 'Mon',
+    },
+    'aq3f815q': {
+      'uk': 'Вт',
+      'en': 'Tue',
+    },
+    '2qikkmdt': {
+      'uk': 'Ср',
+      'en': 'Wed',
+    },
+    '8o5f1hln': {
+      'uk': 'Чт',
+      'en': 'Thr',
+    },
+    'yjmd4lkl': {
+      'uk': 'Пт',
+      'en': 'Fri',
+    },
+    'z0j09h0p': {
+      'uk': 'Сб',
+      'en': 'Sat',
+    },
+    'rgwtj8yg': {
+      'uk': 'Нд',
+      'en': 'Sun',
+    },
+    '7k7u0wbh': {
+      'uk': 'Обрати',
+      'en': 'Choose',
+    },
+  },
+  // fertilizationFrequencyPopup
+  {
+    '2gjwsym5': {
+      'uk': 'Підживлення',
+      'en': '',
+    },
+    'enny1sqs': {
+      'uk': 'Введіть кількість днів',
+      'en': '',
+    },
+    'hwjkkvyv': {
+      'uk': 'Choose',
+      'en': '',
+    },
+  },
+  // eventActions
+  {
+    'tihmeo5t': {
+      'uk': 'Видалити',
+      'en': 'Delete',
+    },
+    'hc1mep35': {
+      'uk': 'Скасувати',
+      'en': 'Cancel',
+    },
+  },
+  // medicationActions
+  {
+    'd7npv8p2': {
+      'uk': 'Видалити',
+      'en': 'Delete',
+    },
+    'm7mwkq2n': {
+      'uk': 'Скасувати',
+      'en': 'Cancel',
+    },
+  },
+  // switcherHomeShop
+  {
+    'nu0juiqw': {
+      'uk': 'Home',
+      'en': 'Home',
+    },
+    'se12gpd4': {
+      'uk': 'Shop',
+      'en': 'Shop',
+    },
+  },
+  // StepDescr
+  {
+    'yj7kcc0a': {
+      'uk': 'Hello World',
+      'en': '',
+    },
+  },
+  // WalkthroughCarServicePlannerAddEvent
+  {
+    'mzv0htg2': {
+      'uk': 'Давайте створимо першу подію\nНатисніть на \"+\" ',
+      'en': '',
+    },
+  },
+  // addPetsPopup
+  {
+    'qcc2p33j': {
+      'uk': 'Назва',
+      'en': '',
+    },
+    'lau1k4gg': {
+      'uk': 'День народження',
+      'en': '',
+    },
+    'zz5fp2a8': {
+      'uk': 'Вид',
+      'en': '',
+    },
+    'd7kb5grl': {
+      'uk': 'Search...',
+      'en': '',
+    },
+    'xio6bb0i': {
+      'uk': 'Кіт',
+      'en': '',
+    },
+    '5poufbr0': {
+      'uk': 'Пес',
+      'en': '',
+    },
+    'wo86rnq3': {
+      'uk': 'Пташка',
+      'en': '',
+    },
+    'f2dsvcr5': {
+      'uk': 'Рибка',
+      'en': '',
+    },
+    'kdsr8u8k': {
+      'uk': 'Хом\'як',
+      'en': '',
+    },
+    'v0iynbji': {
+      'uk': 'Кролик',
+      'en': '',
+    },
+    't5fsem5l': {
+      'uk': 'Порода',
+      'en': '',
+    },
+    'kz6s7hn2': {
+      'uk': 'Вага (кг)',
+      'en': '',
+    },
+    'irr2jp8h': {
+      'uk': 'Оберіть колір улюбленця',
+      'en': '',
+    },
+    '7q4srzhm': {
+      'uk': 'Зберегти',
+      'en': '',
+    },
+    '5appvmo5': {
+      'uk': 'Скасувати',
+      'en': '',
+    },
+    's20pixxz': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    'zjgji4t2': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
+    },
+    '5h5e10dh': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    'yrj653oo': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
+    },
+    '6rlv9a4n': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    '788i7jsl': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
+    },
+    'wapc0gpu': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    '3bpeih52': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
+    },
+  },
+  // addPetsEventPopup
+  {
+    '5re7wy2b': {
+      'uk': 'Оберіть тип події',
+      'en': '',
+    },
+    '1iczw8o5': {
+      'uk': 'Search for an item...',
+      'en': '',
+    },
+    'y9rdt4od': {
+      'uk': 'Регулярна подія',
+      'en': '',
+    },
+    'art4ondh': {
+      'uk': 'Одноразова подія',
+      'en': '',
+    },
+    'l9dqi0ho': {
+      'uk': 'Оберіть подію',
+      'en': '',
+    },
+    'tfnf5fts': {
+      'uk': 'Search for an item...',
+      'en': '',
+    },
+    'n14piiz5': {
+      'uk': 'Похід до ветеринара',
+      'en': '',
+    },
+    'vker2l1d': {
+      'uk': 'Грумінг',
+      'en': '',
+    },
+    'lxz7q9bx': {
+      'uk': 'Шопінг',
+      'en': '',
+    },
+    'qqqe82k9': {
+      'uk': 'Вакцинація',
+      'en': '',
+    },
+    'tcaoh5ha': {
+      'uk': 'Прийом таблеток',
+      'en': '',
+    },
+    'ew1luopd': {
+      'uk': 'Адреса',
+      'en': '',
+    },
+    'gsp0knm7': {
+      'uk': 'Лікар',
+      'en': '',
+    },
+    'skzx7by8': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    'muwiqgmu': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
+    },
+    '2enb0ytz': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    'chzm72x1': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
+    },
+    '61912dxp': {
+      'uk': 'Адреса',
+      'en': '',
+    },
+    '46h6p9me': {
+      'uk': 'Майстер',
+      'en': '',
+    },
+    'i2tlnqaa': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    'h6l05f8e': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
+    },
+    'qdp4do2m': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    'h74vwbhf': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
+    },
+    'qkpuwcjl': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    '12w3dlnw': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
+    },
+    '8dgg7i94': {
+      'uk': 'Магазин',
+      'en': '',
+    },
+    'ugink8ql': {
+      'uk': 'Товар',
+      'en': '',
+    },
+    'ztnb0zry': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    'gwr7k7ks': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
+    },
+    'z4ssh69j': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    'szpylwvr': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
+    },
+    'fvty9k7x': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    '5t7prm94': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
+    },
+    'w8dynh89': {
+      'uk': 'Адреса лікарні',
+      'en': '',
+    },
+    'ivy2nshj': {
+      'uk': 'Лікар',
+      'en': '',
+    },
+    'hzkw1zmg': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    'j4n03cmy': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
+    },
+    'v571y7t7': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    'zd20p45f': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
+    },
+    '0qy3n1sz': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    'xilcc31v': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
+    },
+    'xkorc210': {
+      'uk': 'Препарат',
+      'en': '',
+    },
+    '96wgrxba': {
+      'uk': 'Доза',
+      'en': '',
+    },
+    'nwhf1q7b': {
+      'uk': 'Select...',
+      'en': '',
+    },
+    '04ctso78': {
+      'uk': 'Search...',
+      'en': '',
+    },
+    'u4i5vnfh': {
+      'uk': 'Pill',
+      'en': '',
+    },
+    'sqonf09f': {
+      'uk': 'Ml',
+      'en': '',
+    },
+    'h30kgu5y': {
+      'uk': 'Mg',
+      'en': '',
+    },
+    'healyro9': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    'rq3f4h37': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
+    },
+    '5j6a7f39': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    'tax2m7wp': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
+    },
+    'ny9gnleo': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    '6o1m5dln': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
+    },
+    'r12ogxrs': {
+      'uk': 'Час і дата прийому',
+      'en': '',
+    },
+    '9d2b11cb': {
+      'uk': '',
+      'en': '',
+    },
+    '3h2m554b': {
+      'uk': '',
+      'en': '',
+    },
+    'yelzls7t': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    'kje65yk9': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
+    },
+    'jlnjvt53': {
+      'uk': 'Повторювати через',
+      'en': '',
+    },
+    '4jz48n7i': {
+      'uk': 'Оберіть улюбленця',
+      'en': '',
+    },
+    '9wqqa8yi': {
+      'uk': 'Search for an item...',
+      'en': '',
+    },
+    'wpknaugj': {
+      'uk': 'день',
+      'en': '',
+    },
+    '5es4xvnp': {
+      'uk': 'тиждень',
+      'en': '',
+    },
+    '3aw7zo22': {
+      'uk': 'місяць',
+      'en': '',
+    },
+    'f6nd8n8e': {
+      'uk': 'рік',
+      'en': '',
+    },
+    'oe5ii45v': {
+      'uk': '',
+      'en': '',
+    },
+    'kllayq5o': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    'nwfnpn24': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
+    },
+    'lro5k15d': {
+      'uk': 'Оберіть улюбленця',
+      'en': '',
+    },
+    'zl9dx1c8': {
+      'uk': 'Search for an item...',
+      'en': '',
+    },
+    'm3rh6fx2': {
+      'uk': 'Зберегти',
+      'en': '',
+    },
+    'i1l3qbhk': {
+      'uk': 'Скасувати',
+      'en': '',
+    },
+  },
+  // PetsPageExpandedFloatMenu
+  {
+    'a1stkqcf': {
+      'uk': 'Додати улюбленця',
+      'en': 'Add pet',
+    },
+    'hc1n38ef': {
+      'uk': 'Додати час годування ',
+      'en': 'Add eat time',
+    },
+  },
+  // EventInfoPopup
+  {
+    'mp06mbm4': {
+      'uk': 'Дата та час',
+      'en': '',
+    },
+    '9a27ryzq': {
+      'uk': 'Додаткова інформація',
+      'en': '',
+    },
+    'f93lx5ay': {
+      'uk': 'Позначити як виконане',
+      'en': '',
+    },
+    'd5vesfag': {
+      'uk': 'Виконано',
+      'en': '',
+    },
+  },
+  // PetsEventInfoPopup
+  {
+    '64z3mry6': {
+      'uk': ' ',
+      'en': '',
+    },
+    '09f140c6': {
+      'uk': 'Оберіть подію',
+      'en': '',
+    },
+    'xlbg103w': {
+      'uk': 'Search for an item...',
+      'en': '',
+    },
+    'ihjs00d8': {
+      'uk': 'Похід до ветеринара',
+      'en': '',
+    },
+    'jdsuyfet': {
+      'uk': 'Грумінг',
+      'en': '',
+    },
+    'bjiaqp71': {
+      'uk': 'Шопінг',
+      'en': '',
+    },
+    'kr3h1ys7': {
+      'uk': 'Вакцинація',
+      'en': '',
+    },
+    'n3s3itzr': {
+      'uk': 'Прийом таблеток',
+      'en': '',
+    },
+    'jak2bwgd': {
+      'uk': 'Адреса',
+      'en': '',
+    },
+    '2s1mkrrv': {
+      'uk': 'Лікар',
+      'en': '',
+    },
+    '7be40w63': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    'hcq3asf8': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
+    },
+    'byyj1jyr': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    'b0qpex27': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
+    },
+    'bt0my6py': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    '320fm8nz': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
+    },
+    '2nx6wb8k': {
+      'uk': 'Адреса',
+      'en': '',
+    },
+    'g4fjue2o': {
+      'uk': 'Майстер',
+      'en': '',
+    },
+    'sp7dajao': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    '61vcjtrc': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
+    },
+    'pp7heuju': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    'x7o88tid': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
+    },
+    'h3aubpov': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    '27m467vx': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
+    },
+    'k5j3anol': {
+      'uk': 'Магазин',
+      'en': '',
+    },
+    'k60wec0s': {
+      'uk': 'Товар',
+      'en': '',
+    },
+    '9au0xyh5': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    '0eybmqmd': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
+    },
+    'div6d5r1': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    'fe8gavvj': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
+    },
+    'nunyxxgo': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    'urpvw63j': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
+    },
+    'qqnwz2x8': {
+      'uk': 'Адреса лікарні',
+      'en': '',
+    },
+    '60affheu': {
+      'uk': 'Лікар',
+      'en': '',
+    },
+    'lajl3cls': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    'mcrievg6': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
+    },
+    'miwq8oj7': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    'sab8b5e0': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
+    },
+    'w8123syl': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    'j9zjqgh3': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
+    },
+    'pa3q5ghm': {
+      'uk': 'Препарат',
+      'en': '',
+    },
+    'wxlntnc5': {
+      'uk': 'Доза',
+      'en': '',
+    },
+    '94quhd1u': {
+      'uk': 'Select...',
+      'en': '',
+    },
+    'y4ux67xl': {
+      'uk': 'Search...',
+      'en': '',
+    },
+    '9prggtqw': {
+      'uk': 'Pill',
+      'en': '',
+    },
+    'zxer75eh': {
+      'uk': 'Ml',
+      'en': '',
+    },
+    'eocajt00': {
+      'uk': 'Mg',
+      'en': '',
+    },
+    '4by5ix0u': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    'ucobcsru': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
+    },
+    'zvfn7jw9': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    'o0t3zgry': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
+    },
+    'wyn58v5x': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    'csd79tbw': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
+    },
+    'v4kj00xh': {
+      'uk': 'Час і дата прийому',
+      'en': '',
+    },
+    '3dzsdyok': {
+      'uk': '',
+      'en': '',
+    },
+    'jgudykk4': {
+      'uk': '',
+      'en': '',
+    },
+    'lg8tpool': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    'orsojz1r': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
+    },
+    '7afuejnw': {
+      'uk': 'Повторювати через',
+      'en': '',
+    },
+    '8ykg941c': {
+      'uk': 'Оберіть улюбленця',
+      'en': '',
+    },
+    'x9dkzwbw': {
+      'uk': 'Search for an item...',
+      'en': '',
+    },
+    'x1cfup82': {
+      'uk': 'день',
+      'en': '',
+    },
+    'ktx81sy9': {
+      'uk': 'тиждень',
+      'en': '',
+    },
+    '2ur60egb': {
+      'uk': 'місяць',
+      'en': '',
+    },
+    'jj7c8d57': {
+      'uk': 'рік',
+      'en': '',
+    },
+    'a7ecmrqt': {
+      'uk': '',
+      'en': '',
+    },
+    'uq6xj9jh': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    'g30eiiod': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
+    },
+    'vgkd5ecg': {
+      'uk': 'Позначити як виконане',
+      'en': '',
+    },
+    'kdbmhfq7': {
+      'uk': 'Виконано',
+      'en': '',
+    },
+  },
+  // carTodayTaskListComponent
+  {
+    'ra2ubyeu': {
+      'uk': 'Гараж',
+      'en': '',
+    },
+  },
+  // plantsTodayTaskComponent
+  {
+    '404ozjcw': {
+      'uk': 'Рослини',
+      'en': '',
+    },
+  },
+  // carTaskUpcomingComponent
+  {
+    'rvkur1o8': {
+      'uk': 'Гараж',
+      'en': '',
+    },
+  },
+  // plantTasksUpcomingComponent
+  {
+    '4m95w7xc': {
+      'uk': 'Рослини',
+      'en': '',
+    },
+  },
+  // healthTaskTodayComponent
+  {
+    'r8mv1kkn': {
+      'uk': 'Здоровʼя',
+      'en': '',
+    },
+  },
+  // homeTodayComponent
+  {
+    'w9s3i166': {
+      'uk': 'Дім',
+      'en': '',
+    },
+    '3eintayh': {
+      'uk': 'Перегляньте ваші продукти!',
+      'en': '',
+    },
+    '3omls1w2': {
+      'uk':
+          'У вашому списку присутні продукти з простроченим терміном придатності',
+      'en': '',
+    },
+  },
+  // homeUpcomingComponent
+  {
+    'lcjdt230': {
+      'uk': 'Дім',
+      'en': '',
+    },
+    'wx3eiotp': {
+      'uk': 'Перегляньте ваші продукти!',
+      'en': '',
+    },
+    'wrgydh5b': {
+      'uk':
+          'У вашому списку присутні продукти, термін придатності яких закінчується',
+      'en': '',
+    },
+  },
+  // healthEventUpcomingComponent
+  {
+    '7x9tbb2z': {
+      'uk': 'Здоровʼя',
+      'en': '',
+    },
+  },
+  // petsEventUpcomingComponent
+  {
+    '93mewj4b': {
+      'uk': 'Улюбленці',
+      'en': '',
+    },
+  },
+  // sportEventUpcomingComponent
+  {
+    'g8qlhb4u': {
+      'uk': 'Спорт',
+      'en': '',
+    },
+    '9ektut38': {
+      'uk': 'Hello World',
+      'en': '',
+    },
+    'u97yhqj5': {
+      'uk': 'Hello World',
+      'en': '',
+    },
+  },
+  // petsEventTodayComponent
+  {
+    '4rgumioj': {
+      'uk': 'Улюбленці',
+      'en': '',
+    },
+  },
+  // sportTodayEventComponent
+  {
+    'eo97xg4y': {
+      'uk': 'Спорт',
+      'en': '',
+    },
+    'cq9tsiyz': {
+      'uk': 'Hello World',
+      'en': '',
+    },
+    '0fdmanu5': {
+      'uk': 'Hello World',
+      'en': '',
+    },
+  },
+  // addNewActivity
+  {
+    '00wlp3jv': {
+      'uk': 'Нова активність',
+      'en': 'New Activity',
+    },
+    '1svqqznm': {
+      'uk': 'Назва',
+      'en': 'Title',
+    },
+    'mfmynyi7': {
+      'uk': 'Додаткова інформація',
+      'en': 'Additional information',
+    },
+    'lopokvlv': {
+      'uk': '',
+      'en': '',
+    },
+    '9xxucpqv': {
+      'uk': 'Зберегти',
+      'en': 'Add',
+    },
+    'cqav2jn0': {
+      'uk': 'Скасувати',
+      'en': '',
+    },
+  },
+  // menuSelectPopup
+  {
+    '5ig8w7y6': {
+      'uk': 'menu',
+      'en': '',
+    },
+    'kwpsscj6': {
+      'uk': 'Сніданок',
+      'en': 'Breakfast',
+    },
+    'oceynuyp': {
+      'uk': 'Додати страву',
+      'en': '',
+    },
+    '6fm78cam': {
+      'uk': 'Обід',
+      'en': 'Lunch',
+    },
+    'clm31nno': {
+      'uk': 'Додати страву',
+      'en': '',
+    },
+    'du5ulhd3': {
+      'uk': 'Вечеря',
+      'en': 'Dinner',
+    },
+    'nd91mcnq': {
+      'uk': 'Додати страву',
+      'en': '',
+    },
+    'y3zbz1tc': {
+      'uk': 'Інше',
+      'en': 'Other',
+    },
+    '0n6nmciy': {
+      'uk': 'Додати страву',
+      'en': '',
+    },
+  },
+  // AddCarFirst
+  {
+    's37nd98o': {
+      'uk': 'Давайте додамо першу машину\nНатисніть на \"+\" ',
+      'en': '',
+    },
+  },
+  // CarHistoryguide
+  {
+    'bjs4r89c': {
+      'uk': 'Тут буде відображено всю історію подій',
+      'en': '',
+    },
+  },
+  // CarPlannerGuide
+  {
+    'e6qf91yu': {
+      'uk': 'Давайте додамо першу подію',
+      'en': '',
+    },
+  },
+  // PlantsAddFirstGuide
+  {
+    '8vhbb0d1': {
+      'uk': 'Давайте додамо першу рослину',
+      'en': '',
+    },
+  },
+  // PetsFirstPet
+  {
+    'wavj9t17': {
+      'uk': 'Давайте додамо вашого улюбленця',
+      'en': '',
+    },
+  },
+  // PetsHistoryGuide
+  {
+    'dppi0htj': {
+      'uk': 'Тут буде вся історія подій',
+      'en': '',
+    },
+  },
+  // PetsPlannerGuide
+  {
+    'z00c12sx': {
+      'uk': 'Давайте додамо першу подію',
+      'en': '',
+    },
+  },
+  // SubscriptionOptions
+  {
+    'tqa9ep4n': {
+      'uk': 'Розблокуйте повний доступ',
+      'en': '',
+    },
+    '3r9boloc': {
+      'uk':
+          'Отримайте доступ до функцій застосунка терміном на 1 місяць або 1 рік. Підтримайте команду розробки.',
+      'en': '',
+    },
+    '3vni1jf2': {
+      'uk': 'Monthly Plan',
+      'en': '',
+    },
+    'w71nvpuf': {
+      'uk': '\$1 USD',
+      'en': '',
+    },
+    'j1rnhc93': {
+      'uk': 'Щомісячно',
+      'en': '',
+    },
+    'zouozkhe': {
+      'uk': 'Підписатись на місяць',
+      'en': '',
+    },
+    'k2e9ivmv': {
+      'uk': 'Yearly Plan',
+      'en': '',
+    },
+    'lle2olx2': {
+      'uk': '\$10 USD',
+      'en': '',
+    },
+    'sh1xjojn': {
+      'uk': 'Save 17%',
+      'en': '',
+    },
+    'ndmw645i': {
+      'uk': 'Щороку',
+      'en': '',
+    },
+    'xcjpf4en': {
+      'uk': 'Підписатись на рік',
+      'en': '',
+    },
+    'c5d8xy3t': {
+      'uk': 'Ви можете скасувати підписку у будь-який час',
+      'en': '',
+    },
+  },
+  // HubPageFirst
+  {
+    'uvzt7jw6': {
+      'uk':
+          'Вітаємо у Хабі. Тут відображені всі обрані Вами модулі у попередньому кроці.',
+      'en': '',
+    },
+  },
+  // HomeFirst
+  {
+    'w20eyxnl': {
+      'uk': 'Давайте перейдемо до вашого першого модулю ',
+      'en': '',
+    },
+  },
+  // HomeTabs
+  {
+    'zpesighu': {
+      'uk':
+          'Модуль містить 3 вкладки - Шопінг(список покупок), Планер та Вдома.',
+      'en': '',
+    },
+  },
+  // HomeShopping
+  {
+    'dvg0wchu': {
+      'uk':
+          'Список покупок це вкладка де Ви можете формувати список того, що хочете купити на основі запланованих страв та їх інгредієнтів або ж самостійно.',
+      'en': '',
+    },
+  },
+  // HomePlannerDescr
+  {
+    'j89p46to': {
+      'uk':
+          'Планер - це вкладка, де можна планувати приготування страв по дням. Додавши страву один раз - планувати її кожного разу коли забажаєте і отримувати список покупок базовано на інгредієнтах страви і тих, що є вдома.',
+      'en': '',
+    },
+  },
+  // HomeAtHomeDescr
+  {
+    'k5pw030l': {
+      'uk':
+          'Вдома - це вкладка, в якій Ви можете відслідковувати продукти які є в наявності для приготувань(вдома :)) \nМожна додавати вручну так само як і вони будуть заповнюватись автоматично після покупок та відміток в Шопінгу.',
+      'en': '',
+    },
+  },
+  // HomeAskToAdd
+  {
+    'pyqpyg7t': {
+      'uk': 'Давайте спробуємо додати пару нових страв та запланувати їх.',
+      'en': '',
+    },
+  },
+  // CarFirstEnter
+  {
+    'ydh4lio7': {
+      'uk': 'Модуль Гараж містить 3 вкладки - Історія, Планер та Авто.',
+      'en': '',
+    },
+  },
+  // CarFirstEnterHistory
+  {
+    'ipube76a': {
+      'uk': 'В Історії зберігаються всі виконані роботи по автомобілю.',
+      'en': '',
+    },
+  },
+  // CarFirstEnterPlanner
+  {
+    'gmvta1je': {
+      'uk': 'В Планері можна додати події про які треба нагадати.',
+      'en': '',
+    },
+  },
+  // CarFirstEnterCar
+  {
+    '2t7tulgo': {
+      'uk':
+          'В Авто можна додати автомобіль, його запчастини та їх стан, аби відслідковувати приблизний стан зношеності відповідно до пробігу.',
+      'en': '',
+    },
+  },
+  // PlantFirstEnterPlants
+  {
+    'e1n7vecl': {
+      'uk':
+          'Вкладка \"Рослини\" - тут можна додати свої домашні рослини, задати частоту їх поливу.',
+      'en': '',
+    },
+  },
+  // PlantsFirstEnterPlaner
+  {
+    'whyqnv5w': {
+      'uk':
+          'В \"Планері\" можна побачити перелік тих рослин, що потребують поливу сьогодні або в найближчі дні. ',
+      'en': '',
+    },
+  },
+  // HealthFirstEnterDescr
+  {
+    'h6057sht': {
+      'uk': 'Модуль \"Здоровʼя\" містить 3 вкладки - Історія, Планер та Ліки.',
+      'en': '',
+    },
+  },
+  // HealthFirstEnterHistory
+  {
+    '38adw90z': {
+      'uk':
+          'В Історії можна побачити або додати відвідування лікарів, внести нотатки до візиту та переглянути ліки які приймались раніше.',
+      'en': '',
+    },
+  },
+  // HealthFirstEnterPlanner
+  {
+    'qg5qk35q': {
+      'uk':
+          'У Планері можна задати бажані візити до лікарів або процедури які треба виконати. Можна зробити повторювані події наприклад \"Відвідати стоматолога з частотою нагадувань 3 міс\"',
+      'en': '',
+    },
+  },
+  // HealthFirstEnterMedications
+  {
+    'bvglt8wa': {
+      'uk':
+          'У вкладці \"Ліки\" можна додавати прийоми ліків з певною частотою і отримувати нагадування на визначений час. ',
+      'en': '',
+    },
+  },
+  // viewActivity
+  {
+    'kl66acul': {
+      'uk': 'Огляд події',
+      'en': 'New Activity',
+    },
+    'ebo8ply0': {
+      'uk': 'Назва',
+      'en': 'Title',
+    },
+    'rr315w9g': {
+      'uk': 'Додаткова інформація',
+      'en': 'Additional information',
+    },
+    'a5utk2hh': {
+      'uk': '',
+      'en': '',
+    },
+    'e9c6smbq': {
+      'uk': 'Ок',
+      'en': 'Add',
+    },
+  },
+  // PetsFirstEnterPlanner
+  {
+    'gglsk6qd': {
+      'uk':
+          'Модуль Улюбленці має 3 вкладки. Історія, Планер та сторінка улюбленця.',
+      'en': '',
+    },
+  },
+  // PetsFirstEnterHistory
+  {
+    'c09dc14l': {
+      'uk':
+          'В Історії Ви можете знайти події що відбулись, побачити дату, нотатки.',
+      'en': '',
+    },
+  },
+  // PetsFirstEnterPet
+  {
+    'ybsojqwb': {
+      'uk':
+          'На сторінці Pet Ви можете додати улюбленця, ввести деякі параметри та години годування(поки просто інформативно)',
+      'en': '',
+    },
+  },
+  // PetsFirstEnterNavigate
+  {
+    'q0swkbuc': {
+      'uk': 'Пропонуємо перейти у вкладку улюбленця і додати його до списку',
+      'en': '',
+    },
+  },
+  // PetsFirstEnterPlanner2
+  {
+    '7t7i9f71': {
+      'uk': 'Планер - місце де показуватимуться додані події.',
+      'en': '',
+    },
+  },
+  // PetAddNewPet
+  {
+    'ps8mwphh': {
+      'uk': 'Натисніть + та введіть інформацію про свого друга',
+      'en': '',
+    },
+  },
+  // HubPageSwipe
+  {
+    'qkf8xotk': {
+      'uk':
+          'Якщо свайпнути вліво то побачите екран, на якому будуть відображатись події на найближчі сім днів. Якщо вправо - події на сьогодні.',
+      'en': '',
+    },
+  },
+  // newMedicationPopup
+  {
+    'frz2hbly': {
+      'uk': 'Назва',
+      'en': '',
+    },
+    'xad312wv': {
+      'uk': 'Please select...',
+      'en': '',
+    },
+    'kaalkcac': {
+      'uk': 'Search for an item...',
+      'en': '',
+    },
+    'cc44969w': {
+      'uk': 'Частота споживання',
+      'en': '',
+    },
+    'hk6otuq5': {
+      'uk': 'Щодня',
+      'en': '',
+    },
+    's0aao7un': {
+      'uk': 'Повторювати через',
+      'en': '',
+    },
+    'dbm0ebc1': {
+      'uk': 'Конкретні дні тижня',
+      'en': '',
+    },
+    'q4vqwsvn': {
+      'uk': 'Одноразово',
+      'en': '',
+    },
+    'pxal9fef': {
+      'uk': 'Кількість днів',
+      'en': '',
+    },
+    'mv3c1hp6': {
+      'uk': 'Дата одноразового прийому',
+      'en': '',
+    },
+    'kiqnhe2q': {
+      'uk': 'Оберіть необхідні дні',
+      'en': '',
+    },
+    'uyvpm4qx': {
+      'uk': 'Пн',
+      'en': '',
+    },
+    'yxpg6uft': {
+      'uk': 'Вт',
+      'en': '',
+    },
+    'u0bmxn7r': {
+      'uk': 'Ср',
+      'en': '',
+    },
+    'uwmk399g': {
+      'uk': 'Чт',
+      'en': '',
+    },
+    'ybaopjkg': {
+      'uk': 'Пт',
+      'en': '',
+    },
+    'uy9e7xd0': {
+      'uk': 'Сб',
+      'en': '',
+    },
+    'yt0akl57': {
+      'uk': 'Нд',
+      'en': '',
+    },
+    'qc0itxy8': {
+      'uk': 'Вами не обрано жодного дня',
+      'en': '',
+    },
+    'u6hchaam': {
+      'uk': 'Час прийому',
+      'en': '',
+    },
+    'qxq83hhv': {
+      'uk': 'Обрані вами години не повинні \nповторюватись',
+      'en': '',
+    },
+    'rscb7vkz': {
+      'uk': 'Кількість днів лікування',
+      'en': '',
+    },
+    'y21f8h9x': {
+      'uk': 'Доза',
+      'en': '',
+    },
+    'stk219br': {
+      'uk': 'Select...',
+      'en': '',
+    },
+    'toee3ijp': {
+      'uk': 'Search...',
+      'en': '',
+    },
+    'm3qx2gxa': {
+      'uk': 'Табл',
+      'en': '',
+    },
+    'uv5bpehx': {
+      'uk': 'Мл',
+      'en': '',
+    },
+    '2jzcr2t8': {
+      'uk': 'Мг',
+      'en': '',
+    },
+    'har16712': {
+      'uk': 'Надходження сповіщень',
+      'en': '',
+    },
+    'wiqh8b0n': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    'wissevdu': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
+    },
+    'e69tjyhr': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    'w0zvkpd8': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
+    },
+    'czqzq4jl': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    'qmvy7flb': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
+    },
+    'g3ln7f2w': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    '4ufiyin5': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
+    },
+    'qkoofji1': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    'ubrpeuia': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
+    },
+    'ubxauo3x': {
+      'uk': 'Зберегти',
+      'en': '',
+    },
+    'ku4ieipa': {
+      'uk': 'Скасувати',
+      'en': '',
+    },
+  },
+  // addStorageStuff
+  {
+    '4pwb9i1q': {
+      'uk': '0',
+      'en': '',
+    },
+    'hqynnouo': {
+      'uk': '',
+      'en': '',
+    },
+    's56xofhc': {
+      'uk': 'Search...',
+      'en': '',
+    },
+    'rgxjkwh0': {
+      'uk': 'Їжа',
+      'en': '',
+    },
+    '9535uy1v': {
+      'uk': 'Побутове',
+      'en': '',
+    },
+    'iliggb9z': {
+      'uk': 'Назва *',
+      'en': '',
+    },
+    'lqx338vm': {
+      'uk': 'У вас вже використовується така назва',
+      'en': '',
+    },
+    'cyz95oow': {
+      'uk': 'Кількість *',
+      'en': '',
+    },
+    'cpusfghb': {
+      'uk': '1',
+      'en': '',
+    },
+    '4c13kr42': {
+      'uk': 'Оберіть',
+      'en': '',
+    },
+    't9bnmigx': {
+      'uk': 'Search...',
+      'en': '',
+    },
+    'r6zwsiwk': {
+      'uk': 'Категорія',
+      'en': '',
+    },
+    '99mtbjni': {
+      'uk': 'Спожити до',
+      'en': 'Shop name',
+    },
+    'wfpol1ae': {
+      'uk': '* Обов\'язкові поля',
+      'en': '',
+    },
+    'mfu3of61': {
+      'uk': 'Зберегти',
+      'en': 'Add',
+    },
+    'z5r1m1rv': {
+      'uk': 'Скасувати',
+      'en': '',
+    },
+    '9ihiohjv': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    'k9h3b3aq': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
+    },
+    'nxkzc8a6': {
+      'uk': 'Field is required',
+      'en': '',
+    },
+    'pcofv4ok': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
+    },
+    't8gpmbru': {
+      'uk': 'Категорія is required',
+      'en': '',
+    },
+    'njaxhcat': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': '',
+    },
+    '3rkohdld': {
+      'uk': 'Field is required',
+      'en': 'Обовʼязкове поле',
+    },
+    'z0p869cr': {
+      'uk': 'Please choose an option from the dropdown',
+      'en': 'Оберіть опцію зі списку',
+    },
+  },
+  // shareShopListForUserPopup
+  {
+    'pzwwzo3d': {
+      'uk': 'Надіслати список',
+      'en': '',
+    },
+    'hgyb8oab': {
+      'uk': 'Додати друга',
+      'en': '',
+    },
+    '0dv6ps24': {
+      'uk': 'Надіслати',
+      'en': '',
+    },
+  },
   // Miscellaneous
   {
+    'b6x1ydwz': {
+      'uk': 'Button',
+      'en': 'No',
+    },
+    '2pffxn0y': {
+      'uk': 'Hello World',
+      'en': 'Set notification time',
+    },
     '8nb51qsc': {
-      'uk': '',
-      'en': '',
+      'uk':
+          'Для того щоб сфотографувати щось, цей додаток потребує доступ до камери',
+      'en':
+          'In order to take a picture, this app requires permission to access the camera',
     },
     'zunagtu1': {
-      'uk': '',
-      'en': '',
+      'uk':
+          'Для того щоб додати фото, цей додаток потребує доступу до бібліотеки ',
+      'en':
+          'In order to upload data, this app requires permission to access the photo library',
     },
     '3mx9ufkc': {
-      'uk': 'Can we send you notifications?',
+      'uk': 'Чи можемо ми відправляти Вам сповіщення ? ',
+      'en': 'Can we send you notifications  ?',
+    },
+    'gvjlt99a': {
+      'uk': 'backgroundNotificationPermissions',
       'en': '',
     },
     '3uzxv5p6': {
@@ -3146,12 +4540,12 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
       'en': '',
     },
     'rwdibaak': {
-      'uk': '',
-      'en': '',
+      'uk': 'Оберіть джерело',
+      'en': 'Choose source',
     },
     '0m88o10m': {
-      'uk': '',
-      'en': '',
+      'uk': 'Галерея',
+      'en': 'Gallery',
     },
     '4h5eiitz': {
       'uk': '',
@@ -3162,8 +4556,8 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
       'en': '',
     },
     '59093hxw': {
-      'uk': '',
-      'en': '',
+      'uk': 'Камера',
+      'en': 'Camera',
     },
     'm4klgz4d': {
       'uk': '',

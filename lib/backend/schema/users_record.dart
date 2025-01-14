@@ -57,6 +57,17 @@ class UsersRecord extends FirestoreRecord {
   int get uniqueUserCode => _uniqueUserCode ?? 0;
   bool hasUniqueUserCode() => _uniqueUserCode != null;
 
+  // "PushNotificationServerHour" field.
+  int? _pushNotificationServerHour;
+  int get pushNotificationServerHour => _pushNotificationServerHour ?? 0;
+  bool hasPushNotificationServerHour() => _pushNotificationServerHour != null;
+
+  // "userLoginHistory" field.
+  UserLoginHistoryStruct? _userLoginHistory;
+  UserLoginHistoryStruct get userLoginHistory =>
+      _userLoginHistory ?? UserLoginHistoryStruct();
+  bool hasUserLoginHistory() => _userLoginHistory != null;
+
   void _initializeFields() {
     _email = snapshotData['email'] as String?;
     _displayName = snapshotData['display_name'] as String?;
@@ -66,6 +77,12 @@ class UsersRecord extends FirestoreRecord {
     _phoneNumber = snapshotData['phone_number'] as String?;
     _notificationTime = snapshotData['notification_time'] as DateTime?;
     _uniqueUserCode = castToType<int>(snapshotData['uniqueUserCode']);
+    _pushNotificationServerHour =
+        castToType<int>(snapshotData['PushNotificationServerHour']);
+    _userLoginHistory = snapshotData['userLoginHistory']
+            is UserLoginHistoryStruct
+        ? snapshotData['userLoginHistory']
+        : UserLoginHistoryStruct.maybeFromMap(snapshotData['userLoginHistory']);
   }
 
   static CollectionReference get collection =>
@@ -110,6 +127,8 @@ Map<String, dynamic> createUsersRecordData({
   String? phoneNumber,
   DateTime? notificationTime,
   int? uniqueUserCode,
+  int? pushNotificationServerHour,
+  UserLoginHistoryStruct? userLoginHistory,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
@@ -121,8 +140,14 @@ Map<String, dynamic> createUsersRecordData({
       'phone_number': phoneNumber,
       'notification_time': notificationTime,
       'uniqueUserCode': uniqueUserCode,
+      'PushNotificationServerHour': pushNotificationServerHour,
+      'userLoginHistory': UserLoginHistoryStruct().toMap(),
     }.withoutNulls,
   );
+
+  // Handle nested data for "userLoginHistory" field.
+  addUserLoginHistoryStructData(
+      firestoreData, userLoginHistory, 'userLoginHistory');
 
   return firestoreData;
 }
@@ -139,7 +164,9 @@ class UsersRecordDocumentEquality implements Equality<UsersRecord> {
         e1?.createdTime == e2?.createdTime &&
         e1?.phoneNumber == e2?.phoneNumber &&
         e1?.notificationTime == e2?.notificationTime &&
-        e1?.uniqueUserCode == e2?.uniqueUserCode;
+        e1?.uniqueUserCode == e2?.uniqueUserCode &&
+        e1?.pushNotificationServerHour == e2?.pushNotificationServerHour &&
+        e1?.userLoginHistory == e2?.userLoginHistory;
   }
 
   @override
@@ -151,7 +178,9 @@ class UsersRecordDocumentEquality implements Equality<UsersRecord> {
         e?.createdTime,
         e?.phoneNumber,
         e?.notificationTime,
-        e?.uniqueUserCode
+        e?.uniqueUserCode,
+        e?.pushNotificationServerHour,
+        e?.userLoginHistory
       ]);
 
   @override

@@ -1,5 +1,6 @@
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -83,7 +84,7 @@ class _ChooseDateCopyWidgetState extends State<ChooseDateCopyWidget> {
                         highlightColor: Colors.transparent,
                         onTap: () async {
                           _model.showDays = true;
-                          setState(() {});
+                          safeSetState(() {});
                         },
                         child: Row(
                           mainAxisSize: MainAxisSize.max,
@@ -96,7 +97,7 @@ class _ChooseDateCopyWidgetState extends State<ChooseDateCopyWidget> {
                               highlightColor: Colors.transparent,
                               onTap: () async {
                                 _model.showDays = true;
-                                setState(() {});
+                                safeSetState(() {});
                               },
                               child: Text(
                                 FFAppState().day == 0
@@ -122,7 +123,7 @@ class _ChooseDateCopyWidgetState extends State<ChooseDateCopyWidget> {
                               highlightColor: Colors.transparent,
                               onTap: () async {
                                 _model.showDays = true;
-                                setState(() {});
+                                safeSetState(() {});
                               },
                               child: Icon(
                                 FFIcons.kaltArrowDown,
@@ -162,9 +163,9 @@ class _ChooseDateCopyWidgetState extends State<ChooseDateCopyWidget> {
                                 onFieldSubmitted: (_) async {
                                   FFAppState().day =
                                       int.parse(_model.textController1.text);
-                                  setState(() {});
+                                  safeSetState(() {});
                                   _model.showDays = false;
-                                  setState(() {});
+                                  safeSetState(() {});
                                 },
                                 autofocus: false,
                                 obscureText: false,
@@ -246,9 +247,9 @@ class _ChooseDateCopyWidgetState extends State<ChooseDateCopyWidget> {
                                             highlightColor: Colors.transparent,
                                             onTap: () async {
                                               FFAppState().day = daysItem;
-                                              setState(() {});
+                                              safeSetState(() {});
                                               _model.showDays = false;
-                                              setState(() {});
+                                              safeSetState(() {});
                                             },
                                             child: Row(
                                               mainAxisSize: MainAxisSize.max,
@@ -264,9 +265,9 @@ class _ChooseDateCopyWidgetState extends State<ChooseDateCopyWidget> {
                                                       Colors.transparent,
                                                   onTap: () async {
                                                     FFAppState().day = daysItem;
-                                                    setState(() {});
+                                                    safeSetState(() {});
                                                     _model.showDays = false;
-                                                    setState(() {});
+                                                    safeSetState(() {});
                                                   },
                                                   child: Text(
                                                     daysItem.toString(),
@@ -330,7 +331,7 @@ class _ChooseDateCopyWidgetState extends State<ChooseDateCopyWidget> {
                         highlightColor: Colors.transparent,
                         onTap: () async {
                           _model.showMonths = true;
-                          setState(() {});
+                          safeSetState(() {});
                         },
                         child: Row(
                           mainAxisSize: MainAxisSize.max,
@@ -343,7 +344,7 @@ class _ChooseDateCopyWidgetState extends State<ChooseDateCopyWidget> {
                               highlightColor: Colors.transparent,
                               onTap: () async {
                                 _model.showMonths = true;
-                                setState(() {});
+                                safeSetState(() {});
                               },
                               child: Text(
                                 FFAppState().month == 0
@@ -369,7 +370,7 @@ class _ChooseDateCopyWidgetState extends State<ChooseDateCopyWidget> {
                               highlightColor: Colors.transparent,
                               onTap: () async {
                                 _model.showMonths = true;
-                                setState(() {});
+                                safeSetState(() {});
                               },
                               child: Icon(
                                 FFIcons.kaltArrowDown,
@@ -409,9 +410,9 @@ class _ChooseDateCopyWidgetState extends State<ChooseDateCopyWidget> {
                                 onFieldSubmitted: (_) async {
                                   FFAppState().month =
                                       int.parse(_model.textController2.text);
-                                  setState(() {});
+                                  safeSetState(() {});
                                   _model.showMonths = false;
-                                  setState(() {});
+                                  safeSetState(() {});
                                 },
                                 autofocus: false,
                                 obscureText: false,
@@ -495,9 +496,9 @@ class _ChooseDateCopyWidgetState extends State<ChooseDateCopyWidget> {
                                             highlightColor: Colors.transparent,
                                             onTap: () async {
                                               FFAppState().month = monthsItem;
-                                              setState(() {});
+                                              safeSetState(() {});
                                               _model.showMonths = false;
-                                              setState(() {});
+                                              safeSetState(() {});
                                             },
                                             child: Row(
                                               mainAxisSize: MainAxisSize.max,
@@ -514,9 +515,9 @@ class _ChooseDateCopyWidgetState extends State<ChooseDateCopyWidget> {
                                                   onTap: () async {
                                                     FFAppState().month =
                                                         monthsItem;
-                                                    setState(() {});
+                                                    safeSetState(() {});
                                                     _model.showMonths = false;
-                                                    setState(() {});
+                                                    safeSetState(() {});
                                                   },
                                                   child: Text(
                                                     monthsItem.toString(),
@@ -577,7 +578,7 @@ class _ChooseDateCopyWidgetState extends State<ChooseDateCopyWidget> {
                       highlightColor: Colors.transparent,
                       onTap: () async {
                         _model.showYears = true;
-                        setState(() {});
+                        safeSetState(() {});
                       },
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
@@ -590,7 +591,7 @@ class _ChooseDateCopyWidgetState extends State<ChooseDateCopyWidget> {
                             highlightColor: Colors.transparent,
                             onTap: () async {
                               _model.showYears = true;
-                              setState(() {});
+                              safeSetState(() {});
                             },
                             child: Text(
                               FFAppState().year == 0
@@ -615,7 +616,7 @@ class _ChooseDateCopyWidgetState extends State<ChooseDateCopyWidget> {
                             highlightColor: Colors.transparent,
                             onTap: () async {
                               _model.showYears = true;
-                              setState(() {});
+                              safeSetState(() {});
                             },
                             child: Icon(
                               FFIcons.kaltArrowDown,
@@ -654,9 +655,9 @@ class _ChooseDateCopyWidgetState extends State<ChooseDateCopyWidget> {
                               onFieldSubmitted: (_) async {
                                 FFAppState().year =
                                     int.parse(_model.textController3.text);
-                                setState(() {});
+                                safeSetState(() {});
                                 _model.showYears = false;
-                                setState(() {});
+                                safeSetState(() {});
                               },
                               autofocus: false,
                               obscureText: false,
@@ -738,9 +739,9 @@ class _ChooseDateCopyWidgetState extends State<ChooseDateCopyWidget> {
                                           highlightColor: Colors.transparent,
                                           onTap: () async {
                                             FFAppState().year = yearsItem;
-                                            setState(() {});
+                                            safeSetState(() {});
                                             _model.showYears = false;
-                                            setState(() {});
+                                            safeSetState(() {});
                                           },
                                           child: Row(
                                             mainAxisSize: MainAxisSize.max,
@@ -753,9 +754,9 @@ class _ChooseDateCopyWidgetState extends State<ChooseDateCopyWidget> {
                                                     Colors.transparent,
                                                 onTap: () async {
                                                   FFAppState().year = yearsItem;
-                                                  setState(() {});
+                                                  safeSetState(() {});
                                                   _model.showYears = false;
-                                                  setState(() {});
+                                                  safeSetState(() {});
                                                 },
                                                 child: Text(
                                                   yearsItem.toString(),

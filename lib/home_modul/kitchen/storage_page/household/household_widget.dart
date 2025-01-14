@@ -1,11 +1,13 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
+import '/backend/schema/enums/enums.dart';
 import '/custom_components/app_bar/app_bar_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
-import '/home_modul/kitchen/storage_page/add_item_household/add_item_household_widget.dart';
-import '/home_modul/kitchen/storage_page/edit_item_household/edit_item_household_widget.dart';
+import '/home_modul/kitchen/storage_page/add_storage_stuff/add_storage_stuff_widget.dart';
+import 'dart:ui';
+import '/flutter_flow/custom_functions.dart' as functions;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -36,11 +38,11 @@ class _HouseholdWidgetState extends State<HouseholdWidget> {
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       _model.itemNum = FFAppState().categoryHousehold.length;
       _model.index = 0;
-      setState(() {});
+      safeSetState(() {});
       while (_model.index! < _model.itemNum!) {
         _model.insertAtIndexInCategoriesIsOpened(_model.index!, true);
         _model.index = _model.index! + 1;
-        setState(() {});
+        safeSetState(() {});
       }
       _model.settings = await querySettingsCategoryAndShopRecordOnce(
         parent: FFAppState().currentUserRef,
@@ -48,7 +50,7 @@ class _HouseholdWidgetState extends State<HouseholdWidget> {
       ).then((s) => s.firstOrNull);
       FFAppState().categoryHousehold =
           _model.settings!.categoryHousehold.toList().cast<String>();
-      setState(() {});
+      safeSetState(() {});
     });
   }
 
@@ -64,12 +66,44 @@ class _HouseholdWidgetState extends State<HouseholdWidget> {
     context.watch<FFAppState>();
 
     return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
-          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-          : FocusScope.of(context).unfocus(),
+      onTap: () {
+        FocusScope.of(context).unfocus();
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () async {
+            await showModalBottomSheet(
+              isScrollControlled: true,
+              backgroundColor: Colors.transparent,
+              enableDrag: false,
+              context: context,
+              builder: (context) {
+                return GestureDetector(
+                  onTap: () {
+                    FocusScope.of(context).unfocus();
+                    FocusManager.instance.primaryFocus?.unfocus();
+                  },
+                  child: Padding(
+                    padding: MediaQuery.viewInsetsOf(context),
+                    child: AddStorageStuffWidget(
+                      stuffType: HomeStuffEnum.household,
+                    ),
+                  ),
+                );
+              },
+            ).then((value) => safeSetState(() {}));
+          },
+          backgroundColor: FlutterFlowTheme.of(context).tertiary,
+          elevation: 8.0,
+          child: Icon(
+            Icons.add_rounded,
+            color: FlutterFlowTheme.of(context).info,
+            size: 24.0,
+          ),
+        ),
         body: SafeArea(
           top: true,
           child: Column(
@@ -77,7 +111,7 @@ class _HouseholdWidgetState extends State<HouseholdWidget> {
             children: [
               wrapWithModel(
                 model: _model.appBarModel,
-                updateCallback: () => setState(() {}),
+                updateCallback: () => safeSetState(() {}),
                 child: AppBarWidget(
                   title: 'Home',
                   colorButton: FlutterFlowTheme.of(context).home,
@@ -97,18 +131,18 @@ class _HouseholdWidgetState extends State<HouseholdWidget> {
                       borderRadius: BorderRadius.circular(12.0),
                     ),
                     child: Align(
-                      alignment: AlignmentDirectional(0.0, -1.0),
+                      alignment: AlignmentDirectional(0.0, 0.0),
                       child: Padding(
                         padding: EdgeInsets.all(8.0),
                         child: Row(
                           mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Expanded(
                               child: FFButtonWidget(
                                 onPressed: () async {
-                                  context.pushNamed('HomeShoppingActual');
+                                  context.goNamed('HomeShoppingActual');
                                 },
                                 text: FFLocalizations.of(context).getText(
                                   'lwkzfwu1' /* Shopping */,
@@ -119,13 +153,14 @@ class _HouseholdWidgetState extends State<HouseholdWidget> {
                                   iconPadding: EdgeInsetsDirectional.fromSTEB(
                                       0.0, 0.0, 0.0, 0.0),
                                   color: Colors.white,
-                                  textStyle: GoogleFonts.getFont(
-                                    'Inter',
-                                    color: FlutterFlowTheme.of(context)
-                                        .primaryText,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 16.0,
-                                  ),
+                                  textStyle: FlutterFlowTheme.of(context)
+                                      .titleSmall
+                                      .override(
+                                        fontFamily: 'Inter',
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                        letterSpacing: 0.0,
+                                      ),
                                   elevation: 0.0,
                                   borderSide: BorderSide(
                                     color: Colors.transparent,
@@ -138,7 +173,7 @@ class _HouseholdWidgetState extends State<HouseholdWidget> {
                             Expanded(
                               child: FFButtonWidget(
                                 onPressed: () async {
-                                  context.pushNamed('HomePlannerPage');
+                                  context.goNamed('HomePlannerPage');
                                 },
                                 text: FFLocalizations.of(context).getText(
                                   'rlpk1css' /* Planner */,
@@ -146,22 +181,26 @@ class _HouseholdWidgetState extends State<HouseholdWidget> {
                                 options: FFButtonOptions(
                                   height: 40.0,
                                   padding: EdgeInsets.all(0.0),
+                                  iconAlignment: IconAlignment.start,
                                   iconPadding: EdgeInsetsDirectional.fromSTEB(
                                       0.0, 0.0, 0.0, 0.0),
                                   color: Colors.white,
-                                  textStyle: GoogleFonts.getFont(
-                                    'Inter',
-                                    color: FlutterFlowTheme.of(context)
-                                        .primaryText,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 16.0,
-                                  ),
+                                  textStyle: FlutterFlowTheme.of(context)
+                                      .titleMedium
+                                      .override(
+                                        fontFamily: 'Inter',
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                        fontSize: 16.0,
+                                        letterSpacing: 0.0,
+                                        fontWeight: FontWeight.w500,
+                                      ),
                                   elevation: 0.0,
                                   borderSide: BorderSide(
                                     color: Colors.transparent,
-                                    width: 1.0,
+                                    width: 0.0,
                                   ),
-                                  borderRadius: BorderRadius.circular(13.0),
+                                  borderRadius: BorderRadius.circular(12.0),
                                 ),
                               ),
                             ),
@@ -220,10 +259,10 @@ class _HouseholdWidgetState extends State<HouseholdWidget> {
                               8.0, 8.0, 0.0, 8.0),
                           child: FFButtonWidget(
                             onPressed: () async {
-                              context.pushNamed('StorageFood');
+                              context.goNamed('StorageFood');
                             },
                             text: FFLocalizations.of(context).getText(
-                              'j992yftb' /* Food */,
+                              'j992yftb' /* Їжа */,
                             ),
                             options: FFButtonOptions(
                               width: 155.5,
@@ -259,7 +298,7 @@ class _HouseholdWidgetState extends State<HouseholdWidget> {
                               print('Button pressed ...');
                             },
                             text: FFLocalizations.of(context).getText(
-                              'inbtnljl' /* Household */,
+                              'inbtnljl' /* Побутові */,
                             ),
                             options: FFButtonOptions(
                               width: 155.5,
@@ -307,636 +346,545 @@ class _HouseholdWidgetState extends State<HouseholdWidget> {
                               children: [
                                 Align(
                                   alignment: AlignmentDirectional(-1.0, -1.0),
-                                  child: Builder(
-                                    builder: (context) {
-                                      final categories = FFAppState()
-                                          .categoryHousehold
-                                          .toList();
-
-                                      return Column(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children:
-                                            List.generate(categories.length,
-                                                (categoriesIndex) {
-                                          final categoriesItem =
-                                              categories[categoriesIndex];
-                                          return Container(
-                                            decoration: BoxDecoration(
-                                              color: Color(0x00FFFFFF),
+                                  child: StreamBuilder<
+                                      List<HomeStuffCategoriesRecord>>(
+                                    stream: queryHomeStuffCategoriesRecord(
+                                      parent: FFAppState().currentUserRef,
+                                      queryBuilder:
+                                          (homeStuffCategoriesRecord) =>
+                                              homeStuffCategoriesRecord.where(
+                                        'stuffType',
+                                        isEqualTo:
+                                            HomeStuffEnum.household.serialize(),
+                                      ),
+                                    ),
+                                    builder: (context, snapshot) {
+                                      // Customize what your widget looks like when it's loading.
+                                      if (!snapshot.hasData) {
+                                        return Center(
+                                          child: SizedBox(
+                                            width: 50.0,
+                                            height: 50.0,
+                                            child: CircularProgressIndicator(
+                                              valueColor:
+                                                  AlwaysStoppedAnimation<Color>(
+                                                Color(0xFFF57F44),
+                                              ),
                                             ),
-                                            child: Column(
+                                          ),
+                                        );
+                                      }
+                                      List<HomeStuffCategoriesRecord>
+                                          containerHomeStuffCategoriesRecordList =
+                                          snapshot.data!;
+
+                                      return Container(
+                                        decoration: BoxDecoration(),
+                                        child: Builder(
+                                          builder: (context) {
+                                            final categories =
+                                                containerHomeStuffCategoriesRecordList
+                                                    .map((e) => e.name)
+                                                    .toList();
+
+                                            return Column(
                                               mainAxisSize: MainAxisSize.max,
-                                              children: [
-                                                Align(
-                                                  alignment:
-                                                      AlignmentDirectional(
-                                                          -1.0, 0.0),
-                                                  child: Padding(
-                                                    padding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(0.0, 24.0,
-                                                                0.0, 10.0),
-                                                    child: InkWell(
-                                                      splashColor:
-                                                          Colors.transparent,
-                                                      focusColor:
-                                                          Colors.transparent,
-                                                      hoverColor:
-                                                          Colors.transparent,
-                                                      highlightColor:
-                                                          Colors.transparent,
-                                                      onTap: () async {
-                                                        if (_model
-                                                                .categoriesIsOpened[
-                                                            categoriesIndex]) {
-                                                          _model
-                                                              .updateCategoriesIsOpenedAtIndex(
-                                                            categoriesIndex,
-                                                            (_) => false,
-                                                          );
-                                                          setState(() {});
-                                                        } else {
-                                                          _model
-                                                              .updateCategoriesIsOpenedAtIndex(
-                                                            categoriesIndex,
-                                                            (_) => true,
-                                                          );
-                                                          setState(() {});
-                                                        }
-                                                      },
-                                                      child: Text(
-                                                        categoriesItem,
-                                                        style:
-                                                            GoogleFonts.getFont(
-                                                          'Inter',
-                                                          color:
-                                                              Color(0xFF919191),
-                                                          fontSize: 18.0,
-                                                        ),
-                                                      ),
-                                                    ),
+                                              children: List.generate(
+                                                  categories.length,
+                                                  (categoriesIndex) {
+                                                final categoriesItem =
+                                                    categories[categoriesIndex];
+                                                return Container(
+                                                  decoration: BoxDecoration(
+                                                    color: Color(0x00FFFFFF),
                                                   ),
-                                                ),
-                                                if (_model.categoriesIsOpened[
-                                                    categoriesIndex])
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, -1.0),
-                                                    child: Container(
-                                                      decoration: BoxDecoration(
-                                                        color: FlutterFlowTheme
-                                                                .of(context)
-                                                            .secondaryBackground,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(16.0),
-                                                      ),
-                                                      child: Align(
+                                                  child: Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    children: [
+                                                      Align(
                                                         alignment:
                                                             AlignmentDirectional(
-                                                                0.0, 0.0),
-                                                        child: Padding(
-                                                          padding:
-                                                              EdgeInsetsDirectional
-                                                                  .fromSTEB(
-                                                                      16.0,
-                                                                      0.0,
-                                                                      16.0,
-                                                                      0.0),
-                                                          child: StreamBuilder<
-                                                              List<
-                                                                  AddItemHouseholdRecord>>(
-                                                            stream:
-                                                                queryAddItemHouseholdRecord(
-                                                              parent: FFAppState()
-                                                                  .currentUserRef,
-                                                              queryBuilder:
-                                                                  (addItemHouseholdRecord) =>
-                                                                      addItemHouseholdRecord
-                                                                          .where(
-                                                                            'category',
-                                                                            isEqualTo:
-                                                                                categoriesItem,
-                                                                          )
-                                                                          .where(
-                                                                            'quantity',
-                                                                            isGreaterThan:
-                                                                                0.0,
-                                                                          ),
-                                                            ),
-                                                            builder: (context,
-                                                                snapshot) {
-                                                              // Customize what your widget looks like when it's loading.
-                                                              if (!snapshot
-                                                                  .hasData) {
-                                                                return Center(
+                                                                0.0, -1.0),
+                                                        child: StreamBuilder<
+                                                            List<
+                                                                StaffStorageRecord>>(
+                                                          stream:
+                                                              queryStaffStorageRecord(
+                                                            parent: FFAppState()
+                                                                .currentUserRef,
+                                                            queryBuilder:
+                                                                (staffStorageRecord) =>
+                                                                    staffStorageRecord
+                                                                        .where(
+                                                                          'category',
+                                                                          isEqualTo:
+                                                                              categoriesItem,
+                                                                        )
+                                                                        .where(
+                                                                          'count',
+                                                                          isGreaterThan: functions
+                                                                              .toInt('0')
+                                                                              .toDouble(),
+                                                                        )
+                                                                        .where(
+                                                                          'staffCategoryType',
+                                                                          isEqualTo: HomeStuffEnum
+                                                                              .household
+                                                                              .serialize(),
+                                                                        ),
+                                                          ),
+                                                          builder: (context,
+                                                              snapshot) {
+                                                            // Customize what your widget looks like when it's loading.
+                                                            if (!snapshot
+                                                                .hasData) {
+                                                              return Center(
+                                                                child: SizedBox(
+                                                                  width: 50.0,
+                                                                  height: 50.0,
                                                                   child:
-                                                                      SizedBox(
-                                                                    width: 50.0,
-                                                                    height:
-                                                                        50.0,
-                                                                    child:
-                                                                        CircularProgressIndicator(
-                                                                      valueColor:
-                                                                          AlwaysStoppedAnimation<
-                                                                              Color>(
-                                                                        Color(
-                                                                            0xFFF57F44),
-                                                                      ),
+                                                                      CircularProgressIndicator(
+                                                                    valueColor:
+                                                                        AlwaysStoppedAnimation<
+                                                                            Color>(
+                                                                      Color(
+                                                                          0xFFF57F44),
                                                                     ),
                                                                   ),
-                                                                );
-                                                              }
-                                                              List<AddItemHouseholdRecord>
-                                                                  columnAddItemHouseholdRecordList =
-                                                                  snapshot
-                                                                      .data!;
+                                                                ),
+                                                              );
+                                                            }
+                                                            List<StaffStorageRecord>
+                                                                containerStaffStorageRecordList =
+                                                                snapshot.data!;
 
-                                                              return Column(
-                                                                mainAxisSize:
-                                                                    MainAxisSize
-                                                                        .max,
-                                                                children: List.generate(
-                                                                    columnAddItemHouseholdRecordList
-                                                                        .length,
-                                                                    (columnIndex) {
-                                                                  final columnAddItemHouseholdRecord =
-                                                                      columnAddItemHouseholdRecordList[
-                                                                          columnIndex];
-                                                                  return Row(
-                                                                    mainAxisSize:
-                                                                        MainAxisSize
-                                                                            .max,
-                                                                    mainAxisAlignment:
-                                                                        MainAxisAlignment
-                                                                            .spaceBetween,
-                                                                    children: [
-                                                                      Padding(
+                                                            return Container(
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            16.0),
+                                                              ),
+                                                              child: Visibility(
+                                                                visible:
+                                                                    containerStaffStorageRecordList
+                                                                        .isNotEmpty,
+                                                                child: Column(
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .max,
+                                                                  children: [
+                                                                    Align(
+                                                                      alignment:
+                                                                          AlignmentDirectional(
+                                                                              -1.0,
+                                                                              0.0),
+                                                                      child:
+                                                                          Padding(
                                                                         padding: EdgeInsetsDirectional.fromSTEB(
                                                                             0.0,
-                                                                            16.0,
+                                                                            24.0,
                                                                             0.0,
-                                                                            16.0),
+                                                                            10.0),
                                                                         child:
-                                                                            Container(
-                                                                          width:
-                                                                              140.0,
-                                                                          decoration:
-                                                                              BoxDecoration(
+                                                                            Text(
+                                                                          categoriesItem,
+                                                                          style:
+                                                                              GoogleFonts.getFont(
+                                                                            'Inter',
                                                                             color:
-                                                                                FlutterFlowTheme.of(context).secondaryBackground,
-                                                                          ),
-                                                                          child:
-                                                                              Align(
-                                                                            alignment:
-                                                                                AlignmentDirectional(-1.0, 0.0),
-                                                                            child:
-                                                                                InkWell(
-                                                                              splashColor: Colors.transparent,
-                                                                              focusColor: Colors.transparent,
-                                                                              hoverColor: Colors.transparent,
-                                                                              highlightColor: Colors.transparent,
-                                                                              onTap: () async {
-                                                                                await showModalBottomSheet(
-                                                                                  isScrollControlled: true,
-                                                                                  backgroundColor: Colors.transparent,
-                                                                                  enableDrag: false,
-                                                                                  context: context,
-                                                                                  builder: (context) {
-                                                                                    return GestureDetector(
-                                                                                      onTap: () => _model.unfocusNode.canRequestFocus ? FocusScope.of(context).requestFocus(_model.unfocusNode) : FocusScope.of(context).unfocus(),
-                                                                                      child: Padding(
-                                                                                        padding: MediaQuery.viewInsetsOf(context),
-                                                                                        child: EditItemHouseholdWidget(
-                                                                                          itemInLibrary: columnAddItemHouseholdRecord,
-                                                                                        ),
-                                                                                      ),
-                                                                                    );
-                                                                                  },
-                                                                                ).then((value) => safeSetState(() {}));
-                                                                              },
-                                                                              child: Text(
-                                                                                columnAddItemHouseholdRecord.name,
-                                                                                style: GoogleFonts.getFont(
-                                                                                  'Inter',
-                                                                                  fontWeight: FontWeight.bold,
-                                                                                  fontSize: 15.0,
-                                                                                ),
-                                                                              ),
-                                                                            ),
+                                                                                Color(0xFF919191),
+                                                                            fontSize:
+                                                                                18.0,
                                                                           ),
                                                                         ),
                                                                       ),
-                                                                      Expanded(
+                                                                    ),
+                                                                    Align(
+                                                                      alignment:
+                                                                          AlignmentDirectional(
+                                                                              0.0,
+                                                                              0.0),
+                                                                      child:
+                                                                          Container(
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          color:
+                                                                              FlutterFlowTheme.of(context).secondaryBackground,
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(12.0),
+                                                                        ),
                                                                         child:
                                                                             Padding(
                                                                           padding: EdgeInsetsDirectional.fromSTEB(
-                                                                              0.0,
                                                                               16.0,
                                                                               0.0,
-                                                                              16.0),
+                                                                              16.0,
+                                                                              0.0),
                                                                           child:
-                                                                              Container(
-                                                                            decoration:
-                                                                                BoxDecoration(
-                                                                              color: FlutterFlowTheme.of(context).secondaryBackground,
-                                                                            ),
-                                                                            child:
-                                                                                Align(
-                                                                              alignment: AlignmentDirectional(1.0, 0.0),
-                                                                              child: InkWell(
-                                                                                splashColor: Colors.transparent,
-                                                                                focusColor: Colors.transparent,
-                                                                                hoverColor: Colors.transparent,
-                                                                                highlightColor: Colors.transparent,
-                                                                                onTap: () async {
-                                                                                  await showModalBottomSheet(
-                                                                                    isScrollControlled: true,
-                                                                                    backgroundColor: Colors.transparent,
-                                                                                    enableDrag: false,
-                                                                                    context: context,
-                                                                                    builder: (context) {
-                                                                                      return GestureDetector(
-                                                                                        onTap: () => _model.unfocusNode.canRequestFocus ? FocusScope.of(context).requestFocus(_model.unfocusNode) : FocusScope.of(context).unfocus(),
-                                                                                        child: Padding(
-                                                                                          padding: MediaQuery.viewInsetsOf(context),
-                                                                                          child: EditItemHouseholdWidget(
-                                                                                            itemInLibrary: columnAddItemHouseholdRecord,
+                                                                              Builder(
+                                                                            builder:
+                                                                                (context) {
+                                                                              final stuffList = containerStaffStorageRecordList.toList();
+
+                                                                              return Column(
+                                                                                mainAxisSize: MainAxisSize.max,
+                                                                                children: List.generate(stuffList.length, (stuffListIndex) {
+                                                                                  final stuffListItem = stuffList[stuffListIndex];
+                                                                                  return InkWell(
+                                                                                    splashColor: Colors.transparent,
+                                                                                    focusColor: Colors.transparent,
+                                                                                    hoverColor: Colors.transparent,
+                                                                                    highlightColor: Colors.transparent,
+                                                                                    onTap: () async {
+                                                                                      await showModalBottomSheet(
+                                                                                        isScrollControlled: true,
+                                                                                        backgroundColor: Colors.transparent,
+                                                                                        enableDrag: false,
+                                                                                        context: context,
+                                                                                        builder: (context) {
+                                                                                          return GestureDetector(
+                                                                                            onTap: () {
+                                                                                              FocusScope.of(context).unfocus();
+                                                                                              FocusManager.instance.primaryFocus?.unfocus();
+                                                                                            },
+                                                                                            child: Padding(
+                                                                                              padding: MediaQuery.viewInsetsOf(context),
+                                                                                              child: AddStorageStuffWidget(
+                                                                                                stuff: stuffListItem,
+                                                                                                stuffType: HomeStuffEnum.household,
+                                                                                              ),
+                                                                                            ),
+                                                                                          );
+                                                                                        },
+                                                                                      ).then((value) => safeSetState(() {}));
+                                                                                    },
+                                                                                    child: Row(
+                                                                                      mainAxisSize: MainAxisSize.max,
+                                                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                                      children: [
+                                                                                        Padding(
+                                                                                          padding: EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 16.0),
+                                                                                          child: Container(
+                                                                                            width: 140.0,
+                                                                                            decoration: BoxDecoration(
+                                                                                              color: FlutterFlowTheme.of(context).secondaryBackground,
+                                                                                            ),
+                                                                                            child: Align(
+                                                                                              alignment: AlignmentDirectional(-1.0, 0.0),
+                                                                                              child: Text(
+                                                                                                stuffListItem.name,
+                                                                                                style: GoogleFonts.getFont(
+                                                                                                  'Inter',
+                                                                                                  fontWeight: FontWeight.bold,
+                                                                                                  fontSize: 15.0,
+                                                                                                ),
+                                                                                              ),
+                                                                                            ),
                                                                                           ),
                                                                                         ),
-                                                                                      );
-                                                                                    },
-                                                                                  ).then((value) => safeSetState(() {}));
-                                                                                },
-                                                                                child: Text(
-                                                                                  '${formatNumber(
-                                                                                    columnAddItemHouseholdRecord.quantity,
-                                                                                    formatType: FormatType.custom,
-                                                                                    format: '####.##',
-                                                                                    locale: '',
-                                                                                  )} ${columnAddItemHouseholdRecord.unit}',
-                                                                                  style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                        fontFamily: 'Inter',
-                                                                                        fontSize: 15.0,
-                                                                                        letterSpacing: 0.0,
-                                                                                      ),
-                                                                                ),
-                                                                              ),
-                                                                            ),
+                                                                                        Expanded(
+                                                                                          child: Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 16.0),
+                                                                                            child: Container(
+                                                                                              decoration: BoxDecoration(
+                                                                                                color: FlutterFlowTheme.of(context).secondaryBackground,
+                                                                                              ),
+                                                                                              child: Align(
+                                                                                                alignment: AlignmentDirectional(1.0, 0.0),
+                                                                                                child: Text(
+                                                                                                  '${formatNumber(
+                                                                                                    stuffListItem.count,
+                                                                                                    formatType: FormatType.decimal,
+                                                                                                    decimalType: DecimalType.automatic,
+                                                                                                  )} ${stuffListItem.unit?.name}',
+                                                                                                  style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                        fontFamily: 'Inter',
+                                                                                                        fontSize: 15.0,
+                                                                                                        letterSpacing: 0.0,
+                                                                                                      ),
+                                                                                                ),
+                                                                                              ),
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                      ],
+                                                                                    ),
+                                                                                  );
+                                                                                }),
+                                                                              );
+                                                                            },
                                                                           ),
                                                                         ),
                                                                       ),
-                                                                    ],
-                                                                  );
-                                                                }),
-                                                              );
-                                                            },
-                                                          ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            );
+                                                          },
                                                         ),
                                                       ),
-                                                    ),
+                                                    ],
                                                   ),
-                                              ],
-                                            ),
-                                          );
-                                        }),
+                                                );
+                                              }),
+                                            );
+                                          },
+                                        ),
                                       );
                                     },
                                   ),
                                 ),
-                                Align(
-                                  alignment: AlignmentDirectional(-1.0, 0.0),
-                                  child: Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 24.0, 0.0, 10.0),
-                                    child: InkWell(
-                                      splashColor: Colors.transparent,
-                                      focusColor: Colors.transparent,
-                                      hoverColor: Colors.transparent,
-                                      highlightColor: Colors.transparent,
-                                      onTap: () async {
-                                        if (_model.isAll) {
-                                          _model.isAll = false;
-                                          setState(() {});
-                                        } else {
-                                          _model.isAll = true;
-                                          setState(() {});
-                                        }
-                                      },
-                                      child: Text(
-                                        FFLocalizations.of(context).getText(
-                                          'fwi0ci0j' /* All  */,
-                                        ),
-                                        style: GoogleFonts.getFont(
-                                          'Inter',
-                                          color: Color(0xFF919191),
-                                          fontSize: 18.0,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                if (_model.isAll)
-                                  Align(
-                                    alignment: AlignmentDirectional(0.0, -1.0),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: FlutterFlowTheme.of(context)
-                                            .secondaryBackground,
-                                        borderRadius:
-                                            BorderRadius.circular(16.0),
-                                      ),
-                                      child: Align(
-                                        alignment:
-                                            AlignmentDirectional(0.0, 0.0),
-                                        child: Padding(
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  16.0, 0.0, 16.0, 0.0),
-                                          child: StreamBuilder<
-                                              List<AddItemHouseholdRecord>>(
-                                            stream: queryAddItemHouseholdRecord(
-                                              parent:
-                                                  FFAppState().currentUserRef,
+                                StreamBuilder<List<StaffStorageRecord>>(
+                                  stream: queryStaffStorageRecord(
+                                    parent: FFAppState().currentUserRef,
+                                    queryBuilder: (staffStorageRecord) =>
+                                        staffStorageRecord
+                                            .where(
+                                              'staffCategoryType',
+                                              isEqualTo: HomeStuffEnum.household
+                                                  .serialize(),
+                                            )
+                                            .where(
+                                              'count',
+                                              isGreaterThan: functions
+                                                  .toInt('0')
+                                                  .toDouble(),
                                             ),
-                                            builder: (context, snapshot) {
-                                              // Customize what your widget looks like when it's loading.
-                                              if (!snapshot.hasData) {
-                                                return Center(
-                                                  child: SizedBox(
-                                                    width: 50.0,
-                                                    height: 50.0,
-                                                    child:
-                                                        CircularProgressIndicator(
-                                                      valueColor:
-                                                          AlwaysStoppedAnimation<
-                                                              Color>(
-                                                        Color(0xFFF57F44),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                );
-                                              }
-                                              List<AddItemHouseholdRecord>
-                                                  columnAddItemHouseholdRecordList =
-                                                  snapshot.data!;
-
-                                              return Column(
-                                                mainAxisSize: MainAxisSize.max,
-                                                children: List.generate(
-                                                    columnAddItemHouseholdRecordList
-                                                        .length, (columnIndex) {
-                                                  final columnAddItemHouseholdRecord =
-                                                      columnAddItemHouseholdRecordList[
-                                                          columnIndex];
-                                                  return Row(
-                                                    mainAxisSize:
-                                                        MainAxisSize.max,
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      Padding(
-                                                        padding:
-                                                            EdgeInsetsDirectional
-                                                                .fromSTEB(
-                                                                    0.0,
-                                                                    16.0,
-                                                                    0.0,
-                                                                    16.0),
-                                                        child: Container(
-                                                          width: 140.0,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .secondaryBackground,
-                                                          ),
-                                                          child: Align(
-                                                            alignment:
-                                                                AlignmentDirectional(
-                                                                    -1.0, 0.0),
-                                                            child: InkWell(
-                                                              splashColor: Colors
-                                                                  .transparent,
-                                                              focusColor: Colors
-                                                                  .transparent,
-                                                              hoverColor: Colors
-                                                                  .transparent,
-                                                              highlightColor:
-                                                                  Colors
-                                                                      .transparent,
-                                                              onTap: () async {
-                                                                await showModalBottomSheet(
-                                                                  isScrollControlled:
-                                                                      true,
-                                                                  backgroundColor:
-                                                                      Colors
-                                                                          .transparent,
-                                                                  enableDrag:
-                                                                      false,
-                                                                  context:
-                                                                      context,
-                                                                  builder:
-                                                                      (context) {
-                                                                    return GestureDetector(
-                                                                      onTap: () => _model
-                                                                              .unfocusNode
-                                                                              .canRequestFocus
-                                                                          ? FocusScope.of(context).requestFocus(_model
-                                                                              .unfocusNode)
-                                                                          : FocusScope.of(context)
-                                                                              .unfocus(),
-                                                                      child:
-                                                                          Padding(
-                                                                        padding:
-                                                                            MediaQuery.viewInsetsOf(context),
-                                                                        child:
-                                                                            EditItemHouseholdWidget(
-                                                                          itemInLibrary:
-                                                                              columnAddItemHouseholdRecord,
-                                                                        ),
-                                                                      ),
-                                                                    );
-                                                                  },
-                                                                ).then((value) =>
-                                                                    safeSetState(
-                                                                        () {}));
-                                                              },
-                                                              child: Text(
-                                                                columnAddItemHouseholdRecord
-                                                                    .name,
-                                                                style:
-                                                                    GoogleFonts
-                                                                        .getFont(
-                                                                  'Inter',
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  fontSize:
-                                                                      15.0,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      Expanded(
-                                                        child: Padding(
-                                                          padding:
-                                                              EdgeInsetsDirectional
-                                                                  .fromSTEB(
-                                                                      0.0,
-                                                                      16.0,
-                                                                      0.0,
-                                                                      16.0),
-                                                          child: Container(
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              color: FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .secondaryBackground,
-                                                            ),
-                                                            child: Align(
-                                                              alignment:
-                                                                  AlignmentDirectional(
-                                                                      1.0, 0.0),
-                                                              child: InkWell(
-                                                                splashColor: Colors
-                                                                    .transparent,
-                                                                focusColor: Colors
-                                                                    .transparent,
-                                                                hoverColor: Colors
-                                                                    .transparent,
-                                                                highlightColor:
-                                                                    Colors
-                                                                        .transparent,
-                                                                onTap:
-                                                                    () async {
-                                                                  await showModalBottomSheet(
-                                                                    isScrollControlled:
-                                                                        true,
-                                                                    backgroundColor:
-                                                                        Colors
-                                                                            .transparent,
-                                                                    enableDrag:
-                                                                        false,
-                                                                    context:
-                                                                        context,
-                                                                    builder:
-                                                                        (context) {
-                                                                      return GestureDetector(
-                                                                        onTap: () => _model.unfocusNode.canRequestFocus
-                                                                            ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-                                                                            : FocusScope.of(context).unfocus(),
-                                                                        child:
-                                                                            Padding(
-                                                                          padding:
-                                                                              MediaQuery.viewInsetsOf(context),
-                                                                          child:
-                                                                              EditItemHouseholdWidget(
-                                                                            itemInLibrary:
-                                                                                columnAddItemHouseholdRecord,
-                                                                          ),
-                                                                        ),
-                                                                      );
-                                                                    },
-                                                                  ).then((value) =>
-                                                                      safeSetState(
-                                                                          () {}));
-                                                                },
-                                                                child: Text(
-                                                                  '${formatNumber(
-                                                                    columnAddItemHouseholdRecord
-                                                                        .quantity,
-                                                                    formatType:
-                                                                        FormatType
-                                                                            .custom,
-                                                                    format:
-                                                                        '####.##',
-                                                                    locale: '',
-                                                                  )} ${columnAddItemHouseholdRecord.unit}',
-                                                                  style: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .override(
-                                                                        fontFamily:
-                                                                            'Inter',
-                                                                        fontSize:
-                                                                            15.0,
-                                                                        letterSpacing:
-                                                                            0.0,
-                                                                      ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  );
-                                                }),
-                                              );
-                                            },
+                                  ),
+                                  builder: (context, snapshot) {
+                                    // Customize what your widget looks like when it's loading.
+                                    if (!snapshot.hasData) {
+                                      return Center(
+                                        child: SizedBox(
+                                          width: 50.0,
+                                          height: 50.0,
+                                          child: CircularProgressIndicator(
+                                            valueColor:
+                                                AlwaysStoppedAnimation<Color>(
+                                              Color(0xFFF57F44),
+                                            ),
                                           ),
                                         ),
+                                      );
+                                    }
+                                    List<StaffStorageRecord>
+                                        containerStaffStorageRecordList =
+                                        snapshot.data!;
+
+                                    return Container(
+                                      decoration: BoxDecoration(),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Align(
+                                            alignment:
+                                                AlignmentDirectional(-1.0, 0.0),
+                                            child: Padding(
+                                              padding: EdgeInsetsDirectional
+                                                  .fromSTEB(
+                                                      0.0, 24.0, 0.0, 10.0),
+                                              child: Text(
+                                                FFLocalizations.of(context)
+                                                    .getText(
+                                                  'fwi0ci0j' /* All  */,
+                                                ),
+                                                style: GoogleFonts.getFont(
+                                                  'Inter',
+                                                  color: Color(0xFF919191),
+                                                  fontSize: 18.0,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Align(
+                                            alignment:
+                                                AlignmentDirectional(0.0, -1.0),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .secondaryBackground,
+                                                borderRadius:
+                                                    BorderRadius.circular(16.0),
+                                              ),
+                                              child: Align(
+                                                alignment: AlignmentDirectional(
+                                                    0.0, 0.0),
+                                                child: Padding(
+                                                  padding: EdgeInsetsDirectional
+                                                      .fromSTEB(
+                                                          16.0, 0.0, 16.0, 0.0),
+                                                  child: Builder(
+                                                    builder: (context) {
+                                                      final allStuffList =
+                                                          containerStaffStorageRecordList
+                                                              .toList();
+
+                                                      return Column(
+                                                        mainAxisSize:
+                                                            MainAxisSize.max,
+                                                        children: List.generate(
+                                                            allStuffList.length,
+                                                            (allStuffListIndex) {
+                                                          final allStuffListItem =
+                                                              allStuffList[
+                                                                  allStuffListIndex];
+                                                          return InkWell(
+                                                            splashColor: Colors
+                                                                .transparent,
+                                                            focusColor: Colors
+                                                                .transparent,
+                                                            hoverColor: Colors
+                                                                .transparent,
+                                                            highlightColor:
+                                                                Colors
+                                                                    .transparent,
+                                                            onTap: () async {
+                                                              await showModalBottomSheet(
+                                                                isScrollControlled:
+                                                                    true,
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .transparent,
+                                                                enableDrag:
+                                                                    false,
+                                                                context:
+                                                                    context,
+                                                                builder:
+                                                                    (context) {
+                                                                  return GestureDetector(
+                                                                    onTap: () {
+                                                                      FocusScope.of(
+                                                                              context)
+                                                                          .unfocus();
+                                                                      FocusManager
+                                                                          .instance
+                                                                          .primaryFocus
+                                                                          ?.unfocus();
+                                                                    },
+                                                                    child:
+                                                                        Padding(
+                                                                      padding: MediaQuery
+                                                                          .viewInsetsOf(
+                                                                              context),
+                                                                      child:
+                                                                          AddStorageStuffWidget(
+                                                                        stuff:
+                                                                            allStuffListItem,
+                                                                        stuffType:
+                                                                            HomeStuffEnum.household,
+                                                                      ),
+                                                                    ),
+                                                                  );
+                                                                },
+                                                              ).then((value) =>
+                                                                  safeSetState(
+                                                                      () {}));
+                                                            },
+                                                            child: Row(
+                                                              mainAxisSize:
+                                                                  MainAxisSize
+                                                                      .max,
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                              children: [
+                                                                Padding(
+                                                                  padding: EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          0.0,
+                                                                          16.0,
+                                                                          0.0,
+                                                                          16.0),
+                                                                  child:
+                                                                      Container(
+                                                                    width:
+                                                                        140.0,
+                                                                    decoration:
+                                                                        BoxDecoration(
+                                                                      color: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .secondaryBackground,
+                                                                    ),
+                                                                    child:
+                                                                        Align(
+                                                                      alignment:
+                                                                          AlignmentDirectional(
+                                                                              -1.0,
+                                                                              0.0),
+                                                                      child:
+                                                                          Text(
+                                                                        allStuffListItem
+                                                                            .name,
+                                                                        style: GoogleFonts
+                                                                            .getFont(
+                                                                          'Inter',
+                                                                          fontWeight:
+                                                                              FontWeight.bold,
+                                                                          fontSize:
+                                                                              15.0,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                Expanded(
+                                                                  child:
+                                                                      Padding(
+                                                                    padding: EdgeInsetsDirectional
+                                                                        .fromSTEB(
+                                                                            0.0,
+                                                                            16.0,
+                                                                            0.0,
+                                                                            16.0),
+                                                                    child:
+                                                                        Container(
+                                                                      decoration:
+                                                                          BoxDecoration(
+                                                                        color: FlutterFlowTheme.of(context)
+                                                                            .secondaryBackground,
+                                                                      ),
+                                                                      child:
+                                                                          Align(
+                                                                        alignment: AlignmentDirectional(
+                                                                            1.0,
+                                                                            0.0),
+                                                                        child:
+                                                                            Text(
+                                                                          '${allStuffListItem.count.toString()} ${allStuffListItem.unit?.name}',
+                                                                          style: FlutterFlowTheme.of(context)
+                                                                              .bodyMedium
+                                                                              .override(
+                                                                                fontFamily: 'Inter',
+                                                                                fontSize: 15.0,
+                                                                                letterSpacing: 0.0,
+                                                                              ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          );
+                                                        }),
+                                                      );
+                                                    },
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                    ),
-                                  ),
+                                    );
+                                  },
+                                ),
                               ],
-                            ),
-                          ),
-                        ),
-                        Align(
-                          alignment: AlignmentDirectional(1.0, 1.0),
-                          child: FFButtonWidget(
-                            onPressed: () async {
-                              await showModalBottomSheet(
-                                isScrollControlled: true,
-                                backgroundColor: Colors.transparent,
-                                enableDrag: false,
-                                context: context,
-                                builder: (context) {
-                                  return GestureDetector(
-                                    onTap: () => _model
-                                            .unfocusNode.canRequestFocus
-                                        ? FocusScope.of(context)
-                                            .requestFocus(_model.unfocusNode)
-                                        : FocusScope.of(context).unfocus(),
-                                    child: Padding(
-                                      padding: MediaQuery.viewInsetsOf(context),
-                                      child: AddItemHouseholdWidget(),
-                                    ),
-                                  );
-                                },
-                              ).then((value) => safeSetState(() {}));
-                            },
-                            text: '',
-                            icon: Icon(
-                              FFIcons.kplus,
-                              size: 15.0,
-                            ),
-                            options: FFButtonOptions(
-                              width: 50.0,
-                              height: 50.0,
-                              padding: EdgeInsets.all(0.0),
-                              iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                  9.0, 0.0, 0.0, 0.0),
-                              color: Color(0xFFF57F44),
-                              textStyle: FlutterFlowTheme.of(context)
-                                  .titleSmall
-                                  .override(
-                                    fontFamily: 'Inter',
-                                    color: Colors.white,
-                                    letterSpacing: 0.0,
-                                  ),
-                              elevation: 0.0,
-                              borderSide: BorderSide(
-                                color: Colors.transparent,
-                                width: 1.0,
-                              ),
-                              borderRadius: BorderRadius.circular(25.0),
                             ),
                           ),
                         ),

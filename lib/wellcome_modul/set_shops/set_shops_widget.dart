@@ -4,6 +4,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/main/settings/edit_shop/edit_shop_widget.dart';
+import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -72,9 +73,10 @@ class _SetShopsWidgetState extends State<SetShopsWidget> {
         final setShopsSettingsCategoryAndShopRecord = snapshot.data!;
 
         return GestureDetector(
-          onTap: () => _model.unfocusNode.canRequestFocus
-              ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-              : FocusScope.of(context).unfocus(),
+          onTap: () {
+            FocusScope.of(context).unfocus();
+            FocusManager.instance.primaryFocus?.unfocus();
+          },
           child: Scaffold(
             key: scaffoldKey,
             backgroundColor: Color(0xFFF5F5F5),
@@ -98,7 +100,7 @@ class _SetShopsWidgetState extends State<SetShopsWidget> {
                                 setShopsSettingsCategoryAndShopRecord.shops
                                     .toList()
                                     .cast<String>();
-                            setState(() {});
+                            safeSetState(() {});
                           },
                           text: FFLocalizations.of(context).getText(
                             '3j010kej' /* Продовжити */,
@@ -289,7 +291,7 @@ class _SetShopsWidgetState extends State<SetShopsWidget> {
                                                 },
                                               ),
                                             });
-                                            setState(() {
+                                            safeSetState(() {
                                               _model.textController?.clear();
                                             });
                                           }
@@ -350,7 +352,7 @@ class _SetShopsWidgetState extends State<SetShopsWidget> {
                                                 },
                                               ),
                                             });
-                                            setState(() {
+                                            safeSetState(() {
                                               _model.textController?.clear();
                                             });
                                           }
@@ -472,13 +474,13 @@ class _SetShopsWidgetState extends State<SetShopsWidget> {
                                             context: context,
                                             builder: (context) {
                                               return GestureDetector(
-                                                onTap: () => _model.unfocusNode
-                                                        .canRequestFocus
-                                                    ? FocusScope.of(context)
-                                                        .requestFocus(
-                                                            _model.unfocusNode)
-                                                    : FocusScope.of(context)
-                                                        .unfocus(),
+                                                onTap: () {
+                                                  FocusScope.of(context)
+                                                      .unfocus();
+                                                  FocusManager
+                                                      .instance.primaryFocus
+                                                      ?.unfocus();
+                                                },
                                                 child: Padding(
                                                   padding:
                                                       MediaQuery.viewInsetsOf(
@@ -526,31 +528,35 @@ class _SetShopsWidgetState extends State<SetShopsWidget> {
                                               ),
                                             ],
                                           ),
-                                          child: ListTile(
-                                            title: Text(
-                                              shopsItem,
-                                              textAlign: TextAlign.start,
-                                              style:
+                                          child: Material(
+                                            color: Colors.transparent,
+                                            child: ListTile(
+                                              title: Text(
+                                                shopsItem,
+                                                textAlign: TextAlign.start,
+                                                style:
+                                                    FlutterFlowTheme.of(context)
+                                                        .titleLarge
+                                                        .override(
+                                                          fontFamily: 'Inter',
+                                                          fontSize: 14.0,
+                                                          letterSpacing: 0.0,
+                                                          fontWeight:
+                                                              FontWeight.normal,
+                                                        ),
+                                              ),
+                                              tileColor:
                                                   FlutterFlowTheme.of(context)
-                                                      .titleLarge
-                                                      .override(
-                                                        fontFamily: 'Inter',
-                                                        fontSize: 14.0,
-                                                        letterSpacing: 0.0,
-                                                        fontWeight:
-                                                            FontWeight.normal,
-                                                      ),
-                                            ),
-                                            tileColor:
-                                                FlutterFlowTheme.of(context)
-                                                    .secondaryBackground,
-                                            dense: false,
-                                            contentPadding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    24.0, 0.0, 0.0, 0.0),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(15.0),
+                                                      .secondaryBackground,
+                                              dense: false,
+                                              contentPadding:
+                                                  EdgeInsetsDirectional
+                                                      .fromSTEB(
+                                                          24.0, 0.0, 0.0, 0.0),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(15.0),
+                                              ),
                                             ),
                                           ),
                                         ),

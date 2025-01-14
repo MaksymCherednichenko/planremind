@@ -1,9 +1,9 @@
-import '/backend/backend.dart';
 import '/backend/schema/enums/enums.dart';
 import '/backend/schema/structs/index.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import 'dart:ui';
 import '/actions/actions.dart' as action_blocks;
 import '/flutter_flow/custom_functions.dart' as functions;
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -31,17 +31,17 @@ class _SettingsModulesWidgetState extends State<SettingsModulesWidget> {
     _model = createModel(context, () => SettingsModulesModel());
 
     _model.switchValue1 = functions.getModuleState(
-        FFAppState().moduleStates.toList(), Module.Home)!;
+        FFAppState().moduleStates.toList(), ModulesEnum.Home)!;
     _model.switchValue2 = functions.getModuleState(
-        FFAppState().moduleStates.toList(), Module.Car)!;
+        FFAppState().moduleStates.toList(), ModulesEnum.Car)!;
     _model.switchValue3 = functions.getModuleState(
-        FFAppState().moduleStates.toList(), Module.Plants)!;
+        FFAppState().moduleStates.toList(), ModulesEnum.Plants)!;
     _model.switchValue4 = functions.getModuleState(
-        FFAppState().moduleStates.toList(), Module.Health)!;
+        FFAppState().moduleStates.toList(), ModulesEnum.Health)!;
     _model.switchValue5 = functions.getModuleState(
-        FFAppState().moduleStates.toList(), Module.Pets)!;
+        FFAppState().moduleStates.toList(), ModulesEnum.Pets)!;
     _model.switchValue6 = functions.getModuleState(
-        FFAppState().moduleStates.toList(), Module.Sport)!;
+        FFAppState().moduleStates.toList(), ModulesEnum.Sport)!;
   }
 
   @override
@@ -56,9 +56,10 @@ class _SettingsModulesWidgetState extends State<SettingsModulesWidget> {
     context.watch<FFAppState>();
 
     return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
-          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-          : FocusScope.of(context).unfocus(),
+      onTap: () {
+        FocusScope.of(context).unfocus();
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: Color(0xFFF5F5F5),
@@ -115,425 +116,384 @@ class _SettingsModulesWidgetState extends State<SettingsModulesWidget> {
           top: true,
           child: Padding(
             padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 24.0),
-            child: StreamBuilder<List<SettingsCategoryAndShopRecord>>(
-              stream: querySettingsCategoryAndShopRecord(
-                parent: FFAppState().currentUserRef,
-                singleRecord: true,
-              ),
-              builder: (context, snapshot) {
-                // Customize what your widget looks like when it's loading.
-                if (!snapshot.hasData) {
-                  return Center(
-                    child: SizedBox(
-                      width: 50.0,
-                      height: 50.0,
-                      child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          Color(0xFFF57F44),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Align(
+                    alignment: AlignmentDirectional(0.0, 0.0),
+                    child: Padding(
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 30.0),
+                      child: Text(
+                        FFLocalizations.of(context).getText(
+                          'wgo4exuw' /* Модулі */,
                         ),
+                        textAlign: TextAlign.center,
+                        style: FlutterFlowTheme.of(context).bodyMedium.override(
+                              fontFamily: 'Inter',
+                              color: Color(0xFF878787),
+                              letterSpacing: 0.0,
+                            ),
                       ),
                     ),
-                  );
-                }
-                List<SettingsCategoryAndShopRecord>
-                    columnSettingsCategoryAndShopRecordList = snapshot.data!;
-                // Return an empty Container when the item does not exist.
-                if (snapshot.data!.isEmpty) {
-                  return Container();
-                }
-                final columnSettingsCategoryAndShopRecord =
-                    columnSettingsCategoryAndShopRecordList.isNotEmpty
-                        ? columnSettingsCategoryAndShopRecordList.first
-                        : null;
-
-                return SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Align(
-                        alignment: AlignmentDirectional(0.0, 0.0),
-                        child: Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 10.0, 0.0, 30.0),
-                          child: Text(
-                            FFLocalizations.of(context).getText(
-                              'wgo4exuw' /* Modules */,
-                            ),
-                            textAlign: TextAlign.center,
-                            style: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  fontFamily: 'Inter',
-                                  color: Color(0xFF878787),
-                                  letterSpacing: 0.0,
-                                ),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            0.0, 10.0, 0.0, 10.0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              FFLocalizations.of(context).getText(
-                                'wwpn6oqg' /* Home */,
-                              ),
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .override(
-                                    fontFamily: 'Inter',
-                                    fontSize: 16.0,
-                                    letterSpacing: 0.0,
-                                  ),
-                            ),
-                            Switch.adaptive(
-                              value: _model.switchValue1!,
-                              onChanged: (newValue) async {
-                                setState(() => _model.switchValue1 = newValue!);
-                                if (newValue!) {
-                                  await action_blocks.updateModuleState(
-                                    context,
-                                    module: ModuleStruct(
-                                      name: Module.Home,
-                                      active: true,
-                                    ),
-                                  );
-                                } else {
-                                  _model.homeDisable =
-                                      await action_blocks.updateModuleState(
-                                    context,
-                                    module: ModuleStruct(
-                                      name: Module.Home,
-                                      active: false,
-                                    ),
-                                  );
-                                  if (!_model.homeDisable!) {
-                                    setState(() {
-                                      _model.switchValue1 = true;
-                                    });
-                                  }
-
-                                  setState(() {});
-                                }
-                              },
-                              activeColor: FlutterFlowTheme.of(context).primary,
-                              activeTrackColor:
-                                  FlutterFlowTheme.of(context).accent1,
-                              inactiveTrackColor:
-                                  FlutterFlowTheme.of(context).alternate,
-                              inactiveThumbColor:
-                                  FlutterFlowTheme.of(context).secondaryText,
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            0.0, 10.0, 0.0, 10.0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              FFLocalizations.of(context).getText(
-                                'w61ibmzz' /* Car */,
-                              ),
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .override(
-                                    fontFamily: 'Inter',
-                                    fontSize: 16.0,
-                                    letterSpacing: 0.0,
-                                  ),
-                            ),
-                            Switch.adaptive(
-                              value: _model.switchValue2!,
-                              onChanged: (newValue) async {
-                                setState(() => _model.switchValue2 = newValue!);
-                                if (newValue!) {
-                                  await action_blocks.updateModuleState(
-                                    context,
-                                    module: ModuleStruct(
-                                      name: Module.Car,
-                                      active: true,
-                                    ),
-                                  );
-                                } else {
-                                  _model.carDisable =
-                                      await action_blocks.updateModuleState(
-                                    context,
-                                    module: ModuleStruct(
-                                      name: Module.Car,
-                                      active: false,
-                                    ),
-                                  );
-                                  if (!_model.carDisable!) {
-                                    setState(() {
-                                      _model.switchValue2 = true;
-                                    });
-                                  }
-
-                                  setState(() {});
-                                }
-                              },
-                              activeColor: FlutterFlowTheme.of(context).primary,
-                              activeTrackColor:
-                                  FlutterFlowTheme.of(context).accent1,
-                              inactiveTrackColor:
-                                  FlutterFlowTheme.of(context).alternate,
-                              inactiveThumbColor:
-                                  FlutterFlowTheme.of(context).secondaryText,
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            0.0, 10.0, 0.0, 10.0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              FFLocalizations.of(context).getText(
-                                '3sktvdg4' /* Plants */,
-                              ),
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .override(
-                                    fontFamily: 'Inter',
-                                    fontSize: 16.0,
-                                    letterSpacing: 0.0,
-                                  ),
-                            ),
-                            Switch.adaptive(
-                              value: _model.switchValue3!,
-                              onChanged: (newValue) async {
-                                setState(() => _model.switchValue3 = newValue!);
-                                if (newValue!) {
-                                  await action_blocks.updateModuleState(
-                                    context,
-                                    module: ModuleStruct(
-                                      name: Module.Plants,
-                                      active: true,
-                                    ),
-                                  );
-                                } else {
-                                  _model.plantsDisable =
-                                      await action_blocks.updateModuleState(
-                                    context,
-                                    module: ModuleStruct(
-                                      name: Module.Plants,
-                                      active: false,
-                                    ),
-                                  );
-                                  if (!_model.plantsDisable!) {
-                                    setState(() {
-                                      _model.switchValue3 = true;
-                                    });
-                                  }
-
-                                  setState(() {});
-                                }
-                              },
-                              activeColor: FlutterFlowTheme.of(context).primary,
-                              activeTrackColor:
-                                  FlutterFlowTheme.of(context).accent1,
-                              inactiveTrackColor:
-                                  FlutterFlowTheme.of(context).alternate,
-                              inactiveThumbColor:
-                                  FlutterFlowTheme.of(context).secondaryText,
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            0.0, 10.0, 0.0, 10.0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              FFLocalizations.of(context).getText(
-                                '2b0o1674' /* Health */,
-                              ),
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .override(
-                                    fontFamily: 'Inter',
-                                    fontSize: 16.0,
-                                    letterSpacing: 0.0,
-                                  ),
-                            ),
-                            Switch.adaptive(
-                              value: _model.switchValue4!,
-                              onChanged: (newValue) async {
-                                setState(() => _model.switchValue4 = newValue!);
-                                if (newValue!) {
-                                  await action_blocks.updateModuleState(
-                                    context,
-                                    module: ModuleStruct(
-                                      name: Module.Health,
-                                      active: true,
-                                    ),
-                                  );
-                                } else {
-                                  _model.healthDisable =
-                                      await action_blocks.updateModuleState(
-                                    context,
-                                    module: ModuleStruct(
-                                      name: Module.Health,
-                                      active: false,
-                                    ),
-                                  );
-                                  if (!_model.healthDisable!) {
-                                    setState(() {
-                                      _model.switchValue4 = true;
-                                    });
-                                  }
-
-                                  setState(() {});
-                                }
-                              },
-                              activeColor: FlutterFlowTheme.of(context).primary,
-                              activeTrackColor:
-                                  FlutterFlowTheme.of(context).accent1,
-                              inactiveTrackColor:
-                                  FlutterFlowTheme.of(context).alternate,
-                              inactiveThumbColor:
-                                  FlutterFlowTheme.of(context).secondaryText,
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            0.0, 10.0, 0.0, 10.0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              FFLocalizations.of(context).getText(
-                                'yhy9h8la' /* Pets */,
-                              ),
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .override(
-                                    fontFamily: 'Inter',
-                                    fontSize: 16.0,
-                                    letterSpacing: 0.0,
-                                  ),
-                            ),
-                            Switch.adaptive(
-                              value: _model.switchValue5!,
-                              onChanged: (newValue) async {
-                                setState(() => _model.switchValue5 = newValue!);
-                                if (newValue!) {
-                                  await action_blocks.updateModuleState(
-                                    context,
-                                    module: ModuleStruct(
-                                      name: Module.Pets,
-                                      active: true,
-                                    ),
-                                  );
-                                } else {
-                                  _model.petsDisable =
-                                      await action_blocks.updateModuleState(
-                                    context,
-                                    module: ModuleStruct(
-                                      name: Module.Pets,
-                                      active: false,
-                                    ),
-                                  );
-                                  if (!_model.petsDisable!) {
-                                    setState(() {
-                                      _model.switchValue5 = true;
-                                    });
-                                  }
-
-                                  setState(() {});
-                                }
-                              },
-                              activeColor: FlutterFlowTheme.of(context).primary,
-                              activeTrackColor:
-                                  FlutterFlowTheme.of(context).accent1,
-                              inactiveTrackColor:
-                                  FlutterFlowTheme.of(context).alternate,
-                              inactiveThumbColor:
-                                  FlutterFlowTheme.of(context).secondaryText,
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            0.0, 10.0, 0.0, 10.0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              FFLocalizations.of(context).getText(
-                                'irgzrda4' /* Sport */,
-                              ),
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .override(
-                                    fontFamily: 'Inter',
-                                    fontSize: 16.0,
-                                    letterSpacing: 0.0,
-                                  ),
-                            ),
-                            Switch.adaptive(
-                              value: _model.switchValue6!,
-                              onChanged: (newValue) async {
-                                setState(() => _model.switchValue6 = newValue!);
-                                if (newValue!) {
-                                  await action_blocks.updateModuleState(
-                                    context,
-                                    module: ModuleStruct(
-                                      name: Module.Sport,
-                                      active: true,
-                                    ),
-                                  );
-                                } else {
-                                  _model.sportDisable =
-                                      await action_blocks.updateModuleState(
-                                    context,
-                                    module: ModuleStruct(
-                                      name: Module.Sport,
-                                      active: false,
-                                    ),
-                                  );
-                                  if (!_model.sportDisable!) {
-                                    setState(() {
-                                      _model.switchValue6 = true;
-                                    });
-                                  }
-
-                                  setState(() {});
-                                }
-                              },
-                              activeColor: FlutterFlowTheme.of(context).primary,
-                              activeTrackColor:
-                                  FlutterFlowTheme.of(context).accent1,
-                              inactiveTrackColor:
-                                  FlutterFlowTheme.of(context).alternate,
-                              inactiveThumbColor:
-                                  FlutterFlowTheme.of(context).secondaryText,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
                   ),
-                );
-              },
+                  Padding(
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 10.0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          FFLocalizations.of(context).getText(
+                            'wwpn6oqg' /* Дім */,
+                          ),
+                          style:
+                              FlutterFlowTheme.of(context).bodyMedium.override(
+                                    fontFamily: 'Inter',
+                                    fontSize: 16.0,
+                                    letterSpacing: 0.0,
+                                  ),
+                        ),
+                        Switch.adaptive(
+                          value: _model.switchValue1!,
+                          onChanged: (newValue) async {
+                            safeSetState(() => _model.switchValue1 = newValue!);
+                            if (newValue!) {
+                              await action_blocks.updateModuleState(
+                                context,
+                                module: ModuleStruct(
+                                  name: ModulesEnum.Home,
+                                  active: true,
+                                ),
+                              );
+                            } else {
+                              _model.homeDisable =
+                                  await action_blocks.updateModuleState(
+                                context,
+                                module: ModuleStruct(
+                                  name: ModulesEnum.Home,
+                                  active: false,
+                                ),
+                              );
+                              if (!_model.homeDisable!) {
+                                safeSetState(() {
+                                  _model.switchValue1 = true;
+                                });
+                              }
+
+                              safeSetState(() {});
+                            }
+                          },
+                          activeColor: FlutterFlowTheme.of(context).primary,
+                          activeTrackColor:
+                              FlutterFlowTheme.of(context).accent1,
+                          inactiveTrackColor:
+                              FlutterFlowTheme.of(context).alternate,
+                          inactiveThumbColor:
+                              FlutterFlowTheme.of(context).secondaryText,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 10.0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          FFLocalizations.of(context).getText(
+                            'w61ibmzz' /* Гараж */,
+                          ),
+                          style:
+                              FlutterFlowTheme.of(context).bodyMedium.override(
+                                    fontFamily: 'Inter',
+                                    fontSize: 16.0,
+                                    letterSpacing: 0.0,
+                                  ),
+                        ),
+                        Switch.adaptive(
+                          value: _model.switchValue2!,
+                          onChanged: (newValue) async {
+                            safeSetState(() => _model.switchValue2 = newValue!);
+                            if (newValue!) {
+                              await action_blocks.updateModuleState(
+                                context,
+                                module: ModuleStruct(
+                                  name: ModulesEnum.Car,
+                                  active: true,
+                                ),
+                              );
+                            } else {
+                              _model.carDisable =
+                                  await action_blocks.updateModuleState(
+                                context,
+                                module: ModuleStruct(
+                                  name: ModulesEnum.Car,
+                                  active: false,
+                                ),
+                              );
+                              if (!_model.carDisable!) {
+                                safeSetState(() {
+                                  _model.switchValue2 = true;
+                                });
+                              }
+
+                              safeSetState(() {});
+                            }
+                          },
+                          activeColor: FlutterFlowTheme.of(context).primary,
+                          activeTrackColor:
+                              FlutterFlowTheme.of(context).accent1,
+                          inactiveTrackColor:
+                              FlutterFlowTheme.of(context).alternate,
+                          inactiveThumbColor:
+                              FlutterFlowTheme.of(context).secondaryText,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 10.0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          FFLocalizations.of(context).getText(
+                            '3sktvdg4' /* Рослини */,
+                          ),
+                          style:
+                              FlutterFlowTheme.of(context).bodyMedium.override(
+                                    fontFamily: 'Inter',
+                                    fontSize: 16.0,
+                                    letterSpacing: 0.0,
+                                  ),
+                        ),
+                        Switch.adaptive(
+                          value: _model.switchValue3!,
+                          onChanged: (newValue) async {
+                            safeSetState(() => _model.switchValue3 = newValue!);
+                            if (newValue!) {
+                              await action_blocks.updateModuleState(
+                                context,
+                                module: ModuleStruct(
+                                  name: ModulesEnum.Plants,
+                                  active: true,
+                                ),
+                              );
+                            } else {
+                              _model.plantsDisable =
+                                  await action_blocks.updateModuleState(
+                                context,
+                                module: ModuleStruct(
+                                  name: ModulesEnum.Plants,
+                                  active: false,
+                                ),
+                              );
+                              if (!_model.plantsDisable!) {
+                                safeSetState(() {
+                                  _model.switchValue3 = true;
+                                });
+                              }
+
+                              safeSetState(() {});
+                            }
+                          },
+                          activeColor: FlutterFlowTheme.of(context).primary,
+                          activeTrackColor:
+                              FlutterFlowTheme.of(context).accent1,
+                          inactiveTrackColor:
+                              FlutterFlowTheme.of(context).alternate,
+                          inactiveThumbColor:
+                              FlutterFlowTheme.of(context).secondaryText,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 10.0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          FFLocalizations.of(context).getText(
+                            '2b0o1674' /* Здоровʼя */,
+                          ),
+                          style:
+                              FlutterFlowTheme.of(context).bodyMedium.override(
+                                    fontFamily: 'Inter',
+                                    fontSize: 16.0,
+                                    letterSpacing: 0.0,
+                                  ),
+                        ),
+                        Switch.adaptive(
+                          value: _model.switchValue4!,
+                          onChanged: (newValue) async {
+                            safeSetState(() => _model.switchValue4 = newValue!);
+                            if (newValue!) {
+                              await action_blocks.updateModuleState(
+                                context,
+                                module: ModuleStruct(
+                                  name: ModulesEnum.Health,
+                                  active: true,
+                                ),
+                              );
+                            } else {
+                              _model.healthDisable =
+                                  await action_blocks.updateModuleState(
+                                context,
+                                module: ModuleStruct(
+                                  name: ModulesEnum.Health,
+                                  active: false,
+                                ),
+                              );
+                              if (!_model.healthDisable!) {
+                                safeSetState(() {
+                                  _model.switchValue4 = true;
+                                });
+                              }
+
+                              safeSetState(() {});
+                            }
+                          },
+                          activeColor: FlutterFlowTheme.of(context).primary,
+                          activeTrackColor:
+                              FlutterFlowTheme.of(context).accent1,
+                          inactiveTrackColor:
+                              FlutterFlowTheme.of(context).alternate,
+                          inactiveThumbColor:
+                              FlutterFlowTheme.of(context).secondaryText,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 10.0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          FFLocalizations.of(context).getText(
+                            'yhy9h8la' /* Улюбленці */,
+                          ),
+                          style:
+                              FlutterFlowTheme.of(context).bodyMedium.override(
+                                    fontFamily: 'Inter',
+                                    fontSize: 16.0,
+                                    letterSpacing: 0.0,
+                                  ),
+                        ),
+                        Switch.adaptive(
+                          value: _model.switchValue5!,
+                          onChanged: (newValue) async {
+                            safeSetState(() => _model.switchValue5 = newValue!);
+                            if (newValue!) {
+                              await action_blocks.updateModuleState(
+                                context,
+                                module: ModuleStruct(
+                                  name: ModulesEnum.Pets,
+                                  active: true,
+                                ),
+                              );
+                            } else {
+                              _model.petsDisable =
+                                  await action_blocks.updateModuleState(
+                                context,
+                                module: ModuleStruct(
+                                  name: ModulesEnum.Pets,
+                                  active: false,
+                                ),
+                              );
+                              if (!_model.petsDisable!) {
+                                safeSetState(() {
+                                  _model.switchValue5 = true;
+                                });
+                              }
+
+                              safeSetState(() {});
+                            }
+                          },
+                          activeColor: FlutterFlowTheme.of(context).primary,
+                          activeTrackColor:
+                              FlutterFlowTheme.of(context).accent1,
+                          inactiveTrackColor:
+                              FlutterFlowTheme.of(context).alternate,
+                          inactiveThumbColor:
+                              FlutterFlowTheme.of(context).secondaryText,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 10.0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          FFLocalizations.of(context).getText(
+                            'irgzrda4' /* Спорт */,
+                          ),
+                          style:
+                              FlutterFlowTheme.of(context).bodyMedium.override(
+                                    fontFamily: 'Inter',
+                                    fontSize: 16.0,
+                                    letterSpacing: 0.0,
+                                  ),
+                        ),
+                        Switch.adaptive(
+                          value: _model.switchValue6!,
+                          onChanged: (newValue) async {
+                            safeSetState(() => _model.switchValue6 = newValue!);
+                            if (newValue!) {
+                              await action_blocks.updateModuleState(
+                                context,
+                                module: ModuleStruct(
+                                  name: ModulesEnum.Sport,
+                                  active: true,
+                                ),
+                              );
+                            } else {
+                              _model.sportDisable =
+                                  await action_blocks.updateModuleState(
+                                context,
+                                module: ModuleStruct(
+                                  name: ModulesEnum.Sport,
+                                  active: false,
+                                ),
+                              );
+                              if (!_model.sportDisable!) {
+                                safeSetState(() {
+                                  _model.switchValue6 = true;
+                                });
+                              }
+
+                              safeSetState(() {});
+                            }
+                          },
+                          activeColor: FlutterFlowTheme.of(context).primary,
+                          activeTrackColor:
+                              FlutterFlowTheme.of(context).accent1,
+                          inactiveTrackColor:
+                              FlutterFlowTheme.of(context).alternate,
+                          inactiveThumbColor:
+                              FlutterFlowTheme.of(context).secondaryText,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

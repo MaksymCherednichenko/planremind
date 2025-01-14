@@ -33,8 +33,8 @@ class _StepDescriptionWidgetState extends State<StepDescriptionWidget> {
     super.initState();
     _model = createModel(context, () => StepDescriptionModel());
 
-    _model.textController ??=
-        TextEditingController(text: FFAppState().recipeSteps[widget!.ind!]);
+    _model.textController ??= TextEditingController(
+        text: FFAppState().recipeSteps.elementAtOrNull(widget!.ind!));
     _model.textFieldFocusNode ??= FocusNode();
   }
 
@@ -62,7 +62,7 @@ class _StepDescriptionWidgetState extends State<StepDescriptionWidget> {
               widget!.ind!,
               (_) => _model.textController.text,
             );
-            setState(() {});
+            safeSetState(() {});
           },
         ),
         onFieldSubmitted: (_) async {
@@ -70,7 +70,7 @@ class _StepDescriptionWidgetState extends State<StepDescriptionWidget> {
             widget!.ind!,
             (_) => _model.textController.text,
           );
-          setState(() {});
+          safeSetState(() {});
         },
         autofocus: false,
         obscureText: false,
@@ -119,8 +119,8 @@ class _StepDescriptionWidgetState extends State<StepDescriptionWidget> {
                       widget!.ind!,
                       (_) => _model.textController.text,
                     );
-                    setState(() {});
-                    setState(() {});
+                    safeSetState(() {});
+                    safeSetState(() {});
                   },
                   child: Icon(
                     Icons.clear,

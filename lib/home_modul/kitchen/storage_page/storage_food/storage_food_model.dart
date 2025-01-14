@@ -1,11 +1,13 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
+import '/backend/schema/enums/enums.dart';
 import '/custom_components/app_bar/app_bar_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
-import '/home_modul/kitchen/storage_page/add_item_storage_food/add_item_storage_food_widget.dart';
-import '/home_modul/kitchen/storage_page/edit_item_storage_food/edit_item_storage_food_widget.dart';
+import '/home_modul/kitchen/storage_page/add_storage_stuff/add_storage_stuff_widget.dart';
+import 'dart:ui';
+import '/flutter_flow/custom_functions.dart' as functions;
 import 'storage_food_widget.dart' show StorageFoodWidget;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
@@ -36,9 +38,8 @@ class StorageFoodModel extends FlutterFlowModel<StorageFoodWidget> {
 
   ///  State fields for stateful widgets in this page.
 
-  final unfocusNode = FocusNode();
   // Stores action output result for [Firestore Query - Query a collection] action in StorageFood widget.
-  SettingsCategoryAndShopRecord? settings;
+  SettingsCategoryAndShopRecord? categoryOutput;
   // Model for appBar component.
   late AppBarModel appBarModel;
 
@@ -49,7 +50,6 @@ class StorageFoodModel extends FlutterFlowModel<StorageFoodWidget> {
 
   @override
   void dispose() {
-    unfocusNode.dispose();
     appBarModel.dispose();
   }
 }

@@ -25,6 +25,8 @@ export 'serialization_util.dart';
 
 const kTransitionInfoKey = '__transition_info__';
 
+GlobalKey<NavigatorState> appNavigatorKey = GlobalKey<NavigatorState>();
+
 class AppStateNotifier extends ChangeNotifier {
   AppStateNotifier._();
 
@@ -82,6 +84,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
       initialLocation: '/',
       debugLogDiagnostics: true,
       refreshListenable: appStateNotifier,
+      navigatorKey: appNavigatorKey,
       errorBuilder: (context, state) =>
           appStateNotifier.loggedIn ? HubPageWidget() : LoginPageWidget(),
       routes: [
@@ -104,7 +107,12 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: 'HubPage',
           path: '/hubPage',
-          builder: (context, params) => HubPageWidget(),
+          builder: (context, params) => HubPageWidget(
+            startGuide: params.getParam(
+              'startGuide',
+              ParamType.bool,
+            ),
+          ),
         ),
         FFRoute(
           name: 'HomePlannerPage',
@@ -112,26 +120,9 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, params) => HomePlannerPageWidget(),
         ),
         FFRoute(
-          name: 'AddMealForPlannerPage',
-          path: '/addMealForPlannerPage',
-          builder: (context, params) => AddMealForPlannerPageWidget(
-            listOfDishesRef: params.getParam(
-              'listOfDishesRef',
-              ParamType.DocumentReference,
-              isList: false,
-              collectionNamePath: ['listOfDishes'],
-            ),
-          ),
-        ),
-        FFRoute(
           name: 'HomeShoppingHistory',
           path: '/homeShoppingHistory',
           builder: (context, params) => HomeShoppingHistoryWidget(),
-        ),
-        FFRoute(
-          name: 'HomeShoppingActual',
-          path: '/homeShoppingActual',
-          builder: (context, params) => HomeShoppingActualWidget(),
         ),
         FFRoute(
           name: 'Settings_Notifications',
@@ -175,35 +166,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           name: 'SettingsShops',
           path: '/settingsShops',
           builder: (context, params) => SettingsShopsWidget(),
-        ),
-        FFRoute(
-          name: 'Menu',
-          path: '/menu',
-          builder: (context, params) => MenuWidget(),
-        ),
-        FFRoute(
-          name: 'CreateItemInMenu',
-          path: '/createItemInMenu',
-          builder: (context, params) => CreateItemInMenuWidget(
-            newItemInMenu: params.getParam(
-              'newItemInMenu',
-              ParamType.DocumentReference,
-              isList: false,
-              collectionNamePath: ['menu'],
-            ),
-          ),
-        ),
-        FFRoute(
-          name: 'MenuAddToPlan',
-          path: '/menuAddToPlan',
-          builder: (context, params) => MenuAddToPlanWidget(
-            itemInMenu: params.getParam(
-              'itemInMenu',
-              ParamType.DocumentReference,
-              isList: false,
-              collectionNamePath: ['menu'],
-            ),
-          ),
         ),
         FFRoute(
           name: 'WellcomePageOld',
@@ -326,19 +288,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, params) => CarServiceInformationPageWidget(),
         ),
         FFRoute(
-          name: 'MyCarPage',
-          path: '/myCarPage',
-          asyncParams: {
-            'car': getDoc(['users', 'cars'], CarsRecord.fromSnapshot),
-          },
-          builder: (context, params) => MyCarPageWidget(
-            car: params.getParam(
-              'car',
-              ParamType.Document,
-            ),
-          ),
-        ),
-        FFRoute(
           name: 'SparePartsPage',
           path: '/sparePartsPage',
           asyncParams: {
@@ -372,24 +321,19 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, params) => SportsPlannerPageWidget(),
         ),
         FFRoute(
-          name: 'MyPlantsPageGrid',
-          path: '/myPlantsPageGrid',
-          builder: (context, params) => MyPlantsPageGridWidget(),
-        ),
-        FFRoute(
           name: 'MyPlantsPageList',
           path: '/myPlantsPageList',
           builder: (context, params) => MyPlantsPageListWidget(),
         ),
         FFRoute(
-          name: 'HealthHistoryPage',
-          path: '/healthHistoryPage',
-          builder: (context, params) => HealthHistoryPageWidget(),
+          name: 'HealthHistoryPageEvents',
+          path: '/healthHistoryPageEvents',
+          builder: (context, params) => HealthHistoryPageEventsWidget(),
         ),
         FFRoute(
-          name: 'HealthInformationPage',
-          path: '/healthInformationPage',
-          builder: (context, params) => HealthInformationPageWidget(),
+          name: 'AllMedicationPage',
+          path: '/allMedicationPage',
+          builder: (context, params) => AllMedicationPageWidget(),
         ),
         FFRoute(
           name: 'WellcomePage',
@@ -418,9 +362,71 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, params) => SettingsModulesWidget(),
         ),
         FFRoute(
-          name: 'HomeShoppingActualCopy',
-          path: '/homeShoppingActualCopy',
-          builder: (context, params) => HomeShoppingActualCopyWidget(),
+          name: 'HomeShoppingActual',
+          path: '/homeShoppingActual',
+          builder: (context, params) => HomeShoppingActualWidget(),
+        ),
+        FFRoute(
+          name: 'TodayMedicationPage',
+          path: '/todayMedicationPage',
+          builder: (context, params) => TodayMedicationPageWidget(),
+        ),
+        FFRoute(
+          name: 'recipe',
+          path: '/recipe',
+          asyncParams: {
+            'dishDoc':
+                getDoc(['listOfDishes'], ListOfDishesRecord.fromSnapshot),
+          },
+          builder: (context, params) => RecipeWidget(
+            dishDoc: params.getParam(
+              'dishDoc',
+              ParamType.Document,
+            ),
+            name: params.getParam(
+              'name',
+              ParamType.String,
+            ),
+            addToPlanner: params.getParam(
+              'addToPlanner',
+              ParamType.bool,
+            ),
+          ),
+        ),
+        FFRoute(
+          name: 'HealthHistoryPageMedications',
+          path: '/healthHistoryPageMedications',
+          builder: (context, params) => HealthHistoryPageMedicationsWidget(),
+        ),
+        FFRoute(
+          name: 'PetsHistoryPage',
+          path: '/petsHistoryPage',
+          builder: (context, params) => PetsHistoryPageWidget(),
+        ),
+        FFRoute(
+          name: 'PetsPetPage',
+          path: '/petsPetPage',
+          builder: (context, params) => PetsPetPageWidget(),
+        ),
+        FFRoute(
+          name: 'SportsHistoryPage',
+          path: '/sportsHistoryPage',
+          builder: (context, params) => SportsHistoryPageWidget(),
+        ),
+        FFRoute(
+          name: 'addNewMeal',
+          path: '/addNewMeal',
+          builder: (context, params) => AddNewMealWidget(
+            tag: params.getParam(
+              'tag',
+              ParamType.int,
+            ),
+          ),
+        ),
+        FFRoute(
+          name: 'AccountSettings',
+          path: '/accountSettings',
+          builder: (context, params) => AccountSettingsWidget(),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
       observers: [routeObserver],
@@ -611,7 +617,7 @@ class FFRoute {
               ? Container(
                   color: Colors.transparent,
                   child: Image.asset(
-                    'assets/images/ezgif.com-video-to-gif-converter.gif',
+                    'assets/images/4-ezgif.com-video-to-gif-converter-2.gif',
                     fit: BoxFit.cover,
                   ),
                 )

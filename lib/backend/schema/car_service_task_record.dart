@@ -42,6 +42,16 @@ class CarServiceTaskRecord extends FirestoreRecord {
   DateTime? get date => _date;
   bool hasDate() => _date != null;
 
+  // "car" field.
+  DocumentReference? _car;
+  DocumentReference? get car => _car;
+  bool hasCar() => _car != null;
+
+  // "recordState" field.
+  RecordStateEnum? _recordState;
+  RecordStateEnum? get recordState => _recordState;
+  bool hasRecordState() => _recordState != null;
+
   DocumentReference get parentReference => reference.parent.parent!;
 
   void _initializeFields() {
@@ -50,6 +60,10 @@ class CarServiceTaskRecord extends FirestoreRecord {
     _description = snapshotData['description'] as String?;
     _mileage = castToType<int>(snapshotData['mileage']);
     _date = snapshotData['date'] as DateTime?;
+    _car = snapshotData['car'] as DocumentReference?;
+    _recordState = snapshotData['recordState'] is RecordStateEnum
+        ? snapshotData['recordState']
+        : deserializeEnum<RecordStateEnum>(snapshotData['recordState']);
   }
 
   static Query<Map<String, dynamic>> collection([DocumentReference? parent]) =>
@@ -97,6 +111,8 @@ Map<String, dynamic> createCarServiceTaskRecordData({
   String? description,
   int? mileage,
   DateTime? date,
+  DocumentReference? car,
+  RecordStateEnum? recordState,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
@@ -105,6 +121,8 @@ Map<String, dynamic> createCarServiceTaskRecordData({
       'description': description,
       'mileage': mileage,
       'date': date,
+      'car': car,
+      'recordState': recordState,
     }.withoutNulls,
   );
 
@@ -121,12 +139,21 @@ class CarServiceTaskRecordDocumentEquality
         e1?.place == e2?.place &&
         e1?.description == e2?.description &&
         e1?.mileage == e2?.mileage &&
-        e1?.date == e2?.date;
+        e1?.date == e2?.date &&
+        e1?.car == e2?.car &&
+        e1?.recordState == e2?.recordState;
   }
 
   @override
-  int hash(CarServiceTaskRecord? e) => const ListEquality()
-      .hash([e?.title, e?.place, e?.description, e?.mileage, e?.date]);
+  int hash(CarServiceTaskRecord? e) => const ListEquality().hash([
+        e?.title,
+        e?.place,
+        e?.description,
+        e?.mileage,
+        e?.date,
+        e?.car,
+        e?.recordState
+      ]);
 
   @override
   bool isValidKey(Object? o) => o is CarServiceTaskRecord;

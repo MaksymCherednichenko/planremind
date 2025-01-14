@@ -1,14 +1,17 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
+import '/backend/schema/enums/enums.dart';
+import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/home_modul/kitchen/meal/delete_meal/delete_meal_widget.dart';
 import '/home_modul/kitchen/meal/meal_for_planner_page/addingridientspopup/addingridientspopup_widget.dart';
-import '/home_modul/kitchen/meal/meal_for_planner_page/editingridientspopup/editingridientspopup_widget.dart';
 import 'dart:async';
+import 'dart:ui';
 import '/flutter_flow/custom_functions.dart' as functions;
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -52,9 +55,10 @@ class _MealIngridientsWidgetState extends State<MealIngridientsWidget> {
     context.watch<FFAppState>();
 
     return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
-          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-          : FocusScope.of(context).unfocus(),
+      onTap: () {
+        FocusScope.of(context).unfocus();
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: Color(0xFFF5F5F5),
@@ -224,28 +228,54 @@ class _MealIngridientsWidgetState extends State<MealIngridientsWidget> {
                             hoverColor: Colors.transparent,
                             highlightColor: Colors.transparent,
                             onTap: () async {
-                              await showModalBottomSheet(
-                                isScrollControlled: true,
-                                backgroundColor: Colors.transparent,
-                                enableDrag: false,
-                                context: context,
-                                builder: (context) {
-                                  return GestureDetector(
-                                    onTap: () => _model
-                                            .unfocusNode.canRequestFocus
-                                        ? FocusScope.of(context)
-                                            .requestFocus(_model.unfocusNode)
-                                        : FocusScope.of(context).unfocus(),
-                                    child: Padding(
-                                      padding: MediaQuery.viewInsetsOf(context),
-                                      child: DeleteMealWidget(
-                                        mealRef:
-                                            columnListOfDishesRecord.reference,
+                              var confirmDialogResponse =
+                                  await showDialog<bool>(
+                                        context: context,
+                                        builder: (alertDialogContext) {
+                                          return AlertDialog(
+                                            content: Text(
+                                                'Ви дійно бажаєте видалити запис?'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () => Navigator.pop(
+                                                    alertDialogContext, false),
+                                                child: Text('Скасувати'),
+                                              ),
+                                              TextButton(
+                                                onPressed: () => Navigator.pop(
+                                                    alertDialogContext, true),
+                                                child: Text('Видалити'),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      ) ??
+                                      false;
+                              if (confirmDialogResponse) {
+                                await showModalBottomSheet(
+                                  isScrollControlled: true,
+                                  backgroundColor: Colors.transparent,
+                                  enableDrag: false,
+                                  context: context,
+                                  builder: (context) {
+                                    return GestureDetector(
+                                      onTap: () {
+                                        FocusScope.of(context).unfocus();
+                                        FocusManager.instance.primaryFocus
+                                            ?.unfocus();
+                                      },
+                                      child: Padding(
+                                        padding:
+                                            MediaQuery.viewInsetsOf(context),
+                                        child: DeleteMealWidget(
+                                          mealRef: columnListOfDishesRecord
+                                              .reference,
+                                        ),
                                       ),
-                                    ),
-                                  );
-                                },
-                              ).then((value) => safeSetState(() {}));
+                                    );
+                                  },
+                                ).then((value) => safeSetState(() {}));
+                              }
                             },
                             child: Icon(
                               Icons.delete,
@@ -303,6 +333,220 @@ class _MealIngridientsWidgetState extends State<MealIngridientsWidget> {
                           borderRadius: BorderRadius.circular(12.0),
                         ),
                       ),
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(24.0, 10.0, 24.0, 15.0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Expanded(
+                          child: FFButtonWidget(
+                            onPressed: () async {
+                              var confirmDialogResponse =
+                                  await showDialog<bool>(
+                                        context: context,
+                                        builder: (alertDialogContext) {
+                                          return AlertDialog(
+                                            content: Text(
+                                                'Дійсно бажаєте відмінусувати наявні продукти?'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () => Navigator.pop(
+                                                    alertDialogContext, false),
+                                                child: Text('Скасувати'),
+                                              ),
+                                              TextButton(
+                                                onPressed: () => Navigator.pop(
+                                                    alertDialogContext, true),
+                                                child: Text('Відмінусувати'),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      ) ??
+                                      false;
+                              if (confirmDialogResponse) {
+                                _model.allIngridientsOutput =
+                                    await queryIngredientsOfDishesRecordOnce(
+                                  parent: widget!.choosedMeal,
+                                );
+                                _model.allStufsOutput =
+                                    await queryStaffStorageRecordOnce(
+                                  parent: FFAppState().currentUserRef,
+                                  queryBuilder: (staffStorageRecord) =>
+                                      staffStorageRecord.where(
+                                    'staffCategoryType',
+                                    isEqualTo: HomeStuffEnum.food.serialize(),
+                                  ),
+                                );
+                                _model.loopIndex = 0;
+                                while (_model.loopIndex <
+                                    _model.allIngridientsOutput!.length) {
+                                  if (_model.allStufsOutput!
+                                      .where((e) =>
+                                          (e.name ==
+                                              _model.allIngridientsOutput
+                                                  ?.elementAtOrNull(
+                                                      _model.loopIndex)
+                                                  ?.name) &&
+                                          (e.unit ==
+                                              _model.allIngridientsOutput
+                                                  ?.elementAtOrNull(
+                                                      _model.loopIndex)
+                                                  ?.unit) &&
+                                          (e.count >=
+                                              _model.allIngridientsOutput!
+                                                  .elementAtOrNull(
+                                                      _model.loopIndex)!
+                                                  .quantity))
+                                      .toList()
+                                      .isNotEmpty) {
+                                    if (_model.allStufsOutput
+                                            ?.where((e) =>
+                                                (e.name ==
+                                                    _model.allIngridientsOutput
+                                                        ?.elementAtOrNull(
+                                                            _model.loopIndex)
+                                                        ?.name) &&
+                                                (e.unit ==
+                                                    _model.allIngridientsOutput
+                                                        ?.elementAtOrNull(
+                                                            _model.loopIndex)
+                                                        ?.unit) &&
+                                                (e.count >=
+                                                    _model.allIngridientsOutput!
+                                                        .elementAtOrNull(
+                                                            _model.loopIndex)!
+                                                        .quantity))
+                                            .toList()
+                                            ?.sortedList(
+                                                keyOf: (e) => e.count,
+                                                desc: true)
+                                            ?.firstOrNull
+                                            ?.count ==
+                                        _model.allIngridientsOutput
+                                            ?.elementAtOrNull(_model.loopIndex)
+                                            ?.quantity) {
+                                      await _model.allStufsOutput!
+                                          .where((e) =>
+                                              (e.name ==
+                                                  _model.allIngridientsOutput
+                                                      ?.elementAtOrNull(
+                                                          _model.loopIndex)
+                                                      ?.name) &&
+                                              (e.unit ==
+                                                  _model.allIngridientsOutput
+                                                      ?.elementAtOrNull(
+                                                          _model.loopIndex)
+                                                      ?.unit) &&
+                                              (e.count >=
+                                                  _model.allIngridientsOutput!
+                                                      .elementAtOrNull(
+                                                          _model.loopIndex)!
+                                                      .quantity))
+                                          .toList()
+                                          .sortedList(
+                                              keyOf: (e) => e.count, desc: true)
+                                          .firstOrNull!
+                                          .reference
+                                          .delete();
+                                    } else {
+                                      await _model.allStufsOutput!
+                                          .where((e) =>
+                                              (e.name ==
+                                                  _model.allIngridientsOutput
+                                                      ?.elementAtOrNull(
+                                                          _model.loopIndex)
+                                                      ?.name) &&
+                                              (e.unit ==
+                                                  _model.allIngridientsOutput
+                                                      ?.elementAtOrNull(
+                                                          _model.loopIndex)
+                                                      ?.unit) &&
+                                              (e.count >=
+                                                  _model.allIngridientsOutput!
+                                                      .elementAtOrNull(
+                                                          _model.loopIndex)!
+                                                      .quantity))
+                                          .toList()
+                                          .sortedList(
+                                              keyOf: (e) => e.count, desc: true)
+                                          .firstOrNull!
+                                          .reference
+                                          .update({
+                                        ...mapToFirestore(
+                                          {
+                                            'count': FieldValue.increment(
+                                                -(_model.allIngridientsOutput!
+                                                    .elementAtOrNull(
+                                                        _model.loopIndex)!
+                                                    .quantity)),
+                                          },
+                                        ),
+                                      });
+                                    }
+                                  }
+                                  _model.loopIndex = _model.loopIndex + 1;
+                                }
+                              }
+                              _model.loopIndex = 0;
+                              safeSetState(() {});
+
+                              safeSetState(() {});
+                            },
+                            text: FFLocalizations.of(context).getText(
+                              'ahoiw0ly' /* Відмінусувати продукти */,
+                            ),
+                            options: FFButtonOptions(
+                              height: 50.0,
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  16.0, 0.0, 16.0, 0.0),
+                              iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                  0.0, 0.0, 0.0, 0.0),
+                              color: FlutterFlowTheme.of(context).primary,
+                              textStyle: FlutterFlowTheme.of(context)
+                                  .titleSmall
+                                  .override(
+                                    fontFamily: 'Inter',
+                                    color: Colors.white,
+                                    letterSpacing: 0.0,
+                                  ),
+                              elevation: 0.0,
+                              borderRadius: BorderRadius.circular(16.0),
+                            ),
+                          ),
+                        ),
+                        FlutterFlowIconButton(
+                          borderRadius: 16.0,
+                          buttonSize: 50.0,
+                          fillColor: FlutterFlowTheme.of(context).primary,
+                          icon: Icon(
+                            Icons.question_mark,
+                            color: FlutterFlowTheme.of(context).info,
+                            size: 24.0,
+                          ),
+                          onPressed: () async {
+                            await showDialog(
+                              context: context,
+                              builder: (alertDialogContext) {
+                                return AlertDialog(
+                                  content: Text(
+                                      'Коли ви тиснете \"мідмінусувати продукти, то у Storage віднімаються лише ті продукти, яких достатньо, решту ви можете добавити у список покупок'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(alertDialogContext),
+                                      child: Text('Ok'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ].divide(SizedBox(width: 5.0)),
                     ),
                   ),
                   Expanded(
@@ -368,140 +612,91 @@ class _MealIngridientsWidgetState extends State<MealIngridientsWidget> {
                                         ),
                                         child: Padding(
                                           padding: EdgeInsets.all(16.0),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            children: [
-                                              Align(
-                                                alignment: AlignmentDirectional(
-                                                    -1.0, 0.0),
-                                                child: Container(
-                                                  width: 150.0,
-                                                  decoration: BoxDecoration(),
+                                          child: InkWell(
+                                            splashColor: Colors.transparent,
+                                            focusColor: Colors.transparent,
+                                            hoverColor: Colors.transparent,
+                                            highlightColor: Colors.transparent,
+                                            onTap: () async {
+                                              await showModalBottomSheet(
+                                                isScrollControlled: true,
+                                                backgroundColor:
+                                                    Color(0x85919191),
+                                                enableDrag: false,
+                                                context: context,
+                                                builder: (context) {
+                                                  return GestureDetector(
+                                                    onTap: () {
+                                                      FocusScope.of(context)
+                                                          .unfocus();
+                                                      FocusManager
+                                                          .instance.primaryFocus
+                                                          ?.unfocus();
+                                                    },
+                                                    child: Padding(
+                                                      padding: MediaQuery
+                                                          .viewInsetsOf(
+                                                              context),
+                                                      child:
+                                                          AddingridientspopupWidget(
+                                                        dashRef:
+                                                            columnListOfDishesRecord
+                                                                .reference,
+                                                        ingridient:
+                                                            listViewIngredientsOfDishesRecord,
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                              ).then((value) =>
+                                                  safeSetState(() {}));
+                                            },
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: [
+                                                Flexible(
+                                                  flex: 3,
                                                   child: Align(
                                                     alignment:
                                                         AlignmentDirectional(
                                                             -1.0, 0.0),
-                                                    child: InkWell(
-                                                      splashColor:
-                                                          Colors.transparent,
-                                                      focusColor:
-                                                          Colors.transparent,
-                                                      hoverColor:
-                                                          Colors.transparent,
-                                                      highlightColor:
-                                                          Colors.transparent,
-                                                      onTap: () async {
-                                                        await showModalBottomSheet(
-                                                          isScrollControlled:
-                                                              true,
-                                                          backgroundColor:
-                                                              Color(0x85919191),
-                                                          enableDrag: false,
-                                                          context: context,
-                                                          builder: (context) {
-                                                            return GestureDetector(
-                                                              onTap: () => _model
-                                                                      .unfocusNode
-                                                                      .canRequestFocus
-                                                                  ? FocusScope.of(
-                                                                          context)
-                                                                      .requestFocus(
-                                                                          _model
-                                                                              .unfocusNode)
-                                                                  : FocusScope.of(
-                                                                          context)
-                                                                      .unfocus(),
-                                                              child: Padding(
-                                                                padding: MediaQuery
-                                                                    .viewInsetsOf(
-                                                                        context),
-                                                                child:
-                                                                    EditingridientspopupWidget(
-                                                                  listOfIngridientsRef:
-                                                                      listViewIngredientsOfDishesRecord,
-                                                                ),
+                                                    child: Container(
+                                                      decoration:
+                                                          BoxDecoration(),
+                                                      child: Align(
+                                                        alignment:
+                                                            AlignmentDirectional(
+                                                                -1.0, 0.0),
+                                                        child: Text(
+                                                          listViewIngredientsOfDishesRecord
+                                                              .name,
+                                                          textAlign:
+                                                              TextAlign.start,
+                                                          style: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .bodyMedium
+                                                              .override(
+                                                                fontFamily:
+                                                                    'Inter',
+                                                                color: Colors
+                                                                    .black,
+                                                                fontSize: 15.0,
+                                                                letterSpacing:
+                                                                    0.0,
                                                               ),
-                                                            );
-                                                          },
-                                                        ).then((value) =>
-                                                            safeSetState(
-                                                                () {}));
-                                                      },
-                                                      child: Text(
-                                                        listViewIngredientsOfDishesRecord
-                                                            .name,
-                                                        textAlign:
-                                                            TextAlign.start,
-                                                        style: FlutterFlowTheme
-                                                                .of(context)
-                                                            .bodyMedium
-                                                            .override(
-                                                              fontFamily:
-                                                                  'Inter',
-                                                              color:
-                                                                  Colors.black,
-                                                              fontSize: 15.0,
-                                                              letterSpacing:
-                                                                  0.0,
-                                                            ),
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
                                                 ),
-                                              ),
-                                              Expanded(
-                                                child: Align(
-                                                  alignment:
-                                                      AlignmentDirectional(
-                                                          0.0, 0.0),
-                                                  child: Container(
-                                                    decoration: BoxDecoration(),
-                                                    child: InkWell(
-                                                      splashColor:
-                                                          Colors.transparent,
-                                                      focusColor:
-                                                          Colors.transparent,
-                                                      hoverColor:
-                                                          Colors.transparent,
-                                                      highlightColor:
-                                                          Colors.transparent,
-                                                      onTap: () async {
-                                                        await showModalBottomSheet(
-                                                          isScrollControlled:
-                                                              true,
-                                                          backgroundColor:
-                                                              Color(0x85919191),
-                                                          enableDrag: false,
-                                                          context: context,
-                                                          builder: (context) {
-                                                            return GestureDetector(
-                                                              onTap: () => _model
-                                                                      .unfocusNode
-                                                                      .canRequestFocus
-                                                                  ? FocusScope.of(
-                                                                          context)
-                                                                      .requestFocus(
-                                                                          _model
-                                                                              .unfocusNode)
-                                                                  : FocusScope.of(
-                                                                          context)
-                                                                      .unfocus(),
-                                                              child: Padding(
-                                                                padding: MediaQuery
-                                                                    .viewInsetsOf(
-                                                                        context),
-                                                                child:
-                                                                    EditingridientspopupWidget(
-                                                                  listOfIngridientsRef:
-                                                                      listViewIngredientsOfDishesRecord,
-                                                                ),
-                                                              ),
-                                                            );
-                                                          },
-                                                        ).then((value) =>
-                                                            safeSetState(
-                                                                () {}));
-                                                      },
+                                                Expanded(
+                                                  child: Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            0.0, 0.0),
+                                                    child: Container(
+                                                      decoration:
+                                                          BoxDecoration(),
                                                       child: Text(
                                                         '${formatNumber(
                                                           listViewIngredientsOfDishesRecord
@@ -510,7 +705,7 @@ class _MealIngridientsWidgetState extends State<MealIngridientsWidget> {
                                                               FormatType.custom,
                                                           format: '####.##',
                                                           locale: '',
-                                                        )} ${listViewIngredientsOfDishesRecord.unit}',
+                                                        )} ${listViewIngredientsOfDishesRecord.unit?.name}',
                                                         textAlign:
                                                             TextAlign.end,
                                                         style: FlutterFlowTheme
@@ -529,88 +724,190 @@ class _MealIngridientsWidgetState extends State<MealIngridientsWidget> {
                                                     ),
                                                   ),
                                                 ),
-                                              ),
-                                              Align(
-                                                alignment: AlignmentDirectional(
-                                                    1.0, 0.0),
-                                                child: Container(
-                                                  width: 100.0,
-                                                  decoration: BoxDecoration(),
-                                                  child: InkWell(
-                                                    splashColor:
-                                                        Colors.transparent,
-                                                    focusColor:
-                                                        Colors.transparent,
-                                                    hoverColor:
-                                                        Colors.transparent,
-                                                    highlightColor:
-                                                        Colors.transparent,
-                                                    onTap: () async {
-                                                      if (!listViewIngredientsOfDishesRecord
-                                                          .inStock) {
-                                                        if (listViewIngredientsOfDishesRecord
-                                                                .removeToShopList !=
-                                                            'Added') {
-                                                          unawaited(
-                                                            () async {
-                                                              await listViewIngredientsOfDishesRecord
-                                                                  .reference
-                                                                  .update(
-                                                                      createIngredientsOfDishesRecordData(
-                                                                removeToShopList:
-                                                                    'Added',
-                                                              ));
-                                                            }(),
-                                                          );
-                                                          unawaited(
-                                                            () async {
-                                                              await ShoppingListRecord
-                                                                      .createDoc(
-                                                                          FFAppState()
-                                                                              .currentUserRef!)
-                                                                  .set(
-                                                                      createShoppingListRecordData(
-                                                                name:
-                                                                    listViewIngredientsOfDishesRecord
-                                                                        .name,
-                                                                unit:
-                                                                    listViewIngredientsOfDishesRecord
-                                                                        .unit,
-                                                                quantity:
-                                                                    listViewIngredientsOfDishesRecord
-                                                                        .quantity,
-                                                                bought: false,
-                                                                shopName: ' ',
-                                                              ));
-                                                            }(),
-                                                          );
-                                                        }
-                                                      }
-                                                    },
-                                                    child: Text(
-                                                      listViewIngredientsOfDishesRecord
-                                                              .inStock
-                                                          ? 'Home'
-                                                          : listViewIngredientsOfDishesRecord
-                                                              .removeToShopList,
-                                                      textAlign: TextAlign.end,
-                                                      style: FlutterFlowTheme
-                                                              .of(context)
-                                                          .bodyMedium
-                                                          .override(
-                                                            fontFamily: 'Inter',
-                                                            color: functions
-                                                                .setColorForItemInStock(
-                                                                    listViewIngredientsOfDishesRecord
-                                                                        .inStock),
-                                                            fontSize: 15.0,
-                                                            letterSpacing: 0.0,
-                                                          ),
+                                                Align(
+                                                  alignment:
+                                                      AlignmentDirectional(
+                                                          1.0, 0.0),
+                                                  child: StreamBuilder<
+                                                      List<StaffStorageRecord>>(
+                                                    stream:
+                                                        queryStaffStorageRecord(
+                                                      parent: FFAppState()
+                                                          .currentUserRef,
+                                                      queryBuilder:
+                                                          (staffStorageRecord) =>
+                                                              staffStorageRecord
+                                                                  .where(
+                                                                    'name',
+                                                                    isEqualTo:
+                                                                        listViewIngredientsOfDishesRecord
+                                                                            .name,
+                                                                  )
+                                                                  .where(
+                                                                    'staffCategoryType',
+                                                                    isEqualTo:
+                                                                        HomeStuffEnum
+                                                                            .food
+                                                                            .serialize(),
+                                                                  ),
+                                                      singleRecord: true,
                                                     ),
+                                                    builder:
+                                                        (context, snapshot) {
+                                                      // Customize what your widget looks like when it's loading.
+                                                      if (!snapshot.hasData) {
+                                                        return Center(
+                                                          child: SizedBox(
+                                                            width: 50.0,
+                                                            height: 50.0,
+                                                            child:
+                                                                CircularProgressIndicator(
+                                                              valueColor:
+                                                                  AlwaysStoppedAnimation<
+                                                                      Color>(
+                                                                Color(
+                                                                    0xFFF57F44),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        );
+                                                      }
+                                                      List<StaffStorageRecord>
+                                                          containerStaffStorageRecordList =
+                                                          snapshot.data!;
+                                                      final containerStaffStorageRecord =
+                                                          containerStaffStorageRecordList
+                                                                  .isNotEmpty
+                                                              ? containerStaffStorageRecordList
+                                                                  .first
+                                                              : null;
+
+                                                      return Container(
+                                                        width: 150.0,
+                                                        decoration:
+                                                            BoxDecoration(),
+                                                        child: Row(
+                                                          mainAxisSize:
+                                                              MainAxisSize.max,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .end,
+                                                          children: [
+                                                            if (containerStaffStorageRecord !=
+                                                                    null
+                                                                ? ((containerStaffStorageRecord!
+                                                                            .count <
+                                                                        listViewIngredientsOfDishesRecord
+                                                                            .quantity) ||
+                                                                    (containerStaffStorageRecord
+                                                                            ?.unit !=
+                                                                        listViewIngredientsOfDishesRecord
+                                                                            .unit))
+                                                                : true)
+                                                              InkWell(
+                                                                splashColor: Colors
+                                                                    .transparent,
+                                                                focusColor: Colors
+                                                                    .transparent,
+                                                                hoverColor: Colors
+                                                                    .transparent,
+                                                                highlightColor:
+                                                                    Colors
+                                                                        .transparent,
+                                                                onTap:
+                                                                    () async {
+                                                                  if (!listViewIngredientsOfDishesRecord
+                                                                      .inStock) {
+                                                                    if (listViewIngredientsOfDishesRecord
+                                                                            .removeToShopList !=
+                                                                        'Added') {
+                                                                      unawaited(
+                                                                        () async {
+                                                                          await listViewIngredientsOfDishesRecord
+                                                                              .reference
+                                                                              .update(createIngredientsOfDishesRecordData(
+                                                                            removeToShopList:
+                                                                                'Added',
+                                                                          ));
+                                                                        }(),
+                                                                      );
+                                                                      unawaited(
+                                                                        () async {
+                                                                          await ShoppingListRecord.createDoc(FFAppState().currentUserRef!)
+                                                                              .set(createShoppingListRecordData(
+                                                                            name:
+                                                                                listViewIngredientsOfDishesRecord.name,
+                                                                            unit:
+                                                                                listViewIngredientsOfDishesRecord.unit,
+                                                                            quantity:
+                                                                                listViewIngredientsOfDishesRecord.quantity,
+                                                                            shopName:
+                                                                                ' ',
+                                                                            isBought:
+                                                                                false,
+                                                                            dateOfBuy:
+                                                                                dateTimeFromSecondsSinceEpoch(functions.toInt('0')),
+                                                                          ));
+                                                                        }(),
+                                                                      );
+                                                                    }
+                                                                  }
+                                                                },
+                                                                child: Text(
+                                                                  listViewIngredientsOfDishesRecord
+                                                                          .inStock
+                                                                      ? 'Home'
+                                                                      : listViewIngredientsOfDishesRecord
+                                                                          .removeToShopList,
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .end,
+                                                                  style: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyMedium
+                                                                      .override(
+                                                                        fontFamily:
+                                                                            'Inter',
+                                                                        color: functions
+                                                                            .setColorForItemInStock(listViewIngredientsOfDishesRecord.inStock),
+                                                                        fontSize:
+                                                                            15.0,
+                                                                        letterSpacing:
+                                                                            0.0,
+                                                                      ),
+                                                                ),
+                                                              ),
+                                                            if (containerStaffStorageRecord !=
+                                                                    null
+                                                                ? ((containerStaffStorageRecord!
+                                                                            .count >=
+                                                                        listViewIngredientsOfDishesRecord
+                                                                            .quantity) &&
+                                                                    (containerStaffStorageRecord
+                                                                            ?.unit ==
+                                                                        listViewIngredientsOfDishesRecord
+                                                                            .unit))
+                                                                : false)
+                                                              Text(
+                                                                '${containerStaffStorageRecord?.count?.toString()}${containerStaffStorageRecord?.unit?.name} у Storage',
+                                                                style: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyMedium
+                                                                    .override(
+                                                                      fontFamily:
+                                                                          'Inter',
+                                                                      letterSpacing:
+                                                                          0.0,
+                                                                    ),
+                                                              ),
+                                                          ],
+                                                        ),
+                                                      );
+                                                    },
                                                   ),
                                                 ),
-                                              ),
-                                            ],
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -627,15 +924,6 @@ class _MealIngridientsWidgetState extends State<MealIngridientsWidget> {
                                   0.0, 0.0, 25.0, 0.0),
                               child: FFButtonWidget(
                                 onPressed: () async {
-                                  var ingredientsOfDishesRecordReference =
-                                      IngredientsOfDishesRecord.createDoc(
-                                          widget!.choosedMeal!);
-                                  await ingredientsOfDishesRecordReference.set(
-                                      createIngredientsOfDishesRecordData());
-                                  _model.ingredientsList =
-                                      IngredientsOfDishesRecord.getDocumentFromData(
-                                          createIngredientsOfDishesRecordData(),
-                                          ingredientsOfDishesRecordReference);
                                   await showModalBottomSheet(
                                     isScrollControlled: true,
                                     backgroundColor: Colors.transparent,
@@ -643,25 +931,21 @@ class _MealIngridientsWidgetState extends State<MealIngridientsWidget> {
                                     context: context,
                                     builder: (context) {
                                       return GestureDetector(
-                                        onTap: () => _model
-                                                .unfocusNode.canRequestFocus
-                                            ? FocusScope.of(context)
-                                                .requestFocus(
-                                                    _model.unfocusNode)
-                                            : FocusScope.of(context).unfocus(),
+                                        onTap: () {
+                                          FocusScope.of(context).unfocus();
+                                          FocusManager.instance.primaryFocus
+                                              ?.unfocus();
+                                        },
                                         child: Padding(
                                           padding:
                                               MediaQuery.viewInsetsOf(context),
                                           child: AddingridientspopupWidget(
-                                            listOfIngridients:
-                                                _model.ingredientsList!,
+                                            dashRef: widget!.choosedMeal!,
                                           ),
                                         ),
                                       );
                                     },
                                   ).then((value) => safeSetState(() {}));
-
-                                  setState(() {});
                                 },
                                 text: '',
                                 icon: Icon(

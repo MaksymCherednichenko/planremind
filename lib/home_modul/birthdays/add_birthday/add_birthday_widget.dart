@@ -5,6 +5,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/main/settings/not_field_error/not_field_error_widget.dart';
+import 'dart:ui';
 import '/custom_code/actions/index.dart' as actions;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
@@ -39,7 +40,7 @@ class _AddBirthdayWidgetState extends State<AddBirthdayWidget> {
     // On component load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       FFAppState().choosedDate = null;
-      setState(() {});
+      safeSetState(() {});
     });
 
     _model.textController ??= TextEditingController();
@@ -140,7 +141,7 @@ class _AddBirthdayWidgetState extends State<AddBirthdayWidget> {
                       obscureText: false,
                       decoration: InputDecoration(
                         labelText: FFLocalizations.of(context).getText(
-                          'e0h5brg7' /* Name */,
+                          'e0h5brg7' /* Імʼя */,
                         ),
                         labelStyle:
                             FlutterFlowTheme.of(context).labelMedium.override(
@@ -296,7 +297,7 @@ class _AddBirthdayWidgetState extends State<AddBirthdayWidget> {
                                   child: Text(
                                     valueOrDefault<String>(
                                       dateTimeFormat(
-                                        'd/M/y',
+                                        "d/M/y",
                                         _model.datePicked,
                                         locale: FFLocalizations.of(context)
                                             .languageCode,
@@ -351,7 +352,7 @@ class _AddBirthdayWidgetState extends State<AddBirthdayWidget> {
                       }
                     },
                     text: FFLocalizations.of(context).getText(
-                      'zuj1zuad' /* Add */,
+                      'zuj1zuad' /* Додати */,
                     ),
                     options: FFButtonOptions(
                       width: MediaQuery.sizeOf(context).width * 1.0,

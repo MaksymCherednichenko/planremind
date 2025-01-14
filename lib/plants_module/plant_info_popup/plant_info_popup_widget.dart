@@ -1,11 +1,11 @@
 import '/backend/backend.dart';
-import '/custom_components/delete/delete_widget.dart';
+import '/backend/schema/enums/enums.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/plants_module/edit_plant_popup/edit_plant_popup_widget.dart';
+import '/plants_module/add_new_plant_popup/add_new_plant_popup_widget.dart';
+import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'plant_info_popup_model.dart';
@@ -15,9 +15,11 @@ class PlantInfoPopupWidget extends StatefulWidget {
   const PlantInfoPopupWidget({
     super.key,
     required this.plant,
-  });
+    bool? onlyView,
+  }) : this.onlyView = onlyView ?? false;
 
   final PlantsRecord? plant;
+  final bool onlyView;
 
   @override
   State<PlantInfoPopupWidget> createState() => _PlantInfoPopupWidgetState();
@@ -51,7 +53,7 @@ class _PlantInfoPopupWidgetState extends State<PlantInfoPopupWidget> {
       alignment: AlignmentDirectional(0.0, 0.0),
       child: Container(
         width: 327.0,
-        height: 435.0,
+        height: 600.0,
         decoration: BoxDecoration(
           color: FlutterFlowTheme.of(context).primaryBackground,
           borderRadius: BorderRadius.circular(32.0),
@@ -92,47 +94,8 @@ class _PlantInfoPopupWidgetState extends State<PlantInfoPopupWidget> {
                           child: Row(
                             mainAxisSize: MainAxisSize.max,
                             children: [
-                              InkWell(
-                                splashColor: Colors.transparent,
-                                focusColor: Colors.transparent,
-                                hoverColor: Colors.transparent,
-                                highlightColor: Colors.transparent,
-                                onTap: () async {
-                                  Navigator.pop(context);
-                                  await showModalBottomSheet(
-                                    isScrollControlled: true,
-                                    backgroundColor: Colors.transparent,
-                                    enableDrag: false,
-                                    context: context,
-                                    builder: (context) {
-                                      return Padding(
-                                        padding:
-                                            MediaQuery.viewInsetsOf(context),
-                                        child: EditPlantPopupWidget(
-                                          plant: widget!.plant!,
-                                        ),
-                                      );
-                                    },
-                                  ).then((value) => safeSetState(() {}));
-                                },
-                                child: Text(
-                                  FFLocalizations.of(context).getText(
-                                    '2n0moiro' /* Редагувати */,
-                                  ),
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                        fontFamily: 'Inter',
-                                        color: Color(0xFF919191),
-                                        fontSize: 15.0,
-                                        letterSpacing: 0.0,
-                                      ),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    16.0, 0.0, 0.0, 0.0),
-                                child: InkWell(
+                              if (widget!.onlyView == false)
+                                InkWell(
                                   splashColor: Colors.transparent,
                                   focusColor: Colors.transparent,
                                   hoverColor: Colors.transparent,
@@ -147,20 +110,29 @@ class _PlantInfoPopupWidgetState extends State<PlantInfoPopupWidget> {
                                         return Padding(
                                           padding:
                                               MediaQuery.viewInsetsOf(context),
-                                          child: DeleteWidget(
-                                            plant: widget!.plant?.reference,
+                                          child: AddNewPlantPopupWidget(
+                                            plant: widget!.plant,
                                           ),
                                         );
                                       },
                                     ).then((value) => safeSetState(() {}));
+
+                                    Navigator.pop(context);
                                   },
-                                  child: Icon(
-                                    Icons.delete_outline_outlined,
-                                    color: Color(0xFF919191),
-                                    size: 24.0,
+                                  child: Text(
+                                    FFLocalizations.of(context).getText(
+                                      '2n0moiro' /* Редагувати */,
+                                    ),
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'Inter',
+                                          color: Color(0xFF919191),
+                                          fontSize: 15.0,
+                                          letterSpacing: 0.0,
+                                        ),
                                   ),
                                 ),
-                              ),
                             ],
                           ),
                         ),
@@ -200,10 +172,13 @@ class _PlantInfoPopupWidgetState extends State<PlantInfoPopupWidget> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(24.0),
                       child: Image.network(
-                        columnPlantsRecord.photo,
+                        valueOrDefault<String>(
+                          columnPlantsRecord.photo,
+                          'https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/v3Q92mpanUFl9yqWqBvt/assets/4m25uzr3vp9t/image_1.png',
+                        ),
                         width: 180.0,
                         height: 150.0,
-                        fit: BoxFit.cover,
+                        fit: BoxFit.contain,
                       ),
                     ),
                   ),
@@ -219,98 +194,146 @@ class _PlantInfoPopupWidgetState extends State<PlantInfoPopupWidget> {
                           ),
                     ),
                   ),
-                  Padding(
-                    padding:
-                        EdgeInsetsDirectional.fromSTEB(0.0, 24.0, 0.0, 0.0),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 0.0, 0.0, 4.0),
-                                child: Icon(
-                                  Icons.water_drop_outlined,
-                                  color:
-                                      FlutterFlowTheme.of(context).primaryText,
-                                  size: 24.0,
-                                ),
-                              ),
-                              Text(
-                                columnPlantsRecord.wateringFrequency,
-                                textAlign: TextAlign.center,
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                      fontFamily: 'Inter',
-                                      fontSize: 15.0,
-                                      letterSpacing: 0.0,
-                                    ),
-                              ),
-                            ],
-                          ),
+                  Expanded(
+                    child: Padding(
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(24.0, 24.0, 24.0, 0.0),
+                      child: GridView(
+                        padding: EdgeInsets.zero,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 10.0,
+                          mainAxisSpacing: 10.0,
+                          childAspectRatio: 1.0,
                         ),
-                        Expanded(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 0.0, 0.0, 4.0),
-                                child: Icon(
-                                  Icons.wb_sunny_outlined,
-                                  color:
-                                      FlutterFlowTheme.of(context).primaryText,
-                                  size: 24.0,
+                        scrollDirection: Axis.vertical,
+                        children: [
+                          if (widget!.plant?.wateringFrequency != null)
+                            Column(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      0.0, 0.0, 0.0, 4.0),
+                                  child: Icon(
+                                    FFIcons
+                                        .kwateringCanAndPlantsBlackOutline19370,
+                                    color: FlutterFlowTheme.of(context)
+                                        .primaryText,
+                                    size: 30.0,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                columnPlantsRecord.lighting,
-                                textAlign: TextAlign.center,
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                      fontFamily: 'Inter',
-                                      fontSize: 15.0,
-                                      letterSpacing: 0.0,
-                                    ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 0.0, 0.0, 4.0),
-                                child: FaIcon(
-                                  FontAwesomeIcons.temperatureLow,
-                                  color: Color(0xFF2F2F2F),
-                                  size: 24.0,
+                                Text(
+                                  () {
+                                    if (columnPlantsRecord
+                                            .wateringFrequency.scheme ==
+                                        FrequencySchemeEnum.EveryDay) {
+                                      return 'Щодня';
+                                    } else if (columnPlantsRecord
+                                            .wateringFrequency.scheme ==
+                                        FrequencySchemeEnum.EveryXDay) {
+                                      return 'Кожні ${widget!.plant?.wateringFrequency?.everyXDay?.toString()} дні';
+                                    } else if (columnPlantsRecord
+                                            .wateringFrequency.scheme ==
+                                        FrequencySchemeEnum.SpecificDayOfWeek) {
+                                      return 'Конкретні дні неділі';
+                                    } else {
+                                      return ' ';
+                                    }
+                                  }(),
+                                  textAlign: TextAlign.center,
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .override(
+                                        fontFamily: 'Inter',
+                                        fontSize: 15.0,
+                                        letterSpacing: 0.0,
+                                      ),
                                 ),
-                              ),
-                              Text(
-                                columnPlantsRecord.temperature,
-                                textAlign: TextAlign.center,
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                      fontFamily: 'Inter',
-                                      fontSize: 15.0,
-                                      letterSpacing: 0.0,
-                                    ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+                              ],
+                            ),
+                          if (widget!.plant?.lighting != null)
+                            Column(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      0.0, 0.0, 0.0, 4.0),
+                                  child: Icon(
+                                    Icons.water_drop_outlined,
+                                    color: FlutterFlowTheme.of(context)
+                                        .primaryText,
+                                    size: 24.0,
+                                  ),
+                                ),
+                                Text(
+                                  '${columnPlantsRecord.amountOfWater.toString()} ml',
+                                  textAlign: TextAlign.center,
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .override(
+                                        fontFamily: 'Inter',
+                                        fontSize: 15.0,
+                                        letterSpacing: 0.0,
+                                      ),
+                                ),
+                              ],
+                            ),
+                          if (widget!.plant?.temperature != null)
+                            Column(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      0.0, 0.0, 0.0, 4.0),
+                                  child: Icon(
+                                    FFIcons.kthermometer1829,
+                                    color: Color(0xFF2F2F2F),
+                                    size: 30.0,
+                                  ),
+                                ),
+                                Text(
+                                  columnPlantsRecord.temperature!.name,
+                                  textAlign: TextAlign.center,
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .override(
+                                        fontFamily: 'Inter',
+                                        fontSize: 15.0,
+                                        letterSpacing: 0.0,
+                                      ),
+                                ),
+                              ],
+                            ),
+                          if (widget!.plant?.solidChangeFrequency != null)
+                            Column(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      0.0, 0.0, 0.0, 4.0),
+                                  child: Icon(
+                                    FFIcons.kseedingBlackOutline19388,
+                                    color: Color(0xFF2F2F2F),
+                                    size: 30.0,
+                                  ),
+                                ),
+                                Text(
+                                  columnPlantsRecord
+                                      .solidChangeFrequency.frequency.name,
+                                  textAlign: TextAlign.center,
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .override(
+                                        fontFamily: 'Inter',
+                                        fontSize: 15.0,
+                                        letterSpacing: 0.0,
+                                      ),
+                                ),
+                              ],
+                            ),
+                        ],
+                      ),
                     ),
                   ),
                 ],

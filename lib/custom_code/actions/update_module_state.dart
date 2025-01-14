@@ -21,12 +21,15 @@ Future<List<ModuleStruct>> updateModuleState(
   if (documentSnapshot.exists) {
     var data = documentSnapshot.data() as Map<String, dynamic>;
     moduleList.clear();
-    moduleList.add(ModuleStruct(name: Module.Home, active: data["home"]));
-    moduleList.add(ModuleStruct(name: Module.Car, active: data["car"]));
-    moduleList.add(ModuleStruct(name: Module.Plants, active: data["plants"]));
-    moduleList.add(ModuleStruct(name: Module.Health, active: data["health"]));
-    moduleList.add(ModuleStruct(name: Module.Pets, active: data["pets"]));
-    moduleList.add(ModuleStruct(name: Module.Sport, active: data["sport"]));
+    moduleList.add(ModuleStruct(name: ModulesEnum.Home, active: data["home"]));
+    moduleList.add(ModuleStruct(name: ModulesEnum.Car, active: data["car"]));
+    moduleList
+        .add(ModuleStruct(name: ModulesEnum.Plants, active: data["plants"]));
+    moduleList
+        .add(ModuleStruct(name: ModulesEnum.Health, active: data["health"]));
+    moduleList.add(ModuleStruct(name: ModulesEnum.Pets, active: data["pets"]));
+    moduleList
+        .add(ModuleStruct(name: ModulesEnum.Sport, active: data["sport"]));
     print(moduleList);
   }
   return moduleList;

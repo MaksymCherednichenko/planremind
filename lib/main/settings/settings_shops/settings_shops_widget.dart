@@ -5,6 +5,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/main/settings/edit_shop/edit_shop_widget.dart';
+import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -46,9 +47,10 @@ class _SettingsShopsWidgetState extends State<SettingsShopsWidget> {
     context.watch<FFAppState>();
 
     return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
-          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-          : FocusScope.of(context).unfocus(),
+      onTap: () {
+        FocusScope.of(context).unfocus();
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
@@ -59,7 +61,7 @@ class _SettingsShopsWidgetState extends State<SettingsShopsWidget> {
             children: [
               wrapWithModel(
                 model: _model.appBarModel,
-                updateCallback: () => setState(() {}),
+                updateCallback: () => safeSetState(() {}),
                 child: AppBarWidget(
                   title: FFLocalizations.of(context).getText(
                     'd75dhpfi' /* Налаштування */,
@@ -113,7 +115,7 @@ class _SettingsShopsWidgetState extends State<SettingsShopsWidget> {
                                 0.0, 10.0, 0.0, 20.0),
                             child: Text(
                               FFLocalizations.of(context).getText(
-                                '7qiz0h7d' /* Shops */,
+                                '7qiz0h7d' /* Список магазинів */,
                               ),
                               textAlign: TextAlign.center,
                               style: FlutterFlowTheme.of(context)
@@ -170,13 +172,13 @@ class _SettingsShopsWidgetState extends State<SettingsShopsWidget> {
                                             context: context,
                                             builder: (context) {
                                               return GestureDetector(
-                                                onTap: () => _model.unfocusNode
-                                                        .canRequestFocus
-                                                    ? FocusScope.of(context)
-                                                        .requestFocus(
-                                                            _model.unfocusNode)
-                                                    : FocusScope.of(context)
-                                                        .unfocus(),
+                                                onTap: () {
+                                                  FocusScope.of(context)
+                                                      .unfocus();
+                                                  FocusManager
+                                                      .instance.primaryFocus
+                                                      ?.unfocus();
+                                                },
                                                 child: Padding(
                                                   padding:
                                                       MediaQuery.viewInsetsOf(
@@ -224,31 +226,35 @@ class _SettingsShopsWidgetState extends State<SettingsShopsWidget> {
                                               ),
                                             ],
                                           ),
-                                          child: ListTile(
-                                            title: Text(
-                                              shopsItem,
-                                              textAlign: TextAlign.start,
-                                              style:
+                                          child: Material(
+                                            color: Colors.transparent,
+                                            child: ListTile(
+                                              title: Text(
+                                                shopsItem,
+                                                textAlign: TextAlign.start,
+                                                style:
+                                                    FlutterFlowTheme.of(context)
+                                                        .titleLarge
+                                                        .override(
+                                                          fontFamily: 'Inter',
+                                                          fontSize: 16.0,
+                                                          letterSpacing: 0.0,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                        ),
+                                              ),
+                                              tileColor:
                                                   FlutterFlowTheme.of(context)
-                                                      .titleLarge
-                                                      .override(
-                                                        fontFamily: 'Inter',
-                                                        fontSize: 16.0,
-                                                        letterSpacing: 0.0,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                      ),
-                                            ),
-                                            tileColor:
-                                                FlutterFlowTheme.of(context)
-                                                    .secondaryBackground,
-                                            dense: false,
-                                            contentPadding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    24.0, 0.0, 0.0, 0.0),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(12.0),
+                                                      .secondaryBackground,
+                                              dense: false,
+                                              contentPadding:
+                                                  EdgeInsetsDirectional
+                                                      .fromSTEB(
+                                                          24.0, 0.0, 0.0, 0.0),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(12.0),
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -288,7 +294,7 @@ class _SettingsShopsWidgetState extends State<SettingsShopsWidget> {
                                               },
                                             ),
                                           });
-                                          setState(() {
+                                          safeSetState(() {
                                             _model.textController?.clear();
                                           });
                                         }
@@ -388,7 +394,7 @@ class _SettingsShopsWidgetState extends State<SettingsShopsWidget> {
                                                 },
                                               ),
                                             });
-                                            setState(() {
+                                            safeSetState(() {
                                               _model.textController?.clear();
                                             });
                                           }

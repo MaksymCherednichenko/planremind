@@ -4,6 +4,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'dart:math';
+import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -95,12 +96,11 @@ class _LoginPageWidgetState extends State<LoginPageWidget>
 
   @override
   Widget build(BuildContext context) {
-    context.watch<FFAppState>();
-
     return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
-          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-          : FocusScope.of(context).unfocus(),
+      onTap: () {
+        FocusScope.of(context).unfocus();
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: Color(0xFFF5F5F5),
@@ -173,15 +173,11 @@ class _LoginPageWidgetState extends State<LoginPageWidget>
                           FFAppState().userID = currentUserUid;
                           FFAppState().lastDaySetMileage = getCurrentTimestamp;
                           FFAppState().update(() {});
-                          if (FFAppState().visitWellcomePageCount == 0) {
-                            context.pushNamedAuth(
-                                'WellcomePage', context.mounted);
-                          } else {
-                            context.pushNamedAuth('HubPage', context.mounted);
-                          }
+
+                          context.pushNamedAuth('HubPage', context.mounted);
                         },
                         text: FFLocalizations.of(context).getText(
-                          'fmkm4vpe' /* Sign in with Google */,
+                          'fmkm4vpe' /* Вхід з Google */,
                         ),
                         icon: Icon(
                           FFIcons.kgoogle,
@@ -228,16 +224,12 @@ class _LoginPageWidgetState extends State<LoginPageWidget>
                                 FFAppState().lastDaySetMileage =
                                     getCurrentTimestamp;
                                 FFAppState().update(() {});
-                                if (FFAppState().visitWellcomePageCount == 0) {
-                                  context.pushNamedAuth(
-                                      'WellcomePage', context.mounted);
-                                } else {
-                                  context.pushNamedAuth(
-                                      'HubPage', context.mounted);
-                                }
+
+                                context.pushNamedAuth(
+                                    'WellcomePage', context.mounted);
                               },
                               text: FFLocalizations.of(context).getText(
-                                'z0vadp7z' /* Sign in with Apple */,
+                                'z0vadp7z' /* Вхід з Apple */,
                               ),
                               icon: FaIcon(
                                 FontAwesomeIcons.apple,

@@ -5,10 +5,9 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/home_modul/kitchen/shopping/addingridientspopup_shopping/addingridientspopup_shopping_widget.dart';
-import '/home_modul/kitchen/shopping/editingridientspopup_shopping/editingridientspopup_shopping_widget.dart';
-import '/main/settings/user_friends/share_shoping_list_to/share_shoping_list_to_widget.dart';
-import 'dart:async';
-import '/custom_code/actions/index.dart' as actions;
+import '/home_modul/kitchen/storage_page/share_shop_list_for_user_popup/share_shop_list_for_user_popup_widget.dart';
+import 'dart:ui';
+import '/flutter_flow/custom_functions.dart' as functions;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -37,24 +36,7 @@ class _HomeShoppingActualWidgetState extends State<HomeShoppingActualWidget> {
     _model = createModel(context, () => HomeShoppingActualModel());
 
     // On page load action.
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
-      _model.settings = await querySettingsCategoryAndShopRecordOnce(
-        parent: FFAppState().currentUserRef,
-        singleRecord: true,
-      ).then((s) => s.firstOrNull);
-      FFAppState().namesOfShops =
-          _model.settings!.shops.toList().cast<String>();
-      setState(() {});
-      _model.sortByShop = [];
-      _model.categoryTag = '';
-      setState(() {});
-      _model.createdSortList = await actions.createSortListFromShopNames(
-        FFAppState().namesOfShops.toList(),
-      );
-      FFAppState().sortListFromShopsNames =
-          _model.createdSortList!.toList().cast<String>();
-      setState(() {});
-    });
+    SchedulerBinding.instance.addPostFrameCallback((_) async {});
   }
 
   @override
@@ -69,12 +51,42 @@ class _HomeShoppingActualWidgetState extends State<HomeShoppingActualWidget> {
     context.watch<FFAppState>();
 
     return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
-          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-          : FocusScope.of(context).unfocus(),
+      onTap: () {
+        FocusScope.of(context).unfocus();
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () async {
+            await showModalBottomSheet(
+              isScrollControlled: true,
+              backgroundColor: Colors.transparent,
+              enableDrag: false,
+              context: context,
+              builder: (context) {
+                return GestureDetector(
+                  onTap: () {
+                    FocusScope.of(context).unfocus();
+                    FocusManager.instance.primaryFocus?.unfocus();
+                  },
+                  child: Padding(
+                    padding: MediaQuery.viewInsetsOf(context),
+                    child: AddingridientspopupShoppingWidget(),
+                  ),
+                );
+              },
+            ).then((value) => safeSetState(() {}));
+          },
+          backgroundColor: FlutterFlowTheme.of(context).home,
+          elevation: 8.0,
+          child: Icon(
+            Icons.add_rounded,
+            color: FlutterFlowTheme.of(context).info,
+            size: 24.0,
+          ),
+        ),
         body: SafeArea(
           top: true,
           child: Column(
@@ -82,7 +94,7 @@ class _HomeShoppingActualWidgetState extends State<HomeShoppingActualWidget> {
             children: [
               wrapWithModel(
                 model: _model.appBarModel,
-                updateCallback: () => setState(() {}),
+                updateCallback: () => safeSetState(() {}),
                 child: AppBarWidget(
                   title: 'Home',
                   colorButton: FlutterFlowTheme.of(context).home,
@@ -90,576 +102,670 @@ class _HomeShoppingActualWidgetState extends State<HomeShoppingActualWidget> {
                   isAddButton: false,
                 ),
               ),
-              Align(
-                alignment: AlignmentDirectional(0.0, 0.0),
-                child: Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
-                  child: Container(
-                    width: MediaQuery.sizeOf(context).width * 1.0,
-                    height: 59.0,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            child: FFButtonWidget(
-                              onPressed: () {
-                                print('Button pressed ...');
-                              },
-                              text: FFLocalizations.of(context).getText(
-                                't63gma71' /* Shopping */,
-                              ),
-                              options: FFButtonOptions(
-                                height: 40.0,
-                                padding: EdgeInsets.all(0.0),
-                                iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 0.0, 0.0, 0.0),
-                                color: Color(0xFFF57F44),
-                                textStyle: FlutterFlowTheme.of(context)
-                                    .titleMedium
-                                    .override(
-                                      fontFamily: 'Inter',
-                                      fontSize: 16.0,
-                                      letterSpacing: 0.0,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                elevation: 0.0,
-                                borderSide: BorderSide(
-                                  color: Colors.transparent,
-                                  width: 1.0,
-                                ),
-                                borderRadius: BorderRadius.circular(12.0),
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: FFButtonWidget(
-                              onPressed: () async {
-                                context.pushNamed('HomePlannerPage');
-                              },
-                              text: FFLocalizations.of(context).getText(
-                                '1z01i2jb' /* Planner */,
-                              ),
-                              options: FFButtonOptions(
-                                height: 40.0,
-                                padding: EdgeInsets.all(0.0),
-                                iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 0.0, 0.0, 0.0),
-                                color: FlutterFlowTheme.of(context)
-                                    .secondaryBackground,
-                                textStyle: FlutterFlowTheme.of(context)
-                                    .titleMedium
-                                    .override(
-                                      fontFamily: 'Inter',
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryText,
-                                      fontSize: 16.0,
-                                      letterSpacing: 0.0,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                elevation: 0.0,
-                                borderSide: BorderSide(
-                                  color: Colors.transparent,
-                                  width: 1.0,
-                                ),
-                                borderRadius: BorderRadius.circular(13.0),
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: FFButtonWidget(
-                              onPressed: () async {
-                                context.pushNamed('StorageFood');
-                              },
-                              text: FFLocalizations.of(context).getText(
-                                'j2e8qmsz' /* Storage */,
-                              ),
-                              options: FFButtonOptions(
-                                height: 40.0,
-                                padding: EdgeInsets.all(0.0),
-                                iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 0.0, 0.0, 0.0),
-                                color: FlutterFlowTheme.of(context)
-                                    .secondaryBackground,
-                                textStyle: FlutterFlowTheme.of(context)
-                                    .titleMedium
-                                    .override(
-                                      fontFamily: 'Inter',
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryText,
-                                      fontSize: 16.0,
-                                      letterSpacing: 0.0,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                elevation: 0.0,
-                                borderSide: BorderSide(
-                                  color: Colors.transparent,
-                                  width: 1.0,
-                                ),
-                                borderRadius: BorderRadius.circular(13.0),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(24.0, 4.0, 24.0, 0.0),
-                child: Container(
-                  width: MediaQuery.sizeOf(context).width * 1.0,
-                  height: 59.0,
-                  decoration: BoxDecoration(
-                    color: FlutterFlowTheme.of(context).secondaryBackground,
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        FFButtonWidget(
-                          onPressed: () {
-                            print('Button pressed ...');
-                          },
-                          text: FFLocalizations.of(context).getText(
-                            'wdwvnmuq' /* Поточний список */,
-                          ),
-                          options: FFButtonOptions(
-                            width: MediaQuery.sizeOf(context).width * 0.39,
-                            height: 40.0,
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                8.0, 0.0, 8.0, 0.0),
-                            iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 0.0, 0.0, 0.0),
-                            color: Color(0xFFF9EEE6),
-                            textStyle: FlutterFlowTheme.of(context)
-                                .titleMedium
-                                .override(
-                                  fontFamily: 'Inter',
-                                  color: FlutterFlowTheme.of(context).home,
-                                  fontSize: 15.0,
-                                  letterSpacing: 0.0,
-                                  fontWeight: FontWeight.w500,
-                                  decoration: TextDecoration.underline,
-                                ),
-                            elevation: 0.0,
-                            borderSide: BorderSide(
-                              color: Colors.transparent,
-                              width: 1.0,
-                            ),
+              Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Align(
+                      alignment: AlignmentDirectional(0.0, 0.0),
+                      child: Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(
+                            24.0, 0.0, 24.0, 0.0),
+                        child: Container(
+                          width: MediaQuery.sizeOf(context).width * 1.0,
+                          height: 60.0,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
                             borderRadius: BorderRadius.circular(12.0),
                           ),
-                        ),
-                        FFButtonWidget(
-                          onPressed: () async {
-                            context.pushNamed('HomeShoppingHistory');
-                          },
-                          text: FFLocalizations.of(context).getText(
-                            'aixiys2i' /* Історія */,
-                          ),
-                          options: FFButtonOptions(
-                            width: MediaQuery.sizeOf(context).width * 0.39,
-                            height: 40.0,
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                24.0, 0.0, 24.0, 0.0),
-                            iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 0.0, 0.0, 0.0),
-                            color: FlutterFlowTheme.of(context)
-                                .secondaryBackground,
-                            textStyle: FlutterFlowTheme.of(context)
-                                .titleMedium
-                                .override(
-                                  fontFamily: 'Inter',
-                                  color:
-                                      FlutterFlowTheme.of(context).primaryText,
-                                  fontSize: 15.0,
-                                  letterSpacing: 0.0,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                            elevation: 0.0,
-                            borderSide: BorderSide(
-                              color: Colors.transparent,
-                              width: 0.0,
+                          child: Align(
+                            alignment: AlignmentDirectional(0.0, 0.0),
+                            child: Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: FFButtonWidget(
+                                      onPressed: () {
+                                        print('Button pressed ...');
+                                      },
+                                      text: FFLocalizations.of(context).getText(
+                                        '7b3i19op' /* Shopping */,
+                                      ),
+                                      options: FFButtonOptions(
+                                        height: 40.0,
+                                        padding: EdgeInsets.all(0.0),
+                                        iconPadding:
+                                            EdgeInsetsDirectional.fromSTEB(
+                                                0.0, 0.0, 0.0, 0.0),
+                                        color: Color(0xFFF57F44),
+                                        textStyle: FlutterFlowTheme.of(context)
+                                            .titleMedium
+                                            .override(
+                                              fontFamily: 'Inter',
+                                              fontSize: 16.0,
+                                              letterSpacing: 0.0,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                        elevation: 0.0,
+                                        borderSide: BorderSide(
+                                          color: Colors.transparent,
+                                          width: 0.0,
+                                        ),
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: FFButtonWidget(
+                                      onPressed: () async {
+                                        context.goNamed('HomePlannerPage');
+                                      },
+                                      text: FFLocalizations.of(context).getText(
+                                        'sbtl8jns' /* Planner */,
+                                      ),
+                                      options: FFButtonOptions(
+                                        height: 40.0,
+                                        padding: EdgeInsets.all(0.0),
+                                        iconPadding:
+                                            EdgeInsetsDirectional.fromSTEB(
+                                                0.0, 0.0, 0.0, 0.0),
+                                        color: FlutterFlowTheme.of(context)
+                                            .secondaryBackground,
+                                        textStyle: FlutterFlowTheme.of(context)
+                                            .titleMedium
+                                            .override(
+                                              fontFamily: 'Inter',
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primaryText,
+                                              fontSize: 16.0,
+                                              letterSpacing: 0.0,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                        elevation: 0.0,
+                                        borderSide: BorderSide(
+                                          color: Colors.transparent,
+                                          width: 0.0,
+                                        ),
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: FFButtonWidget(
+                                      onPressed: () async {
+                                        context.goNamed('StorageFood');
+                                      },
+                                      text: FFLocalizations.of(context).getText(
+                                        'urlbnkua' /* Storage */,
+                                      ),
+                                      options: FFButtonOptions(
+                                        height: 40.0,
+                                        padding: EdgeInsets.all(0.0),
+                                        iconPadding:
+                                            EdgeInsetsDirectional.fromSTEB(
+                                                0.0, 0.0, 0.0, 0.0),
+                                        color: FlutterFlowTheme.of(context)
+                                            .secondaryBackground,
+                                        textStyle: FlutterFlowTheme.of(context)
+                                            .titleMedium
+                                            .override(
+                                              fontFamily: 'Inter',
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primaryText,
+                                              fontSize: 16.0,
+                                              letterSpacing: 0.0,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                        elevation: 0.0,
+                                        borderSide: BorderSide(
+                                          color: Colors.transparent,
+                                          width: 0.0,
+                                        ),
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                            borderRadius: BorderRadius.circular(13.0),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              Align(
-                alignment: AlignmentDirectional(-1.0, 0.0),
-                child: Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(24.0, 8.0, 24.0, 0.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      InkWell(
-                        splashColor: Colors.transparent,
-                        focusColor: Colors.transparent,
-                        hoverColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        onTap: () async {
-                          if (_model.isFilterOpen) {
-                            _model.isFilterOpen = false;
-                            setState(() {});
-                          } else {
-                            _model.isFilterOpen = true;
-                            setState(() {});
-                          }
-                        },
-                        child: Icon(
-                          Icons.filter_list,
-                          color: FlutterFlowTheme.of(context).primaryText,
-                          size: 24.0,
                         ),
                       ),
-                      if (_model.isFilterOpen)
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              12.0, 8.0, 0.0, 0.0),
-                          child: Column(
+                    ),
+                    Padding(
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(24.0, 4.0, 24.0, 0.0),
+                      child: Container(
+                        width: MediaQuery.sizeOf(context).width * 1.0,
+                        height: 59.0,
+                        decoration: BoxDecoration(
+                          color:
+                              FlutterFlowTheme.of(context).secondaryBackground,
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Row(
                             mainAxisSize: MainAxisSize.max,
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 0.0, 0.0, 8.0),
-                                child: InkWell(
-                                  splashColor: Colors.transparent,
-                                  focusColor: Colors.transparent,
-                                  hoverColor: Colors.transparent,
-                                  highlightColor: Colors.transparent,
-                                  onTap: () async {
-                                    if (_model.showFilterCategory == 1) {
-                                      _model.showFilterCategory = 0;
-                                      setState(() {});
-                                    } else {
-                                      _model.showFilterCategory = 1;
-                                      setState(() {});
-                                    }
-                                  },
-                                  child: Text(
-                                    FFLocalizations.of(context).getText(
-                                      'k4i5ux94' /* Сортувати по категоріям */,
-                                    ),
-                                    textAlign: TextAlign.start,
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          fontFamily: 'Inter',
-                                          fontSize: 15.0,
-                                          letterSpacing: 0.0,
-                                          fontWeight: FontWeight.w600,
-                                        ),
+                              FFButtonWidget(
+                                onPressed: () {
+                                  print('Button pressed ...');
+                                },
+                                text: FFLocalizations.of(context).getText(
+                                  'nlwcov11' /* Поточний список */,
+                                ),
+                                options: FFButtonOptions(
+                                  width:
+                                      MediaQuery.sizeOf(context).width * 0.39,
+                                  height: 40.0,
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      8.0, 0.0, 8.0, 0.0),
+                                  iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                      0.0, 0.0, 0.0, 0.0),
+                                  color: Color(0xFFF9EEE6),
+                                  textStyle: FlutterFlowTheme.of(context)
+                                      .titleMedium
+                                      .override(
+                                        fontFamily: 'Inter',
+                                        color:
+                                            FlutterFlowTheme.of(context).home,
+                                        fontSize: 15.0,
+                                        letterSpacing: 0.0,
+                                        fontWeight: FontWeight.w500,
+                                        decoration: TextDecoration.underline,
+                                      ),
+                                  elevation: 0.0,
+                                  borderSide: BorderSide(
+                                    color: Colors.transparent,
+                                    width: 1.0,
                                   ),
+                                  borderRadius: BorderRadius.circular(12.0),
                                 ),
                               ),
-                              if (_model.showFilterCategory == 1)
-                                Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    InkWell(
-                                      splashColor: Colors.transparent,
-                                      focusColor: Colors.transparent,
-                                      hoverColor: Colors.transparent,
-                                      highlightColor: Colors.transparent,
-                                      onTap: () async {
-                                        if (_model.isAllCategory) {
-                                          _model.isAllCategory = false;
-                                          setState(() {});
-                                        } else {
-                                          _model.isAllCategory = true;
-                                          _model.categoryTag = '';
-                                          setState(() {});
-                                        }
-                                      },
-                                      child: ListTile(
-                                        title: Text(
-                                          FFLocalizations.of(context).getText(
-                                            'm3y37i0j' /* Все */,
-                                          ),
-                                          style: FlutterFlowTheme.of(context)
-                                              .titleLarge
-                                              .override(
-                                                fontFamily: 'Inter',
-                                                color: valueOrDefault<Color>(
-                                                  _model.isAllCategory
-                                                      ? FlutterFlowTheme.of(
-                                                              context)
-                                                          .tertiary
-                                                      : FlutterFlowTheme.of(
-                                                              context)
-                                                          .primaryText,
-                                                  FlutterFlowTheme.of(context)
-                                                      .primaryText,
-                                                ),
-                                                fontSize: 15.0,
-                                                letterSpacing: 0.0,
-                                                fontWeight: FontWeight.normal,
-                                              ),
-                                        ),
-                                        tileColor: FlutterFlowTheme.of(context)
-                                            .primaryBackground,
-                                        dense: false,
-                                      ),
-                                    ),
-                                    InkWell(
-                                      splashColor: Colors.transparent,
-                                      focusColor: Colors.transparent,
-                                      hoverColor: Colors.transparent,
-                                      highlightColor: Colors.transparent,
-                                      onTap: () async {
-                                        if (_model.categoryTag == 'Food') {
-                                          _model.categoryTag = '';
-                                          _model.isAllCategory = true;
-                                          setState(() {});
-                                        } else {
-                                          _model.categoryTag = 'Food';
-                                          _model.isAllCategory = false;
-                                          setState(() {});
-                                        }
-                                      },
-                                      child: ListTile(
-                                        title: Text(
-                                          FFLocalizations.of(context).getText(
-                                            'ctgd4508' /* Їжа */,
-                                          ),
-                                          style: FlutterFlowTheme.of(context)
-                                              .titleLarge
-                                              .override(
-                                                fontFamily: 'Inter',
-                                                color: valueOrDefault<Color>(
-                                                  _model.categoryTag == 'Food'
-                                                      ? FlutterFlowTheme.of(
-                                                              context)
-                                                          .tertiary
-                                                      : FlutterFlowTheme.of(
-                                                              context)
-                                                          .primaryText,
-                                                  FlutterFlowTheme.of(context)
-                                                      .primaryText,
-                                                ),
-                                                fontSize: 15.0,
-                                                letterSpacing: 0.0,
-                                                fontWeight: FontWeight.normal,
-                                              ),
-                                        ),
-                                        tileColor: FlutterFlowTheme.of(context)
-                                            .primaryBackground,
-                                        dense: false,
-                                      ),
-                                    ),
-                                    InkWell(
-                                      splashColor: Colors.transparent,
-                                      focusColor: Colors.transparent,
-                                      hoverColor: Colors.transparent,
-                                      highlightColor: Colors.transparent,
-                                      onTap: () async {
-                                        if (_model.categoryTag == 'Household') {
-                                          _model.categoryTag = '';
-                                          _model.isAllCategory = true;
-                                          setState(() {});
-                                        } else {
-                                          _model.categoryTag = 'Household';
-                                          _model.isAllCategory = false;
-                                          setState(() {});
-                                        }
-                                      },
-                                      child: ListTile(
-                                        title: Text(
-                                          FFLocalizations.of(context).getText(
-                                            'eaz5e3eb' /* Побутове */,
-                                          ),
-                                          style: FlutterFlowTheme.of(context)
-                                              .titleLarge
-                                              .override(
-                                                fontFamily: 'Inter',
-                                                color: valueOrDefault<Color>(
-                                                  _model.categoryTag ==
-                                                          'Household'
-                                                      ? FlutterFlowTheme.of(
-                                                              context)
-                                                          .tertiary
-                                                      : FlutterFlowTheme.of(
-                                                              context)
-                                                          .primaryText,
-                                                  FlutterFlowTheme.of(context)
-                                                      .primaryText,
-                                                ),
-                                                fontSize: 15.0,
-                                                letterSpacing: 0.0,
-                                                fontWeight: FontWeight.normal,
-                                              ),
-                                        ),
-                                        tileColor: FlutterFlowTheme.of(context)
-                                            .primaryBackground,
-                                        dense: false,
-                                      ),
-                                    ),
-                                  ],
+                              FFButtonWidget(
+                                onPressed: () async {
+                                  context.goNamed('HomeShoppingHistory');
+                                },
+                                text: FFLocalizations.of(context).getText(
+                                  'tsdg2fb4' /* Історія */,
                                 ),
-                              Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 0.0, 0.0, 8.0),
-                                child: InkWell(
-                                  splashColor: Colors.transparent,
-                                  focusColor: Colors.transparent,
-                                  hoverColor: Colors.transparent,
-                                  highlightColor: Colors.transparent,
-                                  onTap: () async {
-                                    if (_model.showFilterCategory == 2) {
-                                      _model.showFilterCategory = 0;
-                                      setState(() {});
-                                    } else {
-                                      _model.showFilterCategory = 2;
-                                      setState(() {});
-                                    }
-                                  },
-                                  child: Text(
-                                    FFLocalizations.of(context).getText(
-                                      'v6pckmv2' /* Сортувати по магазинам */,
-                                    ),
-                                    textAlign: TextAlign.start,
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          fontFamily: 'Inter',
-                                          fontSize: 15.0,
-                                          letterSpacing: 0.0,
-                                          fontWeight: FontWeight.w600,
-                                        ),
+                                options: FFButtonOptions(
+                                  width:
+                                      MediaQuery.sizeOf(context).width * 0.39,
+                                  height: 40.0,
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      24.0, 0.0, 24.0, 0.0),
+                                  iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                      0.0, 0.0, 0.0, 0.0),
+                                  color: FlutterFlowTheme.of(context)
+                                      .secondaryBackground,
+                                  textStyle: FlutterFlowTheme.of(context)
+                                      .titleMedium
+                                      .override(
+                                        fontFamily: 'Inter',
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                        fontSize: 15.0,
+                                        letterSpacing: 0.0,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                  elevation: 0.0,
+                                  borderSide: BorderSide(
+                                    color: Colors.transparent,
+                                    width: 0.0,
                                   ),
+                                  borderRadius: BorderRadius.circular(13.0),
                                 ),
                               ),
-                              if (_model.showFilterCategory == 2)
-                                Builder(
-                                  builder: (context) {
-                                    final sortByStores = FFAppState()
-                                        .sortListFromShopsNames
-                                        .toList();
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(24.0, 10.0, 24.0, 5.0),
+                      child: Container(
+                        width: double.infinity,
+                        height: 50.0,
+                        decoration: BoxDecoration(
+                          color: FlutterFlowTheme.of(context).home,
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Align(
+                              alignment: AlignmentDirectional(0.0, 0.0),
+                              child: Text(
+                                FFLocalizations.of(context).getText(
+                                  'mald2apg' /* Нові пропозиції у скрині */,
+                                ),
+                                style: FlutterFlowTheme.of(context)
+                                    .titleSmall
+                                    .override(
+                                      fontFamily: 'Inter',
+                                      fontSize: 14.0,
+                                      letterSpacing: 0.0,
+                                    ),
+                              ),
+                            ),
+                            Icon(
+                              Icons.mark_email_unread_rounded,
+                              color: FlutterFlowTheme.of(context)
+                                  .primaryBackground,
+                              size: 24.0,
+                            ),
+                          ].divide(SizedBox(width: 10.0)),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                24.0, 10.0, 24.0, 0.0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(),
+                                  child: InkWell(
+                                    splashColor: Colors.transparent,
+                                    focusColor: Colors.transparent,
+                                    hoverColor: Colors.transparent,
+                                    highlightColor: Colors.transparent,
+                                    onTap: () async {
+                                      _model.shopListToDoneAllOutput =
+                                          await queryShoppingListRecordOnce(
+                                        parent: FFAppState().currentUserRef,
+                                        queryBuilder: (shoppingListRecord) =>
+                                            shoppingListRecord.where(Filter.or(
+                                          Filter(
+                                            'dateOfBuy',
+                                            isGreaterThanOrEqualTo:
+                                                functions.getDateOnly(
+                                                    getCurrentTimestamp),
+                                          ),
+                                          Filter(
+                                            'dateOfBuy',
+                                            isEqualTo:
+                                                dateTimeFromSecondsSinceEpoch(
+                                                    functions.toInt('0')),
+                                          ),
+                                        )),
+                                      );
+                                      _model.loopIndex = 0;
+                                      safeSetState(() {});
+                                      while (_model.loopIndex <
+                                          _model.shopListToDoneAllOutput!
+                                              .length) {
+                                        if (_model.shopListToDoneAllOutput
+                                                ?.elementAtOrNull(
+                                                    _model.loopIndex)
+                                                ?.isBought ==
+                                            false) {
+                                          await _model.shopListToDoneAllOutput!
+                                              .elementAtOrNull(
+                                                  _model.loopIndex)!
+                                              .reference
+                                              .update(
+                                                  createShoppingListRecordData(
+                                                isBought: true,
+                                                dateOfBuy:
+                                                    functions.getDateOnly(
+                                                        getCurrentTimestamp),
+                                              ));
+                                        }
+                                        _model.loopIndex = _model.loopIndex + 1;
+                                        safeSetState(() {});
+                                      }
 
-                                    return Column(
+                                      safeSetState(() {});
+                                    },
+                                    child: Row(
                                       mainAxisSize: MainAxisSize.max,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children:
-                                          List.generate(sortByStores.length,
-                                              (sortByStoresIndex) {
-                                        final sortByStoresItem =
-                                            sortByStores[sortByStoresIndex];
-                                        return InkWell(
+                                      children: [
+                                        Icon(
+                                          Icons.done_all,
+                                          color: FlutterFlowTheme.of(context)
+                                              .primaryText,
+                                          size: 24.0,
+                                        ),
+                                        Text(
+                                          FFLocalizations.of(context).getText(
+                                            '6k4cmnpp' /* Виконано усе */,
+                                          ),
+                                          style: FlutterFlowTheme.of(context)
+                                              .bodyMedium
+                                              .override(
+                                                fontFamily: 'Inter',
+                                                letterSpacing: 0.0,
+                                              ),
+                                        ),
+                                      ].divide(SizedBox(width: 5.0)),
+                                    ),
+                                  ),
+                                ),
+                                if (_model.selectMode)
+                                  Container(
+                                    width: 105.0,
+                                    decoration: BoxDecoration(),
+                                    child: InkWell(
+                                      splashColor: Colors.transparent,
+                                      focusColor: Colors.transparent,
+                                      hoverColor: Colors.transparent,
+                                      highlightColor: Colors.transparent,
+                                      onTap: () async {
+                                        _model.selectMode = false;
+                                        _model.selectedItemsList = [];
+                                        safeSetState(() {});
+                                      },
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Icon(
+                                            Icons.deselect_rounded,
+                                            color: FlutterFlowTheme.of(context)
+                                                .primaryText,
+                                            size: 24.0,
+                                          ),
+                                          Text(
+                                            FFLocalizations.of(context).getText(
+                                              '5ij3uo5j' /* Скасувати */,
+                                            ),
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyMedium
+                                                .override(
+                                                  fontFamily: 'Inter',
+                                                  letterSpacing: 0.0,
+                                                ),
+                                          ),
+                                        ].divide(SizedBox(width: 5.0)),
+                                      ),
+                                    ),
+                                  ),
+                                if (_model.selectMode == false)
+                                  Container(
+                                    width: 105.0,
+                                    decoration: BoxDecoration(),
+                                    child: InkWell(
+                                      splashColor: Colors.transparent,
+                                      focusColor: Colors.transparent,
+                                      hoverColor: Colors.transparent,
+                                      highlightColor: Colors.transparent,
+                                      onTap: () async {
+                                        _model.selectMode = true;
+                                        safeSetState(() {});
+                                      },
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Icon(
+                                            Icons.select_all,
+                                            color: FlutterFlowTheme.of(context)
+                                                .primaryText,
+                                            size: 24.0,
+                                          ),
+                                          Text(
+                                            FFLocalizations.of(context).getText(
+                                              'db9h64vt' /* Вибрати */,
+                                            ),
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyMedium
+                                                .override(
+                                                  fontFamily: 'Inter',
+                                                  letterSpacing: 0.0,
+                                                ),
+                                          ),
+                                        ].divide(SizedBox(width: 5.0)),
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                          if (_model.selectMode)
+                            Align(
+                              alignment: AlignmentDirectional(1.0, 0.0),
+                              child: Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    24.0, 15.0, 24.0, 0.0),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(),
+                                      child: InkWell(
+                                        splashColor: Colors.transparent,
+                                        focusColor: Colors.transparent,
+                                        hoverColor: Colors.transparent,
+                                        highlightColor: Colors.transparent,
+                                        onTap: () async {
+                                          if (_model.selectedAll) {
+                                            _model.selectedItemsList = [];
+                                            _model.selectedAll = false;
+                                            safeSetState(() {});
+                                          } else {
+                                            _model.selectAllOutput =
+                                                await queryShoppingListRecordOnce(
+                                              parent:
+                                                  FFAppState().currentUserRef,
+                                              queryBuilder:
+                                                  (shoppingListRecord) =>
+                                                      shoppingListRecord
+                                                          .where(Filter.or(
+                                                Filter(
+                                                  'dateOfBuy',
+                                                  isGreaterThanOrEqualTo:
+                                                      functions.getDateOnly(
+                                                          getCurrentTimestamp),
+                                                ),
+                                                Filter(
+                                                  'dateOfBuy',
+                                                  isEqualTo:
+                                                      dateTimeFromSecondsSinceEpoch(
+                                                          functions.toInt('0')),
+                                                ),
+                                              )),
+                                            );
+                                            _model.selectedItemsList = _model
+                                                .selectAllOutput!
+                                                .map((e) => e.reference)
+                                                .toList()
+                                                .cast<DocumentReference>();
+                                            _model.selectedAll = true;
+                                            safeSetState(() {});
+                                          }
+
+                                          safeSetState(() {});
+                                        },
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          children: [
+                                            Icon(
+                                              Icons.select_all,
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primaryText,
+                                              size: 24.0,
+                                            ),
+                                            Text(
+                                              FFLocalizations.of(context)
+                                                  .getText(
+                                                '6tpidpvc' /* Обрати все  */,
+                                              ),
+                                              style:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMedium
+                                                      .override(
+                                                        fontFamily: 'Inter',
+                                                        letterSpacing: 0.0,
+                                                      ),
+                                            ),
+                                          ].divide(SizedBox(width: 5.0)),
+                                        ),
+                                      ),
+                                    ),
+                                    Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: [
+                                        InkWell(
                                           splashColor: Colors.transparent,
                                           focusColor: Colors.transparent,
                                           hoverColor: Colors.transparent,
                                           highlightColor: Colors.transparent,
                                           onTap: () async {
-                                            _model.index = 0;
-                                            _model.numTemp = 0;
-                                            setState(() {});
-                                            while (_model.index! <
-                                                _model.sortByShop.length) {
-                                              if (sortByStoresItem ==
-                                                  _model.sortByShop[
-                                                      _model.index!]) {
-                                                _model.numTemp =
-                                                    _model.numTemp! + 1;
-                                                setState(() {});
+                                            await showModalBottomSheet(
+                                              isScrollControlled: true,
+                                              backgroundColor:
+                                                  Colors.transparent,
+                                              enableDrag: false,
+                                              context: context,
+                                              builder: (context) {
+                                                return GestureDetector(
+                                                  onTap: () {
+                                                    FocusScope.of(context)
+                                                        .unfocus();
+                                                    FocusManager
+                                                        .instance.primaryFocus
+                                                        ?.unfocus();
+                                                  },
+                                                  child: Padding(
+                                                    padding:
+                                                        MediaQuery.viewInsetsOf(
+                                                            context),
+                                                    child:
+                                                        ShareShopListForUserPopupWidget(
+                                                      shopList: _model
+                                                          .selectedItemsList,
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            ).then(
+                                                (value) => safeSetState(() {}));
+                                          },
+                                          child: Icon(
+                                            Icons.share_outlined,
+                                            color: FlutterFlowTheme.of(context)
+                                                .primaryText,
+                                            size: 24.0,
+                                          ),
+                                        ),
+                                        InkWell(
+                                          splashColor: Colors.transparent,
+                                          focusColor: Colors.transparent,
+                                          hoverColor: Colors.transparent,
+                                          highlightColor: Colors.transparent,
+                                          onTap: () async {
+                                            var confirmDialogResponse =
+                                                await showDialog<bool>(
+                                                      context: context,
+                                                      builder:
+                                                          (alertDialogContext) {
+                                                        return AlertDialog(
+                                                          content: Text(
+                                                              'Ви дійсно бажаєте видалити обрані записи?'),
+                                                          actions: [
+                                                            TextButton(
+                                                              onPressed: () =>
+                                                                  Navigator.pop(
+                                                                      alertDialogContext,
+                                                                      false),
+                                                              child: Text(
+                                                                  'Скасувати'),
+                                                            ),
+                                                            TextButton(
+                                                              onPressed: () =>
+                                                                  Navigator.pop(
+                                                                      alertDialogContext,
+                                                                      true),
+                                                              child: Text(
+                                                                  'Видалити'),
+                                                            ),
+                                                          ],
+                                                        );
+                                                      },
+                                                    ) ??
+                                                    false;
+                                            if (confirmDialogResponse) {
+                                              _model.loopIndex = 0;
+                                              safeSetState(() {});
+                                              while (_model.loopIndex <
+                                                  _model.selectedItemsList
+                                                      .length) {
+                                                await _model.selectedItemsList
+                                                    .elementAtOrNull(
+                                                        _model.loopIndex)!
+                                                    .delete();
+                                                _model.loopIndex =
+                                                    _model.loopIndex + 1;
+                                                safeSetState(() {});
                                               }
-                                              _model.index = _model.index! + 1;
-                                              setState(() {});
-                                            }
-                                            if (_model.numTemp == 0) {
-                                              _model.addToSortByShop(
-                                                  sortByStoresItem);
-                                              setState(() {});
-                                            } else {
-                                              _model.removeFromSortByShop(
-                                                  sortByStoresItem);
-                                              setState(() {});
+                                              _model.selectedAll = false;
+                                              _model.loopIndex = 0;
+                                              _model.selectedItemsList = [];
+                                              safeSetState(() {});
                                             }
                                           },
-                                          child: ListTile(
-                                            title: Text(
-                                              sortByStoresItem,
-                                              textAlign: TextAlign.start,
-                                              style: FlutterFlowTheme.of(
-                                                      context)
-                                                  .headlineSmall
-                                                  .override(
-                                                    fontFamily: 'Inter',
-                                                    color:
-                                                        valueOrDefault<Color>(
-                                                      _model.sortByShop
-                                                              .where((e) =>
-                                                                  sortByStoresItem ==
-                                                                  e)
-                                                              .toList()
-                                                              .isNotEmpty
-                                                          ? FlutterFlowTheme.of(
-                                                                  context)
-                                                              .tertiary
-                                                          : FlutterFlowTheme.of(
-                                                                  context)
-                                                              .primaryText,
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .primaryText,
-                                                    ),
-                                                    fontSize: 15.0,
-                                                    letterSpacing: 0.0,
-                                                    fontWeight:
-                                                        FontWeight.normal,
-                                                  ),
-                                            ),
-                                            tileColor:
-                                                FlutterFlowTheme.of(context)
-                                                    .primaryBackground,
-                                            dense: false,
+                                          child: Icon(
+                                            Icons.delete_outline,
+                                            color: FlutterFlowTheme.of(context)
+                                                .primaryText,
+                                            size: 28.0,
                                           ),
-                                        );
-                                      }),
-                                    );
-                                  },
+                                        ),
+                                      ],
+                                    ),
+                                  ].divide(SizedBox(width: 10.0)),
                                 ),
-                            ],
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-              ),
-              if (_model.checkboxCheckedItems.length > 0)
-                Align(
-                  alignment: AlignmentDirectional(1.0, 0.0),
-                  child: Padding(
-                    padding:
-                        EdgeInsetsDirectional.fromSTEB(24.0, 8.0, 24.0, 0.0),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        StreamBuilder<List<ShoppingListRecord>>(
-                          stream: queryShoppingListRecord(
-                            parent: FFAppState().currentUserRef,
-                            queryBuilder: (shoppingListRecord) =>
-                                shoppingListRecord.where(
-                              'bought',
-                              isEqualTo: true,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(
+                            0.0, 20.0, 0.0, 20.0),
+                        child: StreamBuilder<List<ShoppingListRecord>>(
+                          stream: _model.shopListCache(
+                            requestFn: () => queryShoppingListRecord(
+                              parent: FFAppState().currentUserRef,
+                              queryBuilder: (shoppingListRecord) =>
+                                  shoppingListRecord.where(Filter.or(
+                                Filter(
+                                  'dateOfBuy',
+                                  isGreaterThanOrEqualTo: functions
+                                      .getDateOnly(getCurrentTimestamp),
+                                ),
+                                Filter(
+                                  'dateOfBuy',
+                                  isEqualTo: dateTimeFromSecondsSinceEpoch(
+                                      functions.toInt('0')),
+                                ),
+                              )),
                             ),
                           ),
                           builder: (context, snapshot) {
@@ -678,844 +784,393 @@ class _HomeShoppingActualWidgetState extends State<HomeShoppingActualWidget> {
                               );
                             }
                             List<ShoppingListRecord>
-                                iconShoppingListRecordList = snapshot.data!;
+                                containerShoppingListRecordList =
+                                snapshot.data!;
 
-                            return InkWell(
-                              splashColor: Colors.transparent,
-                              focusColor: Colors.transparent,
-                              hoverColor: Colors.transparent,
-                              highlightColor: Colors.transparent,
-                              onTap: () async {
-                                _model.index = 0;
-                                _model.boughtItemNum =
-                                    iconShoppingListRecordList.length;
-                                _model.forShareList = [];
-                                setState(() {});
-                                while (_model.index! < _model.boughtItemNum!) {
-                                  _model.insertAtIndexInForShareList(
-                                      _model.index!,
-                                      iconShoppingListRecordList[
-                                          _model.index!]);
-                                  setState(() {});
-                                  _model.index = _model.index! + 1;
-                                  setState(() {});
-                                }
-                                if (_model.forShareList.isNotEmpty) {
-                                  await showModalBottomSheet(
-                                    isScrollControlled: true,
-                                    backgroundColor: Colors.transparent,
-                                    enableDrag: false,
-                                    context: context,
-                                    builder: (context) {
-                                      return GestureDetector(
-                                        onTap: () => _model
-                                                .unfocusNode.canRequestFocus
-                                            ? FocusScope.of(context)
-                                                .requestFocus(
-                                                    _model.unfocusNode)
-                                            : FocusScope.of(context).unfocus(),
-                                        child: Padding(
-                                          padding:
-                                              MediaQuery.viewInsetsOf(context),
-                                          child: ShareShopingListToWidget(
-                                            shoppingList: _model.forShareList,
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ).then((value) => safeSetState(() {}));
-                                }
-                                _model.index = 0;
-                                setState(() {});
-                                while (_model.index! <
-                                    iconShoppingListRecordList.length) {
-                                  await iconShoppingListRecordList[
-                                          _model.index!]
-                                      .reference
-                                      .update(createShoppingListRecordData(
-                                        bought: false,
-                                      ));
-                                  _model.index = _model.index! + 1;
-                                  setState(() {});
-                                }
-                                _model.isAllItemChoosed = false;
-                                setState(() {});
-                              },
-                              child: Icon(
-                                Icons.share_outlined,
-                                color: FlutterFlowTheme.of(context).primaryText,
-                                size: 24.0,
-                              ),
-                            );
-                          },
-                        ),
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              24.0, 0.0, 0.0, 0.0),
-                          child: StreamBuilder<List<ShoppingListRecord>>(
-                            stream: queryShoppingListRecord(
-                              parent: FFAppState().currentUserRef,
-                              queryBuilder: (shoppingListRecord) =>
-                                  shoppingListRecord.where(
-                                'bought',
-                                isEqualTo: true,
-                              ),
-                            ),
-                            builder: (context, snapshot) {
-                              // Customize what your widget looks like when it's loading.
-                              if (!snapshot.hasData) {
-                                return Center(
-                                  child: SizedBox(
-                                    width: 50.0,
-                                    height: 50.0,
-                                    child: CircularProgressIndicator(
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                        Color(0xFFF57F44),
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              }
-                              List<ShoppingListRecord>
-                                  iconShoppingListRecordList = snapshot.data!;
+                            return Container(
+                              decoration: BoxDecoration(),
+                              child: Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    24.0, 0.0, 24.0, 80.0),
+                                child: Builder(
+                                  builder: (context) {
+                                    final shopList =
+                                        containerShoppingListRecordList
+                                            .toList();
 
-                              return InkWell(
-                                splashColor: Colors.transparent,
-                                focusColor: Colors.transparent,
-                                hoverColor: Colors.transparent,
-                                highlightColor: Colors.transparent,
-                                onTap: () async {
-                                  _model.index = 0;
-                                  setState(() {});
-                                  while (_model.index! <
-                                      iconShoppingListRecordList.length) {
-                                    await iconShoppingListRecordList[
-                                            _model.index!]
-                                        .reference
-                                        .delete();
-                                    _model.index = _model.index! + 1;
-                                    setState(() {});
-                                  }
-                                },
-                                child: Icon(
-                                  Icons.delete_outline,
-                                  color:
-                                      FlutterFlowTheme.of(context).primaryText,
-                                  size: 28.0,
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                        Expanded(
-                          child: Container(
-                            width: 100.0,
-                            decoration: BoxDecoration(),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 8.0),
-                          child: StreamBuilder<List<ShoppingListRecord>>(
-                            stream: queryShoppingListRecord(
-                              parent: FFAppState().currentUserRef,
-                              queryBuilder: (shoppingListRecord) =>
-                                  shoppingListRecord.where(
-                                'bought',
-                                isEqualTo: true,
-                              ),
-                            ),
-                            builder: (context, snapshot) {
-                              // Customize what your widget looks like when it's loading.
-                              if (!snapshot.hasData) {
-                                return Center(
-                                  child: SizedBox(
-                                    width: 50.0,
-                                    height: 50.0,
-                                    child: CircularProgressIndicator(
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                        Color(0xFFF57F44),
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              }
-                              List<ShoppingListRecord>
-                                  buttonShoppingListRecordList = snapshot.data!;
-
-                              return FFButtonWidget(
-                                onPressed: (buttonShoppingListRecordList
-                                            .length <=
-                                        0)
-                                    ? null
-                                    : () async {
-                                        _model.index = 0;
-                                        _model.boughtItemNum =
-                                            buttonShoppingListRecordList.length;
-                                        setState(() {});
-                                        unawaited(
-                                          () async {
-                                            await actions.moveToHistory();
-                                          }(),
-                                        );
-                                        while (_model.index! <
-                                            _model.boughtItemNum!) {
-                                          if (buttonShoppingListRecordList[
-                                                      _model.index!]
-                                                  .categoryTag ==
-                                              'Household') {
-                                            await AddItemHouseholdRecord
-                                                    .createDoc(FFAppState()
-                                                        .currentUserRef!)
-                                                .set(
-                                                    createAddItemHouseholdRecordData(
-                                              name:
-                                                  buttonShoppingListRecordList[
-                                                          _model.index!]
-                                                      .name,
-                                              unit:
-                                                  buttonShoppingListRecordList[
-                                                          _model.index!]
-                                                      .unit,
-                                              quantity:
-                                                  buttonShoppingListRecordList[
-                                                          _model.index!]
-                                                      .quantity,
-                                            ));
-                                          } else {
-                                            await AddItemLibraryRecord
-                                                    .createDoc(FFAppState()
-                                                        .currentUserRef!)
-                                                .set(
-                                                    createAddItemLibraryRecordData(
-                                              name:
-                                                  buttonShoppingListRecordList[
-                                                          _model.index!]
-                                                      .name,
-                                              unit:
-                                                  buttonShoppingListRecordList[
-                                                          _model.index!]
-                                                      .unit,
-                                              quantity:
-                                                  buttonShoppingListRecordList[
-                                                          _model.index!]
-                                                      .quantity,
-                                            ));
-                                          }
-
-                                          _model.index = _model.index! + 1;
-                                          setState(() {});
-                                        }
-                                      },
-                                text: FFLocalizations.of(context).getText(
-                                  'm62wgjbg' /* В історію */,
-                                ),
-                                options: FFButtonOptions(
-                                  width:
-                                      MediaQuery.sizeOf(context).width * 0.365,
-                                  height: 40.0,
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      8.0, 0.0, 8.0, 0.0),
-                                  iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                      0.0, 0.0, 0.0, 0.0),
-                                  color: Color(0xFFFFFAFA),
-                                  textStyle: FlutterFlowTheme.of(context)
-                                      .titleSmall
-                                      .override(
-                                        fontFamily: 'Inter',
-                                        color: Color(0xFF0B0B0B),
-                                        fontSize: 14.0,
-                                        letterSpacing: 0.0,
-                                        fontWeight: FontWeight.normal,
-                                      ),
-                                  elevation: 0.0,
-                                  borderSide: BorderSide(
-                                    color: Colors.black,
-                                    width: 1.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(13.0),
-                                  disabledColor: Color(0xFFD8D7D7),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              Align(
-                alignment: AlignmentDirectional(-1.0, 0.0),
-                child: Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(30.0, 12.0, 0.0, 0.0),
-                  child: StreamBuilder<List<ShoppingListRecord>>(
-                    stream: queryShoppingListRecord(
-                      parent: FFAppState().currentUserRef,
-                      queryBuilder: (shoppingListRecord) => shoppingListRecord
-                          .where(
-                            'quantity',
-                            isGreaterThan: 0.0,
-                          )
-                          .whereIn('shop_name', _model.sortByShop)
-                          .where(
-                            'categoryTag',
-                            isEqualTo: _model.isAllCategory
-                                ? null
-                                : _model.categoryTag,
-                          ),
-                    ),
-                    builder: (context, snapshot) {
-                      // Customize what your widget looks like when it's loading.
-                      if (!snapshot.hasData) {
-                        return Center(
-                          child: SizedBox(
-                            width: 50.0,
-                            height: 50.0,
-                            child: CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                Color(0xFFF57F44),
-                              ),
-                            ),
-                          ),
-                        );
-                      }
-                      List<ShoppingListRecord> textShoppingListRecordList =
-                          snapshot.data!;
-
-                      return InkWell(
-                        splashColor: Colors.transparent,
-                        focusColor: Colors.transparent,
-                        hoverColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        onTap: () async {
-                          final firestoreBatch =
-                              FirebaseFirestore.instance.batch();
-                          try {
-                            if (_model.isAllItemChoosed) {
-                              _model.index = 0;
-                              setState(() {});
-                              while (_model.index! <
-                                  textShoppingListRecordList.length) {
-                                firestoreBatch.update(
-                                    textShoppingListRecordList[_model.index!]
-                                        .reference,
-                                    createShoppingListRecordData(
-                                      bought: false,
-                                    ));
-                                _model.index = _model.index! + 1;
-                                setState(() {});
-                              }
-                              _model.isAllItemChoosed = false;
-                              setState(() {});
-                            } else {
-                              _model.index = 0;
-                              setState(() {});
-                              while (_model.index! <
-                                  textShoppingListRecordList.length) {
-                                firestoreBatch.update(
-                                    textShoppingListRecordList[_model.index!]
-                                        .reference,
-                                    createShoppingListRecordData(
-                                      bought: true,
-                                    ));
-                                _model.index = _model.index! + 1;
-                                setState(() {});
-                              }
-                              _model.isAllItemChoosed = true;
-                              setState(() {});
-                            }
-                          } finally {
-                            await firestoreBatch.commit();
-                          }
-                        },
-                        child: Text(
-                          FFLocalizations.of(context).getText(
-                            'fdoo8lpk' /* Вибрати все */,
-                          ),
-                          style:
-                              FlutterFlowTheme.of(context).bodyMedium.override(
-                                    fontFamily: 'Inter',
-                                    fontSize: 15.0,
-                                    letterSpacing: 0.0,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.all(24.0),
-                  child: Stack(
-                    children: [
-                      StreamBuilder<List<ShoppingListRecord>>(
-                        stream: queryShoppingListRecord(
-                          parent: FFAppState().currentUserRef,
-                          queryBuilder: (shoppingListRecord) =>
-                              shoppingListRecord
-                                  .where(
-                                    'quantity',
-                                    isGreaterThan: 0.0,
-                                  )
-                                  .whereIn('shop_name', _model.sortByShop)
-                                  .where(
-                                    'categoryTag',
-                                    isEqualTo: _model.isAllCategory
-                                        ? null
-                                        : _model.categoryTag,
-                                  ),
-                        ),
-                        builder: (context, snapshot) {
-                          // Customize what your widget looks like when it's loading.
-                          if (!snapshot.hasData) {
-                            return Center(
-                              child: SizedBox(
-                                width: 50.0,
-                                height: 50.0,
-                                child: CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                    Color(0xFFF57F44),
-                                  ),
-                                ),
-                              ),
-                            );
-                          }
-                          List<ShoppingListRecord>
-                              listViewShoppingListRecordList = snapshot.data!;
-
-                          return ListView.builder(
-                            padding: EdgeInsets.zero,
-                            shrinkWrap: true,
-                            scrollDirection: Axis.vertical,
-                            itemCount: listViewShoppingListRecordList.length,
-                            itemBuilder: (context, listViewIndex) {
-                              final listViewShoppingListRecord =
-                                  listViewShoppingListRecordList[listViewIndex];
-                              return Column(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Stack(
-                                    alignment: AlignmentDirectional(0.0, 0.0),
-                                    children: [
-                                      Align(
-                                        alignment:
-                                            AlignmentDirectional(-1.0, 0.0),
-                                        child: Theme(
-                                          data: ThemeData(
-                                            checkboxTheme: CheckboxThemeData(
-                                              visualDensity:
-                                                  VisualDensity.compact,
-                                              materialTapTargetSize:
-                                                  MaterialTapTargetSize
-                                                      .shrinkWrap,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(4.0),
-                                              ),
-                                            ),
-                                            unselectedWidgetColor:
-                                                FlutterFlowTheme.of(context)
-                                                    .secondaryText,
-                                          ),
-                                          child: Checkbox(
-                                            value: _model.checkboxValueMap[
-                                                    listViewShoppingListRecord] ??=
-                                                listViewShoppingListRecord
-                                                    .bought,
-                                            onChanged: (newValue) async {
-                                              setState(() => _model
-                                                          .checkboxValueMap[
-                                                      listViewShoppingListRecord] =
-                                                  newValue!);
-                                              if (newValue!) {
-                                                await listViewShoppingListRecord
-                                                    .reference
-                                                    .update(
-                                                        createShoppingListRecordData(
-                                                  bought: true,
-                                                ));
-                                              } else {
-                                                await listViewShoppingListRecord
-                                                    .reference
-                                                    .update(
-                                                        createShoppingListRecordData(
-                                                  bought: false,
-                                                ));
-                                              }
+                                    return SingleChildScrollView(
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: List.generate(shopList.length,
+                                            (shopListIndex) {
+                                          final shopListItem =
+                                              shopList[shopListIndex];
+                                          return InkWell(
+                                            splashColor: Colors.transparent,
+                                            focusColor: Colors.transparent,
+                                            hoverColor: Colors.transparent,
+                                            highlightColor: Colors.transparent,
+                                            onTap: () async {
+                                              await showModalBottomSheet(
+                                                isScrollControlled: true,
+                                                backgroundColor:
+                                                    Colors.transparent,
+                                                enableDrag: false,
+                                                context: context,
+                                                builder: (context) {
+                                                  return GestureDetector(
+                                                    onTap: () {
+                                                      FocusScope.of(context)
+                                                          .unfocus();
+                                                      FocusManager
+                                                          .instance.primaryFocus
+                                                          ?.unfocus();
+                                                    },
+                                                    child: Padding(
+                                                      padding: MediaQuery
+                                                          .viewInsetsOf(
+                                                              context),
+                                                      child:
+                                                          AddingridientspopupShoppingWidget(
+                                                        ingridient:
+                                                            shopListItem,
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                              ).then((value) =>
+                                                  safeSetState(() {}));
                                             },
-                                            side: BorderSide(
-                                              width: 2,
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .secondaryText,
-                                            ),
-                                            activeColor:
-                                                FlutterFlowTheme.of(context)
-                                                    .secondaryText,
-                                            checkColor:
-                                                FlutterFlowTheme.of(context)
-                                                    .info,
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.all(16.0),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.max,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Align(
-                                              alignment: AlignmentDirectional(
-                                                  -1.0, 0.0),
-                                              child: Padding(
-                                                padding: EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        15.0, 0.0, 0.0, 0.0),
-                                                child: Container(
-                                                  width: 120.0,
-                                                  decoration: BoxDecoration(
-                                                    color: Color(0x00FFFFFF),
-                                                  ),
-                                                  child: Stack(
-                                                    children: [
+                                            onLongPress: () async {
+                                              _model.selectMode = true;
+                                              _model.selectedItemsList = [];
+                                              _model.selectedAll = false;
+                                              safeSetState(() {});
+                                              _model.addToSelectedItemsList(
+                                                  shopListItem.reference);
+                                              safeSetState(() {});
+                                            },
+                                            child: Container(
+                                              width: double.infinity,
+                                              height: 50.0,
+                                              decoration: BoxDecoration(
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .secondaryBackground,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    blurRadius: 1.0,
+                                                    color: Color(0x13000000),
+                                                    offset: Offset(
+                                                      0.0,
+                                                      2.0,
+                                                    ),
+                                                  )
+                                                ],
+                                                borderRadius:
+                                                    BorderRadius.circular(12.0),
+                                              ),
+                                              child: Align(
+                                                alignment: AlignmentDirectional(
+                                                    0.0, 0.0),
+                                                child: Stack(
+                                                  children: [
+                                                    Align(
+                                                      alignment:
+                                                          AlignmentDirectional(
+                                                              0.0, 0.0),
+                                                      child: Padding(
+                                                        padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    5.0,
+                                                                    0.0,
+                                                                    10.0,
+                                                                    0.0),
+                                                        child: Row(
+                                                          mainAxisSize:
+                                                              MainAxisSize.max,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            Row(
+                                                              mainAxisSize:
+                                                                  MainAxisSize
+                                                                      .max,
+                                                              children: [
+                                                                Theme(
+                                                                  data:
+                                                                      ThemeData(
+                                                                    checkboxTheme:
+                                                                        CheckboxThemeData(
+                                                                      visualDensity:
+                                                                          VisualDensity
+                                                                              .compact,
+                                                                      materialTapTargetSize:
+                                                                          MaterialTapTargetSize
+                                                                              .shrinkWrap,
+                                                                      shape:
+                                                                          RoundedRectangleBorder(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(4.0),
+                                                                      ),
+                                                                    ),
+                                                                    unselectedWidgetColor:
+                                                                        FlutterFlowTheme.of(context)
+                                                                            .alternate,
+                                                                  ),
+                                                                  child:
+                                                                      Checkbox(
+                                                                    value: _model
+                                                                            .checkboxValueMap[shopListItem] ??=
+                                                                        shopListItem
+                                                                            .isBought,
+                                                                    onChanged:
+                                                                        (newValue) async {
+                                                                      safeSetState(() =>
+                                                                          _model.checkboxValueMap[shopListItem] =
+                                                                              newValue!);
+                                                                      if (newValue!) {
+                                                                        await shopListItem
+                                                                            .reference
+                                                                            .update(createShoppingListRecordData(
+                                                                          isBought:
+                                                                              true,
+                                                                          dateOfBuy:
+                                                                              functions.getDateOnly(getCurrentTimestamp),
+                                                                        ));
+                                                                        _model.storageItemOutput =
+                                                                            await queryStaffStorageRecordOnce(
+                                                                          parent:
+                                                                              FFAppState().currentUserRef,
+                                                                          queryBuilder: (staffStorageRecord) =>
+                                                                              staffStorageRecord.where(
+                                                                            'name',
+                                                                            isEqualTo:
+                                                                                shopListItem.name,
+                                                                          ),
+                                                                          singleRecord:
+                                                                              true,
+                                                                        ).then((s) =>
+                                                                                s.firstOrNull);
+                                                                        if ((_model.storageItemOutput !=
+                                                                                null) ==
+                                                                            true) {
+                                                                          await _model
+                                                                              .storageItemOutput!
+                                                                              .reference
+                                                                              .update(createStaffStorageRecordData(
+                                                                            count:
+                                                                                functions.sumDouble(shopListItem.quantity, _model.storageItemOutput!.count),
+                                                                          ));
+                                                                        } else {
+                                                                          await StaffStorageRecord.createDoc(FFAppState().currentUserRef!)
+                                                                              .set(createStaffStorageRecordData(
+                                                                            staffCategoryType:
+                                                                                shopListItem.staffCategory,
+                                                                            category:
+                                                                                shopListItem.categoryFoodOrHousehold,
+                                                                            name:
+                                                                                shopListItem.name,
+                                                                            count:
+                                                                                shopListItem.quantity,
+                                                                            unit:
+                                                                                shopListItem.unit,
+                                                                          ));
+                                                                        }
+
+                                                                        safeSetState(
+                                                                            () {});
+                                                                      } else {
+                                                                        await shopListItem
+                                                                            .reference
+                                                                            .update(createShoppingListRecordData(
+                                                                          isBought:
+                                                                              false,
+                                                                          dateOfBuy:
+                                                                              dateTimeFromSecondsSinceEpoch(functions.toInt('0')),
+                                                                        ));
+                                                                        _model.storageItemOutputOff =
+                                                                            await queryStaffStorageRecordOnce(
+                                                                          parent:
+                                                                              FFAppState().currentUserRef,
+                                                                          queryBuilder: (staffStorageRecord) =>
+                                                                              staffStorageRecord.where(
+                                                                            'name',
+                                                                            isEqualTo:
+                                                                                shopListItem.name,
+                                                                          ),
+                                                                          singleRecord:
+                                                                              true,
+                                                                        ).then((s) =>
+                                                                                s.firstOrNull);
+                                                                        if (_model.storageItemOutputOff !=
+                                                                            null) {
+                                                                          if (_model.storageItemOutputOff!.count >
+                                                                              shopListItem.quantity) {
+                                                                            await _model.storageItemOutputOff!.reference.update(createStaffStorageRecordData(
+                                                                              count: functions.minusDouble(_model.storageItemOutputOff!.count, shopListItem.quantity),
+                                                                            ));
+                                                                          } else {
+                                                                            await _model.storageItemOutputOff!.reference.delete();
+                                                                          }
+                                                                        }
+
+                                                                        safeSetState(
+                                                                            () {});
+                                                                      }
+                                                                    },
+                                                                    side:
+                                                                        BorderSide(
+                                                                      width: 2,
+                                                                      color: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .alternate,
+                                                                    ),
+                                                                    activeColor:
+                                                                        FlutterFlowTheme.of(context)
+                                                                            .home,
+                                                                    checkColor:
+                                                                        FlutterFlowTheme.of(context)
+                                                                            .info,
+                                                                  ),
+                                                                ),
+                                                                Text(
+                                                                  shopListItem
+                                                                      .name,
+                                                                  style: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyMedium
+                                                                      .override(
+                                                                        fontFamily:
+                                                                            'Inter',
+                                                                        letterSpacing:
+                                                                            0.0,
+                                                                      ),
+                                                                ),
+                                                              ].divide(SizedBox(
+                                                                  width: 5.0)),
+                                                            ),
+                                                            Text(
+                                                              '${shopListItem.quantity.toString()} ${shopListItem.unit?.name}',
+                                                              style: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .bodyMedium
+                                                                  .override(
+                                                                    fontFamily:
+                                                                        'Inter',
+                                                                    letterSpacing:
+                                                                        0.0,
+                                                                  ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    if (shopListItem.isBought)
                                                       Align(
                                                         alignment:
                                                             AlignmentDirectional(
                                                                 -1.0, 0.0),
-                                                        child: InkWell(
-                                                          splashColor: Colors
-                                                              .transparent,
-                                                          focusColor: Colors
-                                                              .transparent,
-                                                          hoverColor: Colors
-                                                              .transparent,
-                                                          highlightColor: Colors
-                                                              .transparent,
-                                                          onTap: () async {
-                                                            await showModalBottomSheet(
-                                                              isScrollControlled:
-                                                                  true,
-                                                              backgroundColor:
-                                                                  Colors
-                                                                      .transparent,
-                                                              enableDrag: false,
-                                                              context: context,
-                                                              builder:
-                                                                  (context) {
-                                                                return GestureDetector(
-                                                                  onTap: () => _model
-                                                                          .unfocusNode
-                                                                          .canRequestFocus
-                                                                      ? FocusScope.of(
-                                                                              context)
-                                                                          .requestFocus(_model
-                                                                              .unfocusNode)
-                                                                      : FocusScope.of(
-                                                                              context)
-                                                                          .unfocus(),
-                                                                  child:
-                                                                      Padding(
-                                                                    padding: MediaQuery
-                                                                        .viewInsetsOf(
-                                                                            context),
-                                                                    child:
-                                                                        EditingridientspopupShoppingWidget(
-                                                                      shoppingListDoc:
-                                                                          listViewShoppingListRecord,
-                                                                    ),
-                                                                  ),
-                                                                );
-                                                              },
-                                                            ).then((value) =>
-                                                                safeSetState(
-                                                                    () {}));
-                                                          },
-                                                          child: Text(
-                                                            listViewShoppingListRecord
-                                                                .name,
-                                                            textAlign:
-                                                                TextAlign.start,
-                                                            style: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .bodyMedium
-                                                                .override(
-                                                                  fontFamily:
-                                                                      'Inter',
-                                                                  fontSize:
-                                                                      15.0,
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w800,
-                                                                ),
+                                                        child: Padding(
+                                                          padding:
+                                                              EdgeInsetsDirectional
+                                                                  .fromSTEB(
+                                                                      40.0,
+                                                                      4.0,
+                                                                      7.0,
+                                                                      0.0),
+                                                          child: Container(
+                                                            width:
+                                                                double.infinity,
+                                                            height: 1.0,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .primaryText,
+                                                            ),
                                                           ),
                                                         ),
                                                       ),
-                                                      if (listViewShoppingListRecord
-                                                          .bought)
-                                                        Text(
-                                                          listViewShoppingListRecord
-                                                              .name,
-                                                          textAlign:
-                                                              TextAlign.start,
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                fontFamily:
-                                                                    'Inter',
-                                                                color: Colors
-                                                                    .black,
-                                                                fontSize: 15.0,
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w800,
-                                                                decoration:
-                                                                    TextDecoration
-                                                                        .lineThrough,
-                                                              ),
-                                                        ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            Expanded(
-                                              child: Align(
-                                                alignment: AlignmentDirectional(
-                                                    1.0, 0.0),
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                    color: Color(0x00FFFFFF),
-                                                  ),
-                                                  child: Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            1.0, 0.0),
-                                                    child: InkWell(
-                                                      splashColor:
-                                                          Colors.transparent,
-                                                      focusColor:
-                                                          Colors.transparent,
-                                                      hoverColor:
-                                                          Colors.transparent,
-                                                      highlightColor:
-                                                          Colors.transparent,
-                                                      onTap: () async {
-                                                        await showModalBottomSheet(
-                                                          isScrollControlled:
-                                                              true,
-                                                          backgroundColor:
-                                                              Colors
-                                                                  .transparent,
-                                                          enableDrag: false,
-                                                          context: context,
-                                                          builder: (context) {
-                                                            return GestureDetector(
-                                                              onTap: () => _model
-                                                                      .unfocusNode
-                                                                      .canRequestFocus
-                                                                  ? FocusScope.of(
-                                                                          context)
-                                                                      .requestFocus(
-                                                                          _model
-                                                                              .unfocusNode)
-                                                                  : FocusScope.of(
-                                                                          context)
-                                                                      .unfocus(),
-                                                              child: Padding(
-                                                                padding: MediaQuery
-                                                                    .viewInsetsOf(
-                                                                        context),
-                                                                child:
-                                                                    EditingridientspopupShoppingWidget(
-                                                                  shoppingListDoc:
-                                                                      listViewShoppingListRecord,
-                                                                ),
-                                                              ),
-                                                            );
-                                                          },
-                                                        ).then((value) =>
-                                                            safeSetState(
-                                                                () {}));
-                                                      },
-                                                      child: Text(
-                                                        '${formatNumber(
-                                                          listViewShoppingListRecord
-                                                              .quantity,
-                                                          formatType:
-                                                              FormatType.custom,
-                                                          format: '####.##',
-                                                          locale: '',
-                                                        )} ${listViewShoppingListRecord.unit}',
-                                                        textAlign:
-                                                            TextAlign.start,
-                                                        style: FlutterFlowTheme
-                                                                .of(context)
-                                                            .bodyMedium
-                                                            .override(
-                                                              fontFamily:
-                                                                  'Inter',
-                                                              fontSize: 15.0,
-                                                              letterSpacing:
-                                                                  0.0,
-                                                            ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            Align(
-                                              alignment: AlignmentDirectional(
-                                                  1.0, 0.0),
-                                              child: Container(
-                                                width: 100.0,
-                                                decoration: BoxDecoration(
-                                                  color: Color(0x00FFFFFF),
-                                                ),
-                                                child: Align(
-                                                  alignment:
-                                                      AlignmentDirectional(
-                                                          1.0, 0.0),
-                                                  child: InkWell(
-                                                    splashColor:
-                                                        Colors.transparent,
-                                                    focusColor:
-                                                        Colors.transparent,
-                                                    hoverColor:
-                                                        Colors.transparent,
-                                                    highlightColor:
-                                                        Colors.transparent,
-                                                    onTap: () async {
-                                                      await showModalBottomSheet(
-                                                        isScrollControlled:
-                                                            true,
-                                                        backgroundColor:
+                                                    if (_model.selectMode)
+                                                      InkWell(
+                                                        splashColor:
                                                             Colors.transparent,
-                                                        enableDrag: false,
-                                                        context: context,
-                                                        builder: (context) {
-                                                          return GestureDetector(
-                                                            onTap: () => _model
-                                                                    .unfocusNode
-                                                                    .canRequestFocus
-                                                                ? FocusScope.of(
-                                                                        context)
-                                                                    .requestFocus(
-                                                                        _model
-                                                                            .unfocusNode)
-                                                                : FocusScope.of(
-                                                                        context)
-                                                                    .unfocus(),
-                                                            child: Padding(
-                                                              padding: MediaQuery
-                                                                  .viewInsetsOf(
-                                                                      context),
-                                                              child:
-                                                                  EditingridientspopupShoppingWidget(
-                                                                shoppingListDoc:
-                                                                    listViewShoppingListRecord,
-                                                              ),
-                                                            ),
-                                                          );
+                                                        focusColor:
+                                                            Colors.transparent,
+                                                        hoverColor:
+                                                            Colors.transparent,
+                                                        highlightColor:
+                                                            Colors.transparent,
+                                                        onTap: () async {
+                                                          if (_model
+                                                              .selectedItemsList
+                                                              .contains(shopListItem
+                                                                  .reference)) {
+                                                            _model.removeFromSelectedItemsList(
+                                                                shopListItem
+                                                                    .reference);
+                                                            _model.selectedAll =
+                                                                false;
+                                                            safeSetState(() {});
+                                                          } else {
+                                                            _model.addToSelectedItemsList(
+                                                                shopListItem
+                                                                    .reference);
+                                                            safeSetState(() {});
+                                                            if (containerShoppingListRecordList
+                                                                    .length ==
+                                                                _model
+                                                                    .selectedItemsList
+                                                                    .length) {
+                                                              _model.selectedAll =
+                                                                  true;
+                                                              safeSetState(
+                                                                  () {});
+                                                            }
+                                                          }
                                                         },
-                                                      ).then((value) =>
-                                                          safeSetState(() {}));
-                                                    },
-                                                    child: Text(
-                                                      listViewShoppingListRecord
-                                                          .shopName,
-                                                      textAlign: TextAlign.end,
-                                                      style: FlutterFlowTheme
-                                                              .of(context)
-                                                          .bodyMedium
-                                                          .override(
-                                                            fontFamily: 'Inter',
-                                                            fontSize: 15.0,
-                                                            letterSpacing: 0.0,
+                                                        child: Container(
+                                                          width:
+                                                              double.infinity,
+                                                          height: 50.0,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: _model
+                                                                    .selectedItemsList
+                                                                    .contains(
+                                                                        shopListItem
+                                                                            .reference)
+                                                                ? Color(
+                                                                    0x67F57F44)
+                                                                : Color(
+                                                                    0x28979797),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        12.0),
                                                           ),
-                                                    ),
-                                                  ),
+                                                        ),
+                                                      ),
+                                                  ],
                                                 ),
                                               ),
                                             ),
-                                          ],
-                                        ),
+                                          );
+                                        }).divide(SizedBox(height: 5.0)),
                                       ),
-                                    ],
-                                  ),
-                                  Divider(
-                                    thickness: 1.0,
-                                    color:
-                                        FlutterFlowTheme.of(context).alternate,
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                      ),
-                      Align(
-                        alignment: AlignmentDirectional(1.0, 1.0),
-                        child: FFButtonWidget(
-                          onPressed: () async {
-                            await showModalBottomSheet(
-                              isScrollControlled: true,
-                              backgroundColor: Colors.transparent,
-                              enableDrag: false,
-                              context: context,
-                              builder: (context) {
-                                return GestureDetector(
-                                  onTap: () =>
-                                      _model.unfocusNode.canRequestFocus
-                                          ? FocusScope.of(context)
-                                              .requestFocus(_model.unfocusNode)
-                                          : FocusScope.of(context).unfocus(),
-                                  child: Padding(
-                                    padding: MediaQuery.viewInsetsOf(context),
-                                    child: AddingridientspopupShoppingWidget(),
-                                  ),
-                                );
-                              },
-                            ).then((value) => safeSetState(() {}));
-                          },
-                          text: '',
-                          icon: Icon(
-                            FFIcons.kplus,
-                            size: 15.0,
-                          ),
-                          options: FFButtonOptions(
-                            width: 50.0,
-                            height: 50.0,
-                            padding: EdgeInsets.all(0.0),
-                            iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                9.0, 0.0, 0.0, 0.0),
-                            color: Color(0xFFF57F44),
-                            textStyle: FlutterFlowTheme.of(context)
-                                .titleSmall
-                                .override(
-                                  fontFamily: 'Inter',
-                                  color: Colors.white,
-                                  letterSpacing: 0.0,
+                                    );
+                                  },
                                 ),
-                            elevation: 0.0,
-                            borderSide: BorderSide(
-                              color: Colors.transparent,
-                              width: 1.0,
-                            ),
-                            borderRadius: BorderRadius.circular(25.0),
-                          ),
+                              ),
+                            );
+                          },
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ],

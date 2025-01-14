@@ -5,6 +5,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/main/settings/not_field_error/not_field_error_widget.dart';
+import 'dart:ui';
 import '/custom_code/actions/index.dart' as actions;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
@@ -46,7 +47,7 @@ class _EditBirthdayWidgetState extends State<EditBirthdayWidget> {
     // On component load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       FFAppState().choosedDate = null;
-      setState(() {});
+      safeSetState(() {});
     });
 
     _model.textController ??= TextEditingController(text: widget!.info?.name);
@@ -262,7 +263,7 @@ class _EditBirthdayWidgetState extends State<EditBirthdayWidget> {
                                     });
                                   }
                                   _model.date = _model.datePicked;
-                                  setState(() {});
+                                  safeSetState(() {});
                                 },
                                 text: '',
                                 icon: Icon(
@@ -299,13 +300,13 @@ class _EditBirthdayWidgetState extends State<EditBirthdayWidget> {
                                   child: Text(
                                     _model.date != null
                                         ? dateTimeFormat(
-                                            'd/M/y',
+                                            "d/M/y",
                                             _model.date,
                                             locale: FFLocalizations.of(context)
                                                 .languageCode,
                                           )
                                         : dateTimeFormat(
-                                            'd/M/y',
+                                            "d/M/y",
                                             widget!.date!.date!,
                                             locale: FFLocalizations.of(context)
                                                 .languageCode,

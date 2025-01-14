@@ -37,6 +37,7 @@ abstract class FlutterFlowTheme {
   late Color plants;
   late Color health;
   late Color pets;
+  late Color sport;
 
   @Deprecated('Use displaySmallFamily instead')
   String get title1Family => displaySmallFamily;
@@ -131,6 +132,7 @@ class LightModeTheme extends FlutterFlowTheme {
   late Color plants = Color(0xFF43A047);
   late Color health = Color(0xFFC1121F);
   late Color pets = Color(0xFF9E4AC6);
+  late Color sport = Color(0xFF414040);
 }
 
 abstract class Typography {

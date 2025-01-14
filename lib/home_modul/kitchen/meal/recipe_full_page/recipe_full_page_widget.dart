@@ -4,6 +4,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_video_player.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
@@ -43,39 +44,33 @@ class _RecipeFullPageWidgetState extends State<RecipeFullPageWidget> {
         _model.recipe = widget!.mealDocFromPlanner!.recipeFull;
         _model.videoLink = widget!.mealDocFromPlanner?.videoLink;
         _model.siteLink = widget!.mealDocFromPlanner?.siteLink;
-        setState(() {});
+        safeSetState(() {});
       } else if (widget!.manuDoc != null) {
         _model.recipe = widget!.manuDoc!.recipeFull;
         _model.videoLink = widget!.manuDoc?.videoLink;
         _model.siteLink = widget!.manuDoc?.siteLink;
-        setState(() {});
+        safeSetState(() {});
       }
 
       if (_model.siteLink != null && _model.siteLink != '') {
-        setState(() {
+        safeSetState(() {
           _model.siteCheckboxValue = true;
         });
-        setState(() {
+        safeSetState(() {
           _model.textController1?.text = _model.siteLink!;
-          _model.textController1?.selection = TextSelection.collapsed(
-              offset: _model.textController1!.text.length);
         });
       }
       if (_model.videoLink != null && _model.videoLink != '') {
-        setState(() {
+        safeSetState(() {
           _model.videoCheckboxValue = true;
         });
-        setState(() {
+        safeSetState(() {
           _model.textController2?.text = _model.videoLink!;
-          _model.textController2?.selection = TextSelection.collapsed(
-              offset: _model.textController2!.text.length);
         });
       }
       if (_model.recipe != null && _model.recipe != '') {
-        setState(() {
+        safeSetState(() {
           _model.textController3?.text = _model.recipe;
-          _model.textController3?.selection = TextSelection.collapsed(
-              offset: _model.textController3!.text.length);
         });
       }
     });
@@ -100,9 +95,10 @@ class _RecipeFullPageWidgetState extends State<RecipeFullPageWidget> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
-          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-          : FocusScope.of(context).unfocus(),
+      onTap: () {
+        FocusScope.of(context).unfocus();
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
@@ -335,7 +331,7 @@ class _RecipeFullPageWidgetState extends State<RecipeFullPageWidget> {
                                         value: _model.siteCheckboxValue ??=
                                             false,
                                         onChanged: (newValue) async {
-                                          setState(() => _model
+                                          safeSetState(() => _model
                                               .siteCheckboxValue = newValue!);
                                         },
                                         side: BorderSide(
@@ -357,11 +353,11 @@ class _RecipeFullPageWidgetState extends State<RecipeFullPageWidget> {
                                       highlightColor: Colors.transparent,
                                       onTap: () async {
                                         if (_model.siteCheckboxValue!) {
-                                          setState(() {
+                                          safeSetState(() {
                                             _model.siteCheckboxValue = false;
                                           });
                                         } else {
-                                          setState(() {
+                                          safeSetState(() {
                                             _model.siteCheckboxValue = true;
                                           });
                                         }
@@ -408,7 +404,7 @@ class _RecipeFullPageWidgetState extends State<RecipeFullPageWidget> {
                                                 () async {
                                                   _model.siteLink = _model
                                                       .textController1.text;
-                                                  setState(() {});
+                                                  safeSetState(() {});
                                                 },
                                               ),
                                               autofocus: false,
@@ -564,7 +560,7 @@ class _RecipeFullPageWidgetState extends State<RecipeFullPageWidget> {
                                           value: _model.videoCheckboxValue ??=
                                               false,
                                           onChanged: (newValue) async {
-                                            setState(() =>
+                                            safeSetState(() =>
                                                 _model.videoCheckboxValue =
                                                     newValue!);
                                           },
@@ -587,11 +583,11 @@ class _RecipeFullPageWidgetState extends State<RecipeFullPageWidget> {
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
                                           if (_model.videoCheckboxValue!) {
-                                            setState(() {
+                                            safeSetState(() {
                                               _model.videoCheckboxValue = false;
                                             });
                                           } else {
-                                            setState(() {
+                                            safeSetState(() {
                                               _model.videoCheckboxValue = true;
                                             });
                                           }
@@ -639,7 +635,7 @@ class _RecipeFullPageWidgetState extends State<RecipeFullPageWidget> {
                                                 () async {
                                                   _model.videoLink = _model
                                                       .textController2.text;
-                                                  setState(() {});
+                                                  safeSetState(() {});
                                                 },
                                               ),
                                               autofocus: false,
@@ -792,7 +788,7 @@ class _RecipeFullPageWidgetState extends State<RecipeFullPageWidget> {
                                 Duration(milliseconds: 2000),
                                 () async {
                                   _model.recipe = _model.textController3.text;
-                                  setState(() {});
+                                  safeSetState(() {});
                                 },
                               ),
                               autofocus: false,
@@ -890,7 +886,7 @@ class _RecipeFullPageWidgetState extends State<RecipeFullPageWidget> {
                               _model.recipe = '';
                               _model.videoLink = '';
                               _model.siteLink = '';
-                              setState(() {});
+                              safeSetState(() {});
                             },
                             text: FFLocalizations.of(context).getText(
                               'wyca0khf' /* Зберегти */,

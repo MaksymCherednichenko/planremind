@@ -4,6 +4,7 @@ import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/home_modul/birthdays/add_birthday/add_birthday_widget.dart';
 import '/home_modul/birthdays/edit_birthday/edit_birthday_widget.dart';
+import 'dart:ui';
 import '/flutter_flow/custom_functions.dart' as functions;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -43,9 +44,10 @@ class _BirthdaysContactsPageWidgetState
     context.watch<FFAppState>();
 
     return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
-          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-          : FocusScope.of(context).unfocus(),
+      onTap: () {
+        FocusScope.of(context).unfocus();
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
@@ -57,7 +59,7 @@ class _BirthdaysContactsPageWidgetState
             alignment: AlignmentDirectional(-1.0, 0.0),
             child: FFButtonWidget(
               onPressed: () async {
-                context.pushNamed('HomeCategories');
+                context.safePop();
               },
               text: '',
               icon: Icon(
@@ -87,7 +89,7 @@ class _BirthdaysContactsPageWidgetState
             alignment: AlignmentDirectional(0.0, 0.0),
             child: Text(
               FFLocalizations.of(context).getText(
-                'wmcckhso' /* Birthdays */,
+                'wmcckhso' /* Дні народження */,
               ),
               textAlign: TextAlign.center,
               style: FlutterFlowTheme.of(context).headlineMedium.override(
@@ -159,11 +161,11 @@ class _BirthdaysContactsPageWidgetState
                               context: context,
                               builder: (context) {
                                 return GestureDetector(
-                                  onTap: () =>
-                                      _model.unfocusNode.canRequestFocus
-                                          ? FocusScope.of(context)
-                                              .requestFocus(_model.unfocusNode)
-                                          : FocusScope.of(context).unfocus(),
+                                  onTap: () {
+                                    FocusScope.of(context).unfocus();
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
+                                  },
                                   child: Padding(
                                     padding: MediaQuery.viewInsetsOf(context),
                                     child: AddBirthdayWidget(),
@@ -249,7 +251,7 @@ class _BirthdaysContactsPageWidgetState
                                                   0.0, 0.0),
                                               child: Text(
                                                 dateTimeFormat(
-                                                  'MMMM',
+                                                  "MMMM",
                                                   monthsItem,
                                                   locale: FFLocalizations.of(
                                                           context)
@@ -412,9 +414,11 @@ class _BirthdaysContactsPageWidgetState
                                                                         builder:
                                                                             (context) {
                                                                           return GestureDetector(
-                                                                            onTap: () => _model.unfocusNode.canRequestFocus
-                                                                                ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-                                                                                : FocusScope.of(context).unfocus(),
+                                                                            onTap:
+                                                                                () {
+                                                                              FocusScope.of(context).unfocus();
+                                                                              FocusManager.instance.primaryFocus?.unfocus();
+                                                                            },
                                                                             child:
                                                                                 Padding(
                                                                               padding: MediaQuery.viewInsetsOf(context),
@@ -487,7 +491,10 @@ class _BirthdaysContactsPageWidgetState
                                                                           builder:
                                                                               (context) {
                                                                             return GestureDetector(
-                                                                              onTap: () => _model.unfocusNode.canRequestFocus ? FocusScope.of(context).requestFocus(_model.unfocusNode) : FocusScope.of(context).unfocus(),
+                                                                              onTap: () {
+                                                                                FocusScope.of(context).unfocus();
+                                                                                FocusManager.instance.primaryFocus?.unfocus();
+                                                                              },
                                                                               child: Padding(
                                                                                 padding: MediaQuery.viewInsetsOf(context),
                                                                                 child: EditBirthdayWidget(
@@ -503,7 +510,7 @@ class _BirthdaysContactsPageWidgetState
                                                                       child:
                                                                           Text(
                                                                         dateTimeFormat(
-                                                                          'd.M.y',
+                                                                          "d.M.y",
                                                                           columnBirthdayDateRecord
                                                                               .date!,
                                                                           locale:
@@ -620,7 +627,7 @@ class _BirthdaysContactsPageWidgetState
                                 24.0, 24.0, 0.0, 0.0),
                             child: Text(
                               FFLocalizations.of(context).getText(
-                                'pp2uiufa' /* Upcoming */,
+                                'pp2uiufa' /* Найближчі дні народження */,
                               ),
                               style: FlutterFlowTheme.of(context)
                                   .bodyMedium
@@ -696,7 +703,7 @@ class _BirthdaysContactsPageWidgetState
                                                   24.0, 16.0, 0.0, 0.0),
                                           child: Text(
                                             dateTimeFormat(
-                                              'd MMMM',
+                                              "d MMMM",
                                               upcomingDataBirthdayDateRecord
                                                   .date!,
                                               locale:
@@ -771,28 +778,33 @@ class _BirthdaysContactsPageWidgetState
                                                       final columnBirthdayDateInfoRecord =
                                                           columnBirthdayDateInfoRecordList[
                                                               columnIndex];
-                                                      return ListTile(
-                                                        title: Text(
-                                                          columnBirthdayDateInfoRecord
-                                                              .name,
-                                                          style: FlutterFlowTheme
+                                                      return Material(
+                                                        color:
+                                                            Colors.transparent,
+                                                        child: ListTile(
+                                                          title: Text(
+                                                            columnBirthdayDateInfoRecord
+                                                                .name,
+                                                            style: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .titleLarge
+                                                                .override(
+                                                                  fontFamily:
+                                                                      'Inter',
+                                                                  fontSize:
+                                                                      15.0,
+                                                                  letterSpacing:
+                                                                      0.0,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .normal,
+                                                                ),
+                                                          ),
+                                                          tileColor: FlutterFlowTheme
                                                                   .of(context)
-                                                              .titleLarge
-                                                              .override(
-                                                                fontFamily:
-                                                                    'Inter',
-                                                                fontSize: 15.0,
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .normal,
-                                                              ),
+                                                              .secondaryBackground,
+                                                          dense: false,
                                                         ),
-                                                        tileColor: FlutterFlowTheme
-                                                                .of(context)
-                                                            .secondaryBackground,
-                                                        dense: false,
                                                       );
                                                     }),
                                                   );

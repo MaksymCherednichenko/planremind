@@ -5,6 +5,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/main/settings/edit_category_food/edit_category_food_widget.dart';
+import 'dart:ui';
 import '/custom_code/actions/index.dart' as actions;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -48,9 +49,10 @@ class _SettingsStorageFoodCategoriesWidgetState
     context.watch<FFAppState>();
 
     return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
-          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-          : FocusScope.of(context).unfocus(),
+      onTap: () {
+        FocusScope.of(context).unfocus();
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
@@ -61,7 +63,7 @@ class _SettingsStorageFoodCategoriesWidgetState
             children: [
               wrapWithModel(
                 model: _model.appBarModel,
-                updateCallback: () => setState(() {}),
+                updateCallback: () => safeSetState(() {}),
                 child: AppBarWidget(
                   title: FFLocalizations.of(context).getText(
                     'msm8r4fn' /* Налаштування */,
@@ -107,7 +109,7 @@ class _SettingsStorageFoodCategoriesWidgetState
                     children: [
                       Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(
-                            24.0, 4.0, 24.0, 0.0),
+                            24.0, 4.0, 24.0, 24.0),
                         child: Container(
                           width: MediaQuery.sizeOf(context).width * 1.0,
                           height: 59.0,
@@ -164,7 +166,7 @@ class _SettingsStorageFoodCategoriesWidgetState
                                       0.0, 8.0, 8.0, 8.0),
                                   child: FFButtonWidget(
                                     onPressed: () async {
-                                      context.pushNamed(
+                                      context.goNamed(
                                           'Settings_Storage_HouseholdCategories');
                                     },
                                     text: FFLocalizations.of(context).getText(
@@ -199,146 +201,11 @@ class _SettingsStorageFoodCategoriesWidgetState
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            24.0, 24.0, 24.0, 0.0),
-                        child: Builder(
-                          builder: (context) {
-                            final categories =
-                                columnSettingsCategoryAndShopRecord
-                                        ?.categoryFood
-                                        ?.toList() ??
-                                    [];
-
-                            return ReorderableListView.builder(
-                              padding: EdgeInsets.zero,
-                              shrinkWrap: true,
-                              scrollDirection: Axis.vertical,
-                              itemCount: categories.length,
-                              itemBuilder: (context, categoriesIndex) {
-                                final categoriesItem =
-                                    categories[categoriesIndex];
-                                return Container(
-                                  key: ValueKey("ListView_9neberys" +
-                                      '_' +
-                                      categoriesIndex.toString()),
-                                  child: Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 0.0, 0.0, 16.0),
-                                    child: Material(
-                                      color: Colors.transparent,
-                                      elevation: 1.0,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
-                                      ),
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(12.0),
-                                        ),
-                                        child: InkWell(
-                                          splashColor: Colors.transparent,
-                                          focusColor: Colors.transparent,
-                                          hoverColor: Colors.transparent,
-                                          highlightColor: Colors.transparent,
-                                          onTap: () async {
-                                            await showModalBottomSheet(
-                                              isScrollControlled: true,
-                                              backgroundColor:
-                                                  Colors.transparent,
-                                              enableDrag: false,
-                                              context: context,
-                                              builder: (context) {
-                                                return GestureDetector(
-                                                  onTap: () => _model
-                                                          .unfocusNode
-                                                          .canRequestFocus
-                                                      ? FocusScope.of(context)
-                                                          .requestFocus(_model
-                                                              .unfocusNode)
-                                                      : FocusScope.of(context)
-                                                          .unfocus(),
-                                                  child: Padding(
-                                                    padding:
-                                                        MediaQuery.viewInsetsOf(
-                                                            context),
-                                                    child:
-                                                        EditCategoryFoodWidget(
-                                                      item: categoriesItem,
-                                                      itemIndex:
-                                                          categoriesIndex,
-                                                      settings:
-                                                          columnSettingsCategoryAndShopRecord!,
-                                                    ),
-                                                  ),
-                                                );
-                                              },
-                                            ).then(
-                                                (value) => safeSetState(() {}));
-                                          },
-                                          child: ListTile(
-                                            title: Text(
-                                              categoriesItem,
-                                              textAlign: TextAlign.start,
-                                              style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .titleLarge
-                                                      .override(
-                                                        fontFamily: 'Inter',
-                                                        fontSize: 16.0,
-                                                        letterSpacing: 0.0,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                      ),
-                                            ),
-                                            tileColor:
-                                                FlutterFlowTheme.of(context)
-                                                    .secondaryBackground,
-                                            dense: false,
-                                            contentPadding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    24.0, 0.0, 0.0, 0.0),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(12.0),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                              onReorder: (int reorderableOldIndex,
-                                  int reorderableNewIndex) async {
-                                _model.updatedList = await actions.reorderItem(
-                                  categories.toList(),
-                                  reorderableOldIndex,
-                                  reorderableNewIndex,
-                                );
-
-                                await columnSettingsCategoryAndShopRecord!
-                                    .reference
-                                    .update({
-                                  ...mapToFirestore(
-                                    {
-                                      'categoryFood': _model.updatedList,
-                                    },
-                                  ),
-                                });
-
-                                setState(() {});
-                              },
-                            );
-                          },
-                        ),
-                      ),
                       Align(
                         alignment: AlignmentDirectional(0.0, -1.0),
                         child: Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(
-                              24.0, 0.0, 24.0, 24.0),
+                              24.0, 0.0, 24.0, 16.0),
                           child: Row(
                             mainAxisSize: MainAxisSize.max,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -369,7 +236,7 @@ class _SettingsStorageFoodCategoriesWidgetState
                                                 },
                                               ),
                                             });
-                                            setState(() {
+                                            safeSetState(() {
                                               _model.textController?.clear();
                                             });
                                           }
@@ -377,10 +244,6 @@ class _SettingsStorageFoodCategoriesWidgetState
                                         autofocus: false,
                                         obscureText: false,
                                         decoration: InputDecoration(
-                                          labelText: FFLocalizations.of(context)
-                                              .getText(
-                                            'duxjve90' /* Додати категорію */,
-                                          ),
                                           labelStyle: FlutterFlowTheme.of(
                                                   context)
                                               .labelMedium
@@ -393,30 +256,40 @@ class _SettingsStorageFoodCategoriesWidgetState
                                                 letterSpacing: 0.0,
                                                 fontWeight: FontWeight.w500,
                                               ),
+                                          hintText: FFLocalizations.of(context)
+                                              .getText(
+                                            'zsum884p' /* Додати категорію */,
+                                          ),
                                           hintStyle:
                                               FlutterFlowTheme.of(context)
                                                   .labelMedium
                                                   .override(
                                                     fontFamily: 'Inter',
+                                                    fontSize: 16.0,
                                                     letterSpacing: 0.0,
+                                                    fontWeight: FontWeight.w500,
                                                   ),
-                                          enabledBorder: OutlineInputBorder(
+                                          enabledBorder: UnderlineInputBorder(
                                             borderSide: BorderSide(
-                                              color: Color(0xFFF9EEE6),
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .alternate,
                                               width: 1.0,
                                             ),
                                             borderRadius:
                                                 BorderRadius.circular(12.0),
                                           ),
-                                          focusedBorder: OutlineInputBorder(
+                                          focusedBorder: UnderlineInputBorder(
                                             borderSide: BorderSide(
-                                              color: Color(0xFFF9EEE6),
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .alternate,
                                               width: 1.0,
                                             ),
                                             borderRadius:
                                                 BorderRadius.circular(12.0),
                                           ),
-                                          errorBorder: OutlineInputBorder(
+                                          errorBorder: UnderlineInputBorder(
                                             borderSide: BorderSide(
                                               color:
                                                   FlutterFlowTheme.of(context)
@@ -427,7 +300,7 @@ class _SettingsStorageFoodCategoriesWidgetState
                                                 BorderRadius.circular(12.0),
                                           ),
                                           focusedErrorBorder:
-                                              OutlineInputBorder(
+                                              UnderlineInputBorder(
                                             borderSide: BorderSide(
                                               color:
                                                   FlutterFlowTheme.of(context)
@@ -476,7 +349,7 @@ class _SettingsStorageFoodCategoriesWidgetState
                                                   },
                                                 ),
                                               });
-                                              setState(() {
+                                              safeSetState(() {
                                                 _model.textController?.clear();
                                               });
                                             }
@@ -520,6 +393,145 @@ class _SettingsStorageFoodCategoriesWidgetState
                               ),
                             ],
                           ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(
+                            24.0, 0.0, 24.0, 24.0),
+                        child: Builder(
+                          builder: (context) {
+                            final categories =
+                                columnSettingsCategoryAndShopRecord
+                                        ?.categoryFood
+                                        ?.toList() ??
+                                    [];
+
+                            return ReorderableListView.builder(
+                              padding: EdgeInsets.zero,
+                              shrinkWrap: true,
+                              scrollDirection: Axis.vertical,
+                              itemCount: categories.length,
+                              itemBuilder: (context, categoriesIndex) {
+                                final categoriesItem =
+                                    categories[categoriesIndex];
+                                return Container(
+                                  key: ValueKey("ListView_9neberys" +
+                                      '_' +
+                                      categoriesIndex.toString()),
+                                  child: Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        0.0, 0.0, 0.0, 16.0),
+                                    child: Material(
+                                      color: Colors.transparent,
+                                      elevation: 1.0,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
+                                      ),
+                                      child: Container(
+                                        height: 48.0,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(12.0),
+                                        ),
+                                        child: InkWell(
+                                          splashColor: Colors.transparent,
+                                          focusColor: Colors.transparent,
+                                          hoverColor: Colors.transparent,
+                                          highlightColor: Colors.transparent,
+                                          onTap: () async {
+                                            await showModalBottomSheet(
+                                              isScrollControlled: true,
+                                              backgroundColor:
+                                                  Colors.transparent,
+                                              enableDrag: false,
+                                              context: context,
+                                              builder: (context) {
+                                                return GestureDetector(
+                                                  onTap: () {
+                                                    FocusScope.of(context)
+                                                        .unfocus();
+                                                    FocusManager
+                                                        .instance.primaryFocus
+                                                        ?.unfocus();
+                                                  },
+                                                  child: Padding(
+                                                    padding:
+                                                        MediaQuery.viewInsetsOf(
+                                                            context),
+                                                    child:
+                                                        EditCategoryFoodWidget(
+                                                      item: categoriesItem,
+                                                      itemIndex:
+                                                          categoriesIndex,
+                                                      settings:
+                                                          columnSettingsCategoryAndShopRecord!,
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            ).then(
+                                                (value) => safeSetState(() {}));
+                                          },
+                                          child: Material(
+                                            color: Colors.transparent,
+                                            child: ListTile(
+                                              title: Text(
+                                                categoriesItem,
+                                                textAlign: TextAlign.start,
+                                                style:
+                                                    FlutterFlowTheme.of(context)
+                                                        .titleLarge
+                                                        .override(
+                                                          fontFamily: 'Inter',
+                                                          fontSize: 16.0,
+                                                          letterSpacing: 0.0,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                        ),
+                                              ),
+                                              tileColor:
+                                                  FlutterFlowTheme.of(context)
+                                                      .secondaryBackground,
+                                              dense: false,
+                                              contentPadding:
+                                                  EdgeInsetsDirectional
+                                                      .fromSTEB(
+                                                          24.0, 0.0, 0.0, 0.0),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(12.0),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                              onReorder: (int reorderableOldIndex,
+                                  int reorderableNewIndex) async {
+                                _model.updatedList = await actions.reorderItem(
+                                  categories.toList(),
+                                  reorderableOldIndex,
+                                  reorderableNewIndex,
+                                );
+
+                                await columnSettingsCategoryAndShopRecord!
+                                    .reference
+                                    .update({
+                                  ...mapToFirestore(
+                                    {
+                                      'categoryFood': _model.updatedList,
+                                    },
+                                  ),
+                                });
+
+                                safeSetState(() {});
+                              },
+                            );
+                          },
                         ),
                       ),
                     ],

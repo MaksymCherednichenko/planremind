@@ -2,6 +2,7 @@ import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import 'dart:ui';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -41,21 +42,40 @@ class _CustomCountControllerWidgetState
 
     // On component load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      setState(() {
-        _model.textController?.text =
-            ((FFAppState().unit == 'kg') || (FFAppState().unit == 'l')
-                    ? valueOrDefault<double>(
-                        FFAppState().setQuantityDouble,
-                        0.0,
-                      )
-                    : valueOrDefault<double>(
-                        FFAppState().setQuantityInt.toDouble(),
-                        0.0,
-                      ))
-                .toString();
-        _model.textController?.selection =
-            TextSelection.collapsed(offset: _model.textController!.text.length);
+      safeSetState(() {
+        _model.textController?.text = ((FFAppState().unit == 'kg') ||
+                    (FFAppState().unit == 'l') ||
+                    (FFAppState().unit == 'pound') ||
+                    (FFAppState().unit == 'quart')
+                ? valueOrDefault<double>(
+                    FFAppState().setQuantityDouble,
+                    0.0,
+                  )
+                : valueOrDefault<double>(
+                    FFAppState().setQuantityInt.toDouble(),
+                    0.0,
+                  ))
+            .toString();
       });
+      _model.buttonClick = () {
+        if ((FFAppState().unit == 'g') && (FFAppState().unit == 'oz')) {
+          return 1;
+        } else if ((FFAppState().unit == 'kg') &&
+            (FFAppState().unit == 'pound')) {
+          return 2;
+        } else if (FFAppState().unit == 'piece') {
+          return 3;
+        } else if ((FFAppState().unit == 'l') &&
+            (FFAppState().unit == 'pint')) {
+          return 4;
+        } else if ((FFAppState().unit == 'ml') &&
+            (FFAppState().unit == 'liquid ounce')) {
+          return 5;
+        } else {
+          return 0;
+        }
+      }();
+      safeSetState(() {});
     });
 
     _model.textController ??= TextEditingController(
@@ -100,207 +120,305 @@ class _CustomCountControllerWidgetState
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              FFButtonWidget(
-                onPressed: widget!.isButtonDisable
-                    ? null
-                    : () async {
-                        FFAppState().unit = FFAppState().units[0];
-                        setState(() {});
-                        _model.buttonClick = 1;
-                        setState(() {});
-                      },
-                text: FFAppState().units[0],
-                options: FFButtonOptions(
-                  width: 45.0,
-                  height: 40.0,
-                  padding: EdgeInsets.all(0.0),
-                  iconPadding:
-                      EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                  color: valueOrDefault<Color>(
-                    _model.buttonClick == 1 ? Colors.black : Colors.white,
-                    Colors.white,
-                  ),
-                  textStyle: FlutterFlowTheme.of(context).titleSmall.override(
-                        fontFamily: 'Inter',
-                        color: valueOrDefault<Color>(
-                          _model.buttonClick == 1 ? Colors.white : Colors.black,
-                          Colors.black,
-                        ),
-                        fontSize: 13.0,
-                        letterSpacing: 0.0,
-                        fontWeight: FontWeight.normal,
+              Container(
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      blurRadius: 8.0,
+                      color: Color(0xFFF9EEE6),
+                      offset: Offset(
+                        1.0,
+                        2.0,
                       ),
-                  elevation: 0.0,
-                  borderSide: BorderSide(
-                    color: Colors.transparent,
-                    width: 1.0,
-                  ),
+                    )
+                  ],
                   borderRadius: BorderRadius.circular(8.0),
                 ),
-                showLoadingIndicator: false,
-              ),
-              FFButtonWidget(
-                onPressed: widget!.isButtonDisable
-                    ? null
-                    : () async {
-                        FFAppState().unit = FFAppState().units[1];
-                        setState(() {});
-                        _model.buttonClick = 2;
-                        setState(() {});
-                      },
-                text: FFAppState().units[1],
-                options: FFButtonOptions(
-                  width: 45.0,
-                  height: 40.0,
-                  padding: EdgeInsets.all(0.0),
-                  iconPadding:
-                      EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                  color: valueOrDefault<Color>(
-                    _model.buttonClick == 2 ? Colors.black : Colors.white,
-                    Colors.white,
-                  ),
-                  textStyle: GoogleFonts.getFont(
-                    'Inter',
+                child: FFButtonWidget(
+                  onPressed: widget!.isButtonDisable
+                      ? null
+                      : () async {
+                          FFAppState().unit =
+                              FFAppState().units.elementAtOrNull(0)!;
+                          safeSetState(() {});
+                          _model.buttonClick = 1;
+                          safeSetState(() {});
+                        },
+                  text: FFAppState().units.elementAtOrNull(0)!,
+                  options: FFButtonOptions(
+                    width: 48.0,
+                    height: 48.0,
+                    padding: EdgeInsets.all(0.0),
+                    iconPadding:
+                        EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                     color: valueOrDefault<Color>(
-                      _model.buttonClick == 2 ? Colors.white : Colors.black,
-                      Colors.black,
+                      _model.buttonClick == 1
+                          ? Color(0xFFF9EEE6)
+                          : Colors.white,
+                      Colors.white,
                     ),
-                    fontWeight: FontWeight.normal,
-                    fontSize: 13.0,
-                  ),
-                  elevation: 0.0,
-                  borderSide: BorderSide(
-                    color: Colors.transparent,
-                    width: 1.0,
-                  ),
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-              ),
-              FFButtonWidget(
-                onPressed: widget!.isButtonDisable
-                    ? null
-                    : () async {
-                        FFAppState().unit = FFAppState().units[2];
-                        setState(() {});
-                        _model.buttonClick = 3;
-                        setState(() {});
-                      },
-                text: FFAppState().units[2],
-                options: FFButtonOptions(
-                  width: 45.0,
-                  height: 40.0,
-                  padding: EdgeInsets.all(0.0),
-                  iconPadding:
-                      EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                  color: valueOrDefault<Color>(
-                    _model.buttonClick == 3 ? Colors.black : Colors.white,
-                    Colors.white,
-                  ),
-                  textStyle: GoogleFonts.getFont(
-                    'Inter',
-                    color: valueOrDefault<Color>(
-                      _model.buttonClick == 3 ? Colors.white : Colors.black,
-                      Colors.black,
-                    ),
-                    fontWeight: FontWeight.normal,
-                    fontSize: 13.0,
-                  ),
-                  elevation: 0.0,
-                  borderSide: BorderSide(
-                    color: Colors.transparent,
-                    width: 1.0,
-                  ),
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-              ),
-              FFButtonWidget(
-                onPressed: widget!.isButtonDisable
-                    ? null
-                    : () async {
-                        FFAppState().unit = FFAppState().units[3];
-                        setState(() {});
-                        _model.buttonClick = 4;
-                        setState(() {});
-                      },
-                text: FFAppState().units[3],
-                options: FFButtonOptions(
-                  width: 45.0,
-                  height: 40.0,
-                  padding: EdgeInsets.all(0.0),
-                  iconPadding:
-                      EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                  color: valueOrDefault<Color>(
-                    _model.buttonClick == 4 ? Colors.black : Colors.white,
-                    Colors.white,
-                  ),
-                  textStyle: FlutterFlowTheme.of(context).titleSmall.override(
-                        fontFamily: 'Inter',
-                        color: valueOrDefault<Color>(
-                          _model.buttonClick == 4 ? Colors.white : Colors.black,
-                          Colors.black,
+                    textStyle: FlutterFlowTheme.of(context).titleSmall.override(
+                          fontFamily: 'Inter',
+                          color: valueOrDefault<Color>(
+                            _model.buttonClick == 1
+                                ? FlutterFlowTheme.of(context).home
+                                : Colors.black,
+                            Colors.black,
+                          ),
+                          fontSize: 16.0,
+                          letterSpacing: 0.0,
+                          fontWeight: FontWeight.w500,
                         ),
-                        fontSize: 13.0,
-                        letterSpacing: 0.0,
-                        fontWeight: FontWeight.normal,
-                      ),
-                  elevation: 0.0,
-                  borderSide: BorderSide(
-                    color: Colors.transparent,
-                    width: 1.0,
+                    elevation: 0.0,
+                    borderSide: BorderSide(
+                      color: Colors.transparent,
+                    ),
+                    borderRadius: BorderRadius.circular(8.0),
                   ),
-                  borderRadius: BorderRadius.circular(8.0),
+                  showLoadingIndicator: false,
                 ),
               ),
-              FFButtonWidget(
-                onPressed: widget!.isButtonDisable
-                    ? null
-                    : () async {
-                        FFAppState().unit = FFAppState().units[4];
-                        setState(() {});
-                        _model.buttonClick = 5;
-                        setState(() {});
-                      },
-                text: FFAppState().units[4],
-                options: FFButtonOptions(
-                  width: FFAppState().units[4] == 'liquid ounce' ? 70.0 : 45.0,
-                  height: 40.0,
-                  padding: EdgeInsets.all(0.0),
-                  iconPadding:
-                      EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                  color: valueOrDefault<Color>(
-                    _model.buttonClick == 5 ? Colors.black : Colors.white,
-                    Colors.white,
-                  ),
-                  textStyle: GoogleFonts.getFont(
-                    'Inter',
-                    color: valueOrDefault<Color>(
-                      _model.buttonClick == 5 ? Colors.white : Colors.black,
-                      Colors.black,
-                    ),
-                    fontWeight: FontWeight.normal,
-                    fontSize: 13.0,
-                  ),
-                  elevation: 0.0,
-                  borderSide: BorderSide(
-                    color: Colors.transparent,
-                    width: 1.0,
-                  ),
+              Container(
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      blurRadius: 8.0,
+                      color: Color(0xFFF9EEE6),
+                      offset: Offset(
+                        1.0,
+                        2.0,
+                      ),
+                    )
+                  ],
                   borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: FFButtonWidget(
+                  onPressed: widget!.isButtonDisable
+                      ? null
+                      : () async {
+                          FFAppState().unit =
+                              FFAppState().units.elementAtOrNull(1)!;
+                          safeSetState(() {});
+                          _model.buttonClick = 2;
+                          safeSetState(() {});
+                        },
+                  text: FFAppState().units.elementAtOrNull(1)!,
+                  options: FFButtonOptions(
+                    width: 48.0,
+                    height: 48.0,
+                    padding: EdgeInsets.all(0.0),
+                    iconPadding:
+                        EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                    color: valueOrDefault<Color>(
+                      _model.buttonClick == 2
+                          ? Color(0xFFF9EEE6)
+                          : Colors.white,
+                      Colors.white,
+                    ),
+                    textStyle: GoogleFonts.getFont(
+                      'Inter',
+                      color: valueOrDefault<Color>(
+                        _model.buttonClick == 2
+                            ? FlutterFlowTheme.of(context).home
+                            : Colors.black,
+                        Colors.black,
+                      ),
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16.0,
+                    ),
+                    elevation: 0.0,
+                    borderSide: BorderSide(
+                      color: Colors.transparent,
+                      width: 1.0,
+                    ),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      blurRadius: 8.0,
+                      color: Color(0xFFF9EEE6),
+                      offset: Offset(
+                        1.0,
+                        2.0,
+                      ),
+                    )
+                  ],
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: FFButtonWidget(
+                  onPressed: widget!.isButtonDisable
+                      ? null
+                      : () async {
+                          FFAppState().unit =
+                              FFAppState().units.elementAtOrNull(2)!;
+                          safeSetState(() {});
+                          _model.buttonClick = 3;
+                          safeSetState(() {});
+                        },
+                  text: FFAppState().units.elementAtOrNull(2)!,
+                  options: FFButtonOptions(
+                    width: 48.0,
+                    height: 48.0,
+                    padding: EdgeInsets.all(0.0),
+                    iconPadding:
+                        EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                    color: valueOrDefault<Color>(
+                      _model.buttonClick == 3
+                          ? Color(0xFFF9EEE6)
+                          : Colors.white,
+                      Colors.white,
+                    ),
+                    textStyle: GoogleFonts.getFont(
+                      'Inter',
+                      color: valueOrDefault<Color>(
+                        _model.buttonClick == 3
+                            ? FlutterFlowTheme.of(context).home
+                            : Colors.black,
+                        Colors.black,
+                      ),
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16.0,
+                    ),
+                    elevation: 0.0,
+                    borderSide: BorderSide(
+                      color: Colors.transparent,
+                      width: 1.0,
+                    ),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      blurRadius: 8.0,
+                      color: Color(0xFFF9EEE6),
+                      offset: Offset(
+                        1.0,
+                        2.0,
+                      ),
+                    )
+                  ],
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: FFButtonWidget(
+                  onPressed: widget!.isButtonDisable
+                      ? null
+                      : () async {
+                          FFAppState().unit =
+                              FFAppState().units.elementAtOrNull(3)!;
+                          safeSetState(() {});
+                          _model.buttonClick = 4;
+                          safeSetState(() {});
+                        },
+                  text: FFAppState().units.elementAtOrNull(3)!,
+                  options: FFButtonOptions(
+                    width: 48.0,
+                    height: 48.0,
+                    padding: EdgeInsets.all(0.0),
+                    iconPadding:
+                        EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                    color: valueOrDefault<Color>(
+                      _model.buttonClick == 4
+                          ? Color(0xFFF9EEE6)
+                          : Colors.white,
+                      Colors.white,
+                    ),
+                    textStyle: FlutterFlowTheme.of(context).titleSmall.override(
+                          fontFamily: 'Inter',
+                          color: valueOrDefault<Color>(
+                            _model.buttonClick == 4
+                                ? FlutterFlowTheme.of(context).home
+                                : Colors.black,
+                            Colors.black,
+                          ),
+                          fontSize: 16.0,
+                          letterSpacing: 0.0,
+                          fontWeight: FontWeight.w500,
+                        ),
+                    elevation: 0.0,
+                    borderSide: BorderSide(
+                      color: Colors.transparent,
+                      width: 1.0,
+                    ),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      blurRadius: 8.0,
+                      color: Color(0xFFF9EEE6),
+                      offset: Offset(
+                        1.0,
+                        2.0,
+                      ),
+                    )
+                  ],
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: FFButtonWidget(
+                  onPressed: widget!.isButtonDisable
+                      ? null
+                      : () async {
+                          FFAppState().unit =
+                              FFAppState().units.elementAtOrNull(4)!;
+                          safeSetState(() {});
+                          _model.buttonClick = 5;
+                          safeSetState(() {});
+                        },
+                  text: FFAppState().units.elementAtOrNull(4)!,
+                  options: FFButtonOptions(
+                    width:
+                        FFAppState().units.elementAtOrNull(4) == 'liquid ounce'
+                            ? 70.0
+                            : 48.0,
+                    height: 48.0,
+                    padding: EdgeInsets.all(0.0),
+                    iconPadding:
+                        EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                    color: valueOrDefault<Color>(
+                      _model.buttonClick == 5
+                          ? Color(0xFFF9EEE6)
+                          : Colors.white,
+                      Colors.white,
+                    ),
+                    textStyle: GoogleFonts.getFont(
+                      'Inter',
+                      color: valueOrDefault<Color>(
+                        _model.buttonClick == 5
+                            ? FlutterFlowTheme.of(context).home
+                            : Colors.black,
+                        Colors.black,
+                      ),
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16.0,
+                    ),
+                    elevation: 0.0,
+                    borderSide: BorderSide(
+                      color: Colors.transparent,
+                      width: 1.0,
+                    ),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
                 ),
               ),
             ],
           ),
           Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(0.0, 12.0, 0.0, 0.0),
+            padding: EdgeInsetsDirectional.fromSTEB(0.0, 24.0, 0.0, 0.0),
             child: Container(
               width: MediaQuery.sizeOf(context).width * 1.0,
-              height: 50.0,
+              height: 48.0,
               decoration: BoxDecoration(
-                color: Color(0x00FFFFFF),
                 borderRadius: BorderRadius.circular(16.0),
-                border: Border.all(
-                  color: Color(0xFFE4E4E4),
-                ),
               ),
               alignment: AlignmentDirectional(0.0, 0.0),
               child: Padding(
@@ -311,97 +429,104 @@ class _CustomCountControllerWidgetState
                   children: [
                     Align(
                       alignment: AlignmentDirectional(0.0, 0.0),
-                      child: FlutterFlowIconButton(
-                        borderColor: Color(0x00FFFFFF),
-                        borderRadius: 9.0,
-                        borderWidth: 0.0,
-                        buttonSize: 37.0,
-                        fillColor: Colors.white,
-                        disabledColor: Color(0xFFE4E4E4),
-                        icon: FaIcon(
-                          FontAwesomeIcons.minus,
-                          color: Colors.black,
-                          size: 12.0,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              blurRadius: 8.0,
+                              color: Color(0xFFF9EEE6),
+                              offset: Offset(
+                                1.0,
+                                2.0,
+                              ),
+                            )
+                          ],
+                          borderRadius: BorderRadius.circular(8.0),
                         ),
-                        onPressed: (valueOrDefault<double>(
-                                  (FFAppState().unit == 'kg') ||
-                                          (FFAppState().unit == 'l')
-                                      ? valueOrDefault<double>(
-                                          FFAppState().setQuantityDouble,
-                                          0.0,
-                                        )
-                                      : valueOrDefault<double>(
-                                          FFAppState()
-                                              .setQuantityInt
-                                              .toDouble(),
-                                          0.0,
-                                        ),
-                                  0.0,
-                                ) ==
-                                0.0)
-                            ? null
-                            : () async {
-                                if ((FFAppState().unit == 'kg') ||
-                                    (FFAppState().unit == 'l')) {
-                                  FFAppState().setQuantityDouble =
-                                      FFAppState().setQuantityDouble + -0.5;
-                                  FFAppState().update(() {});
-                                  setState(() {
-                                    _model.textController?.text =
-                                        valueOrDefault<String>(
-                                      formatNumber(
-                                        FFAppState().setQuantityDouble,
-                                        formatType: FormatType.custom,
-                                        format: '####.##',
-                                        locale: '',
-                                      ),
-                                      '0',
-                                    );
-                                    _model.textController?.selection =
-                                        TextSelection.collapsed(
-                                            offset: _model
-                                                .textController!.text.length);
-                                  });
-                                  FFAppState().setQuantity =
-                                      FFAppState().setQuantityDouble;
-                                  setState(() {});
-                                } else {
-                                  if ((FFAppState().unit == 'piece') ||
-                                      (FFAppState().unit == 'oz') ||
-                                      (FFAppState().unit == 'pound') ||
-                                      (FFAppState().unit == 'pint') ||
-                                      (FFAppState().unit == 'liquid ounce') ||
-                                      (FFAppState().unit == 'quart')) {
-                                    FFAppState().setQuantityInt =
-                                        FFAppState().setQuantityInt + -1;
+                        child: FlutterFlowIconButton(
+                          borderColor: Color(0x00FFFFFF),
+                          borderRadius: 8.0,
+                          borderWidth: 0.0,
+                          buttonSize: 32.0,
+                          fillColor: Colors.white,
+                          disabledColor: Color(0xFFE4E4E4),
+                          icon: FaIcon(
+                            FontAwesomeIcons.minus,
+                            color: Colors.black,
+                            size: 12.0,
+                          ),
+                          onPressed: (valueOrDefault<double>(
+                                    (FFAppState().unit == 'kg') ||
+                                            (FFAppState().unit == 'l')
+                                        ? valueOrDefault<double>(
+                                            FFAppState().setQuantityDouble,
+                                            0.0,
+                                          )
+                                        : valueOrDefault<double>(
+                                            FFAppState()
+                                                .setQuantityInt
+                                                .toDouble(),
+                                            0.0,
+                                          ),
+                                    0.0,
+                                  ) ==
+                                  0.0)
+                              ? null
+                              : () async {
+                                  if ((FFAppState().unit == 'kg') ||
+                                      (FFAppState().unit == 'l')) {
+                                    FFAppState().setQuantityDouble =
+                                        FFAppState().setQuantityDouble + -0.5;
                                     FFAppState().update(() {});
+                                    safeSetState(() {
+                                      _model.textController?.text =
+                                          valueOrDefault<String>(
+                                        formatNumber(
+                                          FFAppState().setQuantityDouble,
+                                          formatType: FormatType.custom,
+                                          format: '####.##',
+                                          locale: '',
+                                        ),
+                                        '0',
+                                      );
+                                    });
+                                    FFAppState().setQuantity =
+                                        FFAppState().setQuantityDouble;
+                                    safeSetState(() {});
                                   } else {
-                                    if (FFAppState().setQuantityInt <= 100) {
-                                      FFAppState().setQuantityInt = 0;
+                                    if ((FFAppState().unit == 'piece') ||
+                                        (FFAppState().unit == 'oz') ||
+                                        (FFAppState().unit == 'pound') ||
+                                        (FFAppState().unit == 'pint') ||
+                                        (FFAppState().unit == 'liquid ounce') ||
+                                        (FFAppState().unit == 'quart')) {
+                                      FFAppState().setQuantityInt =
+                                          FFAppState().setQuantityInt + -1;
                                       FFAppState().update(() {});
                                     } else {
-                                      FFAppState().setQuantityInt =
-                                          FFAppState().setQuantityInt + -100;
-                                      FFAppState().update(() {});
+                                      if (FFAppState().setQuantityInt <= 100) {
+                                        FFAppState().setQuantityInt = 0;
+                                        FFAppState().update(() {});
+                                      } else {
+                                        FFAppState().setQuantityInt =
+                                            FFAppState().setQuantityInt + -100;
+                                        FFAppState().update(() {});
+                                      }
                                     }
-                                  }
 
-                                  setState(() {
-                                    _model.textController?.text =
-                                        valueOrDefault<String>(
-                                      FFAppState().setQuantityInt.toString(),
-                                      '0',
-                                    );
-                                    _model.textController?.selection =
-                                        TextSelection.collapsed(
-                                            offset: _model
-                                                .textController!.text.length);
-                                  });
-                                  FFAppState().setQuantity =
-                                      FFAppState().setQuantityInt.toDouble();
-                                  setState(() {});
-                                }
-                              },
+                                    safeSetState(() {
+                                      _model.textController?.text =
+                                          valueOrDefault<String>(
+                                        FFAppState().setQuantityInt.toString(),
+                                        '0',
+                                      );
+                                    });
+                                    FFAppState().setQuantity =
+                                        FFAppState().setQuantityInt.toDouble();
+                                    safeSetState(() {});
+                                  }
+                                },
+                        ),
                       ),
                     ),
                     Expanded(
@@ -422,25 +547,21 @@ class _CustomCountControllerWidgetState
                                   FFAppState().setQuantityInt =
                                       int.parse(_model.textController.text);
                                   FFAppState().update(() {});
-                                  setState(() {
+                                  safeSetState(() {
                                     _model.textController?.text =
                                         valueOrDefault<String>(
                                       FFAppState().setQuantityInt.toString(),
                                       '0',
                                     );
-                                    _model.textController?.selection =
-                                        TextSelection.collapsed(
-                                            offset: _model
-                                                .textController!.text.length);
                                   });
                                   FFAppState().setQuantity =
                                       FFAppState().setQuantityInt.toDouble();
-                                  setState(() {});
+                                  safeSetState(() {});
                                 } else {
                                   FFAppState().setQuantityDouble =
                                       double.parse(_model.textController.text);
                                   FFAppState().update(() {});
-                                  setState(() {
+                                  safeSetState(() {
                                     _model.textController?.text =
                                         valueOrDefault<String>(
                                       formatNumber(
@@ -451,14 +572,10 @@ class _CustomCountControllerWidgetState
                                       ),
                                       '0',
                                     );
-                                    _model.textController?.selection =
-                                        TextSelection.collapsed(
-                                            offset: _model
-                                                .textController!.text.length);
                                   });
                                   FFAppState().setQuantity =
                                       FFAppState().setQuantityDouble;
-                                  setState(() {});
+                                  safeSetState(() {});
                                 }
                               },
                             ),
@@ -481,13 +598,16 @@ class _CustomCountControllerWidgetState
                               focusedBorder: InputBorder.none,
                               errorBorder: InputBorder.none,
                               focusedErrorBorder: InputBorder.none,
+                              contentPadding: EdgeInsetsDirectional.fromSTEB(
+                                  0.0, 0.0, 0.0, 6.0),
                             ),
                             style: FlutterFlowTheme.of(context)
                                 .bodyMedium
                                 .override(
                                   fontFamily: 'Inter',
-                                  fontSize: 15.0,
+                                  fontSize: 16.0,
                                   letterSpacing: 0.0,
+                                  fontWeight: FontWeight.w600,
                                 ),
                             textAlign: TextAlign.center,
                             validator: _model.textControllerValidator
@@ -498,74 +618,81 @@ class _CustomCountControllerWidgetState
                     ),
                     Align(
                       alignment: AlignmentDirectional(0.0, 0.0),
-                      child: FlutterFlowIconButton(
-                        borderColor: Color(0x00FFFFFF),
-                        borderRadius: 9.0,
-                        borderWidth: 0.0,
-                        buttonSize: 37.0,
-                        fillColor: Colors.white,
-                        icon: Icon(
-                          Icons.add,
-                          color: FlutterFlowTheme.of(context).primaryText,
-                          size: 20.0,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              blurRadius: 8.0,
+                              color: Color(0xFFF9EEE6),
+                              offset: Offset(
+                                1.0,
+                                2.0,
+                              ),
+                            )
+                          ],
+                          borderRadius: BorderRadius.circular(8.0),
                         ),
-                        onPressed: () async {
-                          if ((FFAppState().unit == 'kg') ||
-                              (FFAppState().unit == 'l')) {
-                            FFAppState().setQuantityDouble =
-                                FFAppState().setQuantityDouble + 0.5;
-                            FFAppState().update(() {});
-                            setState(() {
-                              _model.textController?.text =
-                                  valueOrDefault<String>(
-                                formatNumber(
-                                  FFAppState().setQuantityDouble,
-                                  formatType: FormatType.custom,
-                                  format: '####.##',
-                                  locale: '',
-                                ),
-                                '0',
-                              );
-                              _model.textController?.selection =
-                                  TextSelection.collapsed(
-                                      offset:
-                                          _model.textController!.text.length);
-                            });
-                            FFAppState().setQuantity =
-                                FFAppState().setQuantityDouble;
-                            setState(() {});
-                          } else {
-                            if ((FFAppState().unit == 'piece') ||
-                                (FFAppState().unit == 'oz') ||
-                                (FFAppState().unit == 'pound') ||
-                                (FFAppState().unit == 'pint') ||
-                                (FFAppState().unit == 'liquid ounce') ||
-                                (FFAppState().unit == 'quart')) {
-                              FFAppState().setQuantityInt =
-                                  FFAppState().setQuantityInt + 1;
+                        child: FlutterFlowIconButton(
+                          borderColor: Color(0x00FFFFFF),
+                          borderRadius: 8.0,
+                          borderWidth: 0.0,
+                          buttonSize: 32.0,
+                          fillColor: Colors.white,
+                          icon: Icon(
+                            Icons.add,
+                            color: FlutterFlowTheme.of(context).primaryText,
+                            size: 18.0,
+                          ),
+                          onPressed: () async {
+                            if ((FFAppState().unit == 'kg') ||
+                                (FFAppState().unit == 'l')) {
+                              FFAppState().setQuantityDouble =
+                                  FFAppState().setQuantityDouble + 0.5;
                               FFAppState().update(() {});
+                              safeSetState(() {
+                                _model.textController?.text =
+                                    valueOrDefault<String>(
+                                  formatNumber(
+                                    FFAppState().setQuantityDouble,
+                                    formatType: FormatType.custom,
+                                    format: '####.##',
+                                    locale: '',
+                                  ),
+                                  '0',
+                                );
+                              });
+                              FFAppState().setQuantity =
+                                  FFAppState().setQuantityDouble;
+                              safeSetState(() {});
                             } else {
-                              FFAppState().setQuantityInt =
-                                  FFAppState().setQuantityInt + 100;
-                              FFAppState().update(() {});
-                            }
+                              if ((FFAppState().unit == 'piece') ||
+                                  (FFAppState().unit == 'oz') ||
+                                  (FFAppState().unit == 'pound') ||
+                                  (FFAppState().unit == 'pint') ||
+                                  (FFAppState().unit == 'liquid ounce') ||
+                                  (FFAppState().unit == 'quart')) {
+                                FFAppState().setQuantityInt =
+                                    FFAppState().setQuantityInt + 1;
+                                FFAppState().update(() {});
+                              } else {
+                                FFAppState().setQuantityInt =
+                                    FFAppState().setQuantityInt + 100;
+                                FFAppState().update(() {});
+                              }
 
-                            setState(() {
-                              _model.textController?.text =
-                                  valueOrDefault<String>(
-                                FFAppState().setQuantityInt.toString(),
-                                '0',
-                              );
-                              _model.textController?.selection =
-                                  TextSelection.collapsed(
-                                      offset:
-                                          _model.textController!.text.length);
-                            });
-                            FFAppState().setQuantity =
-                                FFAppState().setQuantityInt.toDouble();
-                            setState(() {});
-                          }
-                        },
+                              safeSetState(() {
+                                _model.textController?.text =
+                                    valueOrDefault<String>(
+                                  FFAppState().setQuantityInt.toString(),
+                                  '0',
+                                );
+                              });
+                              FFAppState().setQuantity =
+                                  FFAppState().setQuantityInt.toDouble();
+                              safeSetState(() {});
+                            }
+                          },
+                        ),
                       ),
                     ),
                   ],

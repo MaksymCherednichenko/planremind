@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "490606516846-cpjalfjr3qr9rd8tai7duujum67t7aoj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mycompany.planremindproject",
+            "certificate_hash": "3a936cda1fb5cae204bd5c13886795908d1fa10c"
+          }
+        },
+        {
           "client_id": "490606516846-di4dt0ijdmt3prbnjg1pio4a440ic66p.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -90,6 +98,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "490606516846-230mfbie54aev09a4c3nkjova481km0h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.planremindcompany.planremindproject",
+            "certificate_hash": "88ebd1be2b76da2731e22e2d3284bac2cd57a617"
+          }
+        },
+        {
           "client_id": "490606516846-3iv4t7le2h4dqg223k2ttru1me6nbnni.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -127,6 +143,14 @@
           "android_info": {
             "package_name": "com.planremindcompany.planremindproject",
             "certificate_hash": "112550eb947fc9805596071ffc84f983d6f44f24"
+          }
+        },
+        {
+          "client_id": "490606516846-hf014bov7spao1k88711sf0iitve55r8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.planremindcompany.planremindproject",
+            "certificate_hash": "3a936cda1fb5cae204bd5c13886795908d1fa10c"
           }
         },
         {

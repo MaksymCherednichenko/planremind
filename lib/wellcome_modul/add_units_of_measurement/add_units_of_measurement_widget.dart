@@ -2,6 +2,7 @@ import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -36,18 +37,18 @@ class _AddUnitsOfMeasurementWidgetState
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       if (!(FFAppState().units.isNotEmpty)) {
         _model.ind = 0;
-        setState(() {});
+        safeSetState(() {});
         while (_model.ind! < 5) {
           FFAppState().insertAtIndexInUnits(_model.ind!, ' ');
-          setState(() {});
+          safeSetState(() {});
           _model.ind = _model.ind! + 1;
-          setState(() {});
+          safeSetState(() {});
         }
         FFAppState().updateUnitsAtIndex(
           2,
           (_) => 'piece',
         );
-        setState(() {});
+        safeSetState(() {});
       }
     });
   }
@@ -128,7 +129,7 @@ class _AddUnitsOfMeasurementWidgetState
                       onPressed: () {
                         print('Button pressed ...');
                       },
-                      text: FFAppState().units[0],
+                      text: FFAppState().units.elementAtOrNull(0)!,
                       options: FFButtonOptions(
                         width: 45.0,
                         height: 40.0,
@@ -158,7 +159,7 @@ class _AddUnitsOfMeasurementWidgetState
                       onPressed: () {
                         print('Button pressed ...');
                       },
-                      text: FFAppState().units[1],
+                      text: FFAppState().units.elementAtOrNull(1)!,
                       options: FFButtonOptions(
                         width: 45.0,
                         height: 40.0,
@@ -188,7 +189,7 @@ class _AddUnitsOfMeasurementWidgetState
                       onPressed: () {
                         print('Button pressed ...');
                       },
-                      text: FFAppState().units[2],
+                      text: FFAppState().units.elementAtOrNull(2)!,
                       options: FFButtonOptions(
                         width: 45.0,
                         height: 40.0,
@@ -218,7 +219,7 @@ class _AddUnitsOfMeasurementWidgetState
                       onPressed: () {
                         print('Button pressed ...');
                       },
-                      text: FFAppState().units[3],
+                      text: FFAppState().units.elementAtOrNull(3)!,
                       options: FFButtonOptions(
                         width: 45.0,
                         height: 40.0,
@@ -248,9 +249,10 @@ class _AddUnitsOfMeasurementWidgetState
                       onPressed: () {
                         print('Button pressed ...');
                       },
-                      text: FFAppState().units[4],
+                      text: FFAppState().units.elementAtOrNull(4)!,
                       options: FFButtonOptions(
-                        width: FFAppState().units[4] == 'liquid ounce'
+                        width: FFAppState().units.elementAtOrNull(4) ==
+                                'liquid ounce'
                             ? 70.0
                             : 45.0,
                         height: 40.0,
@@ -291,7 +293,7 @@ class _AddUnitsOfMeasurementWidgetState
                           0,
                           (_) => 'g',
                         );
-                        setState(() {});
+                        safeSetState(() {});
                       },
                       text: FFLocalizations.of(context).getText(
                         '5xhh5smx' /* г */,
@@ -327,7 +329,7 @@ class _AddUnitsOfMeasurementWidgetState
                           1,
                           (_) => 'kg',
                         );
-                        setState(() {});
+                        safeSetState(() {});
                       },
                       text: FFLocalizations.of(context).getText(
                         'zdxkay4t' /* кг */,
@@ -363,7 +365,7 @@ class _AddUnitsOfMeasurementWidgetState
                           2,
                           (_) => 'piece',
                         );
-                        setState(() {});
+                        safeSetState(() {});
                       },
                       text: FFLocalizations.of(context).getText(
                         'ilags8z0' /* штука */,
@@ -399,7 +401,7 @@ class _AddUnitsOfMeasurementWidgetState
                           3,
                           (_) => 'l',
                         );
-                        setState(() {});
+                        safeSetState(() {});
                       },
                       text: FFLocalizations.of(context).getText(
                         'zqh1lf79' /* л */,
@@ -435,7 +437,7 @@ class _AddUnitsOfMeasurementWidgetState
                           4,
                           (_) => 'ml',
                         );
-                        setState(() {});
+                        safeSetState(() {});
                       },
                       text: FFLocalizations.of(context).getText(
                         'v5d6zrn7' /* мл */,
@@ -480,7 +482,7 @@ class _AddUnitsOfMeasurementWidgetState
                           0,
                           (_) => 'oz',
                         );
-                        setState(() {});
+                        safeSetState(() {});
                       },
                       text: FFLocalizations.of(context).getText(
                         'rm4pudqs' /* унція */,
@@ -516,7 +518,7 @@ class _AddUnitsOfMeasurementWidgetState
                           1,
                           (_) => 'pound',
                         );
-                        setState(() {});
+                        safeSetState(() {});
                       },
                       text: FFLocalizations.of(context).getText(
                         '6kbw4xro' /* фунт */,
@@ -552,7 +554,7 @@ class _AddUnitsOfMeasurementWidgetState
                           3,
                           (_) => 'quart',
                         );
-                        setState(() {});
+                        safeSetState(() {});
                       },
                       text: FFLocalizations.of(context).getText(
                         '23uf0mfp' /* кварта */,
@@ -588,7 +590,7 @@ class _AddUnitsOfMeasurementWidgetState
                           3,
                           (_) => 'pint',
                         );
-                        setState(() {});
+                        safeSetState(() {});
                       },
                       text: FFLocalizations.of(context).getText(
                         'pj5f72z3' /* пінта */,
@@ -624,7 +626,7 @@ class _AddUnitsOfMeasurementWidgetState
                           4,
                           (_) => 'liquid ounce',
                         );
-                        setState(() {});
+                        safeSetState(() {});
                       },
                       text: FFLocalizations.of(context).getText(
                         '7n0zcwyb' /* рідка унція */,

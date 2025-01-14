@@ -5,6 +5,7 @@ import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/wellcome_modul/add_units_of_measurement/add_units_of_measurement_widget.dart';
 import '/wellcome_modul/select_language/select_language_widget.dart';
+import 'dart:ui';
 import 'wellcome_page_old_widget.dart' show WellcomePageOldWidget;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
@@ -16,7 +17,6 @@ import 'package:provider/provider.dart';
 class WellcomePageOldModel extends FlutterFlowModel<WellcomePageOldWidget> {
   ///  State fields for stateful widgets in this page.
 
-  final unfocusNode = FocusNode();
   // Stores action output result for [Firestore Query - Query a collection] action in WellcomePageOld widget.
   int? numOfDoc;
 
@@ -24,7 +24,5 @@ class WellcomePageOldModel extends FlutterFlowModel<WellcomePageOldWidget> {
   void initState(BuildContext context) {}
 
   @override
-  void dispose() {
-    unfocusNode.dispose();
-  }
+  void dispose() {}
 }
